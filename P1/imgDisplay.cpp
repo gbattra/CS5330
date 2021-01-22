@@ -1,13 +1,29 @@
 #include <stdio.h>
 #include <opencv4/opencv.hpp>
 
+#define ERROR_CODE -1
+#define SUCCESS_CODE 0
+
 int main(int argc, char** argv)
 {
     if (argc != 2)
     {
         printf("usage: ImgDisplay <filepath>\n");
-        return -1;
+        return ERROR_CODE;
     }
 
-    
+    cv::Mat img = cv::imread(argv[1], 1);
+
+    if (!img.data)
+    {
+        printf("Image not found\n");
+        return ERROR_CODE;
+    }
+
+    cv::namedWindow("Display Image", WINDOW_AUTOSIZE);
+    cv::imshow("Display Image", img);
+
+    waitKey(0);
+
+    return SUCCESS_CODE;
 }
