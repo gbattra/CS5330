@@ -31,6 +31,7 @@ Follow the "Detailed Process" instructions at [OpenCV Installation for Linux](ht
 
 ### ImgDisplay
 
-Run: `$ ./ImgDisplay images/cat.jpeg`
+Usage: `$ ./ImgDisplay <image_filepath>`
+- i.e. `$./ImgDisplay images/cat.jpeg` - This will display a picture of a cat.
 
-This will display a picture of a cat.
+Press `q` to exit the program.
