@@ -12,4 +12,36 @@ int main(int argc, char *argv[])
         printf("Failed to open camera\n");
         return ERROR_CODE;
     }
+
+    cv::Size bounds(
+        (int) cam->get(cv::CAP_PROP_FRAME_WIDTH),
+        (int) cam->get(cv::CAP_PROP_FRAME_HEIGHT));
+    printf("Image Size: %d %d\n", bounds.width, bounds.height);
+
+    cv::namedWindow("Video", 1);
+    cv::Mat frame;
+
+    for(;;)
+    {
+        *cam >> frame;
+        if (frame.empty())
+        {
+            printf("Frame is empty\n");
+            break;
+        }
+
+        // in named window "Video", show the frame
+        cv::imshow("Video", frame);
+
+        int key = cv::waitKey(0);
+        if (key == 'q')
+        {
+            break;
+        }
+
+        cv::destroyWindow("Video");
+    }
+
+    delete cam;
+    return SUCCESS_CODE;
 }
