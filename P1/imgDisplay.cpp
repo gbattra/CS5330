@@ -23,7 +23,14 @@ int main(int argc, char** argv)
     cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE);
     cv::imshow("Display Image", img);
 
-    cv::waitKey(0);
+    while(1)
+    {
+        int key = cv::waitKey(0);
+        if (key == 'q')
+        {
+            break;
+        }
+    }
 
     return SUCCESS_CODE;
 }

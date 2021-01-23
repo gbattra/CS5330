@@ -1,8 +1,14 @@
 ## Setup
+
 ### Environment
 
 - OS: Ubuntu Desktop 20.04
 - IDE: VS Code
+
+### Dependencies
+
+- build-essentials
+- opencv
 
 ### OpenCV Installation
 
@@ -15,11 +21,11 @@ Follow the "Detailed Process" instructions at [OpenCV Installation for Linux](ht
 6. Run: `$ cmake ../opencv`
 7. Run: `$ make -j8`
 8. Run: `$ sudo make install`
-- **Note**: Make sure to have the packages `libgtk2.0-dev` and `pkg-config` installed prior to running `cmake ../opencv && sudo make install`:
+- **Note**: Make sure to have the packages `libgtk2.0-dev` and `pkg-config` installed prior to running `$ cmake ../opencv && sudo make install`:
 
 ### Build
 
-1. In the project root directory, run: `cmake . && make`
+1. In the project root directory, run: `$ cmake . && make`
 
 ## Programs
 
