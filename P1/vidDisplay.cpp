@@ -4,6 +4,21 @@
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
 
+bool save_frame(cv::Mat *frame)
+{
+    return cv::imwrite(
+        "" + std::to_string(std::time(0)) + ".jpg",
+        *frame);
+}
+
+bool process_keystroke(char key, cv::Mat *frame)
+{
+    if (key == 's')
+    {
+        return save_frame(frame);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     cv::VideoCapture *cam = new cv::VideoCapture(0);
@@ -37,6 +52,12 @@ int main(int argc, char *argv[])
         if (key == 'q')
         {
             break;
+        }
+
+        bool success = process_keystroke(key, &frame);
+        if (!success)
+        {
+            printf("Failed to process keystroke\n");
         }
 
         cv::destroyWindow("Video");
