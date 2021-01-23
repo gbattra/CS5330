@@ -7,8 +7,26 @@
 bool save_frame(cv::Mat *frame)
 {
     return cv::imwrite(
-        "images/" + std::to_string(std::time(0)) + ".jpg",
+        "images/saved/" + std::to_string(std::time(0)) + ".jpg",
         *frame);
+}
+
+bool grayscale(cv::Mat *frame)
+{
+    cv::namedWindow("Grayscale", 1);
+
+    cv::Mat gs_image;
+    cv::cvtColor(*frame, gs_image, cv::COLOR_BGR2GRAY);
+
+    cv::imshow("Grayscale", gs_image);
+
+    int key = cv::waitKey(0);
+    if (key == 's')
+    {
+        return save_frame(&gs_image);
+    }
+
+    return true;
 }
 
 bool process_keystroke(char key, cv::Mat *frame)
@@ -16,6 +34,10 @@ bool process_keystroke(char key, cv::Mat *frame)
     if (key == 's')
     {
         return save_frame(frame);
+    }
+    if (key == 'g')
+    {
+        return grayscale(frame);
     }
 
     return true;
