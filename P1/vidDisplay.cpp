@@ -7,7 +7,7 @@
 bool save_frame(cv::Mat *frame)
 {
     return cv::imwrite(
-        "" + std::to_string(std::time(0)) + ".jpg",
+        "images/" + std::to_string(std::time(0)) + ".jpg",
         *frame);
 }
 
@@ -17,6 +17,8 @@ bool process_keystroke(char key, cv::Mat *frame)
     {
         return save_frame(frame);
     }
+
+    return true;
 }
 
 int main(int argc, char *argv[])
