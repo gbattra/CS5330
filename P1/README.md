@@ -1,11 +1,12 @@
-### Setup
+## Setup
+### Environment
 
 - OS: Ubuntu Desktop 20.04
 - IDE: VS Code
 
 ### OpenCV Installation
 
-Follow the "Detailed Process" instructions at [OpenCV Installation for Linux](https://docs.opencv.org/4.5.1/d7/d9f/tutorial_linux_install.html)
+Follow the "Detailed Process" instructions at [OpenCV Installation for Linux](https://docs.opencv.org/4.5.1/d7/d9f/tutorial_linux_install.html):
 1. Run `sudo apt install -y g++`
 2. Run `sudo apt install -y cmake`
 3. Run `sudo apt install make`
@@ -19,3 +20,7 @@ Follow the "Detailed Process" instructions at [OpenCV Installation for Linux](ht
 ### Build
 
 1. In the project root directory, run: `cmake . && make`
+
+## Programs
+
+### 
