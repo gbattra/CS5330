@@ -83,8 +83,6 @@ int main(int argc, char *argv[])
         {
             printf("Failed to process keystroke\n");
         }
-
-        cv::destroyWindow("Video");
     }
 
     delete cam;

@@ -42,4 +42,4 @@ Usage: `$ ./VidDisplay`
 
 This will open up a video stream, pausing at each frame and allowing the user to execute commands on that frame via keystrokes. Below are the available keystrokes:
 - `s` - Saves the frame to an image file in `images/saved`
-- `g` - Converts the image to grayscale. The user may press `s` to save this grayscale image.
+- `g` - Converts the image to grayscale. The user may press `s` to save this grayscale image. Otherwise press any key to continue.

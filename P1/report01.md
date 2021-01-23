@@ -12,7 +12,7 @@
 
 ### Grayscale
 
-Below are the before and after images for **Part 3**, which converts the color scheme of the original image to grayscale:
+Below are the before and after images for **Part 3**, in which the program is to convert the color scheme of the original image to grayscale:
 
 **Before:**
 <br>
