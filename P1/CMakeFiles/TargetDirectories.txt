@@ -1,0 +1,3 @@
+/home/gattra/Projects/CS5330/P1/CMakeFiles/rebuild_cache.dir
+/home/gattra/Projects/CS5330/P1/CMakeFiles/edit_cache.dir
+/home/gattra/Projects/CS5330/P1/CMakeFiles/DisplayImage.dir

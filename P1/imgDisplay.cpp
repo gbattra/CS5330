@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <opencv4/opencv.hpp>
+#include <opencv2/opencv.hpp>
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
@@ -20,10 +20,10 @@ int main(int argc, char** argv)
         return ERROR_CODE;
     }
 
-    cv::namedWindow("Display Image", WINDOW_AUTOSIZE);
+    cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE);
     cv::imshow("Display Image", img);
 
-    waitKey(0);
+    cv::waitKey(0);
 
     return SUCCESS_CODE;
 }
