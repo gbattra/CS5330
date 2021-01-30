@@ -31,6 +31,11 @@ int main(int argc, char** argv)
         {
             break;
         }
+
+        if (key == 's')
+        {
+            save_frame(&img);
+        }
     }
 
     return SUCCESS_CODE;

@@ -32,6 +32,18 @@ CS 5330 Prof. Maxwell
 <br>
 <img src="images/examples/blur_after.jpg"/>
 
+### Blur Quantize
+
+**Before:**
+<br>
+<img src="images/examples/bq_before.jpg"/>
+
+<br>
+
+**After**
+<br>
+<img src="images/examples/bq_after.jpg"/>
+
 
 ## Extensions
 
