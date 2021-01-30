@@ -17,42 +17,46 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'b')
     {
-        cv::Mat dst = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        blur5x5(*frame, dst);
+        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
         cv::namedWindow("Gaussian", 1);
-        cv::imshow("Gaussian", dst);
+        cv::imshow("Gaussian", *dst);
 
-        int key = cv::waitKey(0);
-        if (key == 's')
+        int skey = cv::waitKey(0);
+        if (skey == 's')
         {
-            return save_frame(&dst);
+            return save_frame(dst);
         }
+
+        cv::destroyWindow("Gaussian");
     }
     if (key == 'x')
     {
-        cv::Mat dst = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        sobolX3x3(*frame, dst);
+        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        sobelX3x3(*frame, *dst);
         cv::namedWindow("SobolX", 1);
-        cv::imshow("SobolX", dst);
+        cv::imshow("SobolX", *dst);
 
-        int key = cv::waitKey(0);
-        if (key == 's')
+        int skey = cv::waitKey(0);
+        if (skey == 's')
         {
-            return save_frame(&dst);
+            return save_frame(dst);
         }
+        cv::destroyWindow("SobolX");
     }
     if (key == 'y')
     {
-        cv::Mat dst = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        sobolY3x3(*frame, dst);
+        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        sobelY3x3(*frame, *dst);
         cv::namedWindow("SobolY", 1);
-        cv::imshow("SobolY", dst);
+        cv::imshow("SobolY", *dst);
 
-        int key = cv::waitKey(0);
-        if (key == 's')
+        int skey = cv::waitKey(0);
+        if (skey == 's')
         {
-            return save_frame(&dst);
+            return save_frame(dst);
         }
+
+        cv::destroyWindow("SobolY");
     }
 
     return true;
