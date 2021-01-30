@@ -28,6 +28,32 @@ bool process_keystroke(char key, cv::Mat *frame)
             return save_frame(&dst);
         }
     }
+    if (key == 'x')
+    {
+        cv::Mat dst = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        sobolX3x3(*frame, dst);
+        cv::namedWindow("SobolX", 1);
+        cv::imshow("SobolX", dst);
+
+        int key = cv::waitKey(0);
+        if (key == 's')
+        {
+            return save_frame(&dst);
+        }
+    }
+    if (key == 'y')
+    {
+        cv::Mat dst = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        sobolY3x3(*frame, dst);
+        cv::namedWindow("SobolY", 1);
+        cv::imshow("SobolY", dst);
+
+        int key = cv::waitKey(0);
+        if (key == 's')
+        {
+            return save_frame(&dst);
+        }
+    }
 
     return true;
 }

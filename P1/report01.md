@@ -36,6 +36,7 @@ CS 5330 Prof. Maxwell
 ## Extensions
 
 ## Reflection
+- talk about memory issue with gaussian
 
 ## Resources
 - OpenCV documentation

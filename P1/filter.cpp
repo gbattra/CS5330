@@ -49,6 +49,7 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
             vtmp[0] = 0;
             vtmp[1] = 0;
             vtmp[2] = 0;
+
             for (int k = 0; k < BLUR_FILTER_SIZE; k++)
             {
                 // horizontal
@@ -81,4 +82,14 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
     }
 
     return SUCCESS_CODE;
+}
+
+int sobolX3x3(cv::Mat &src, cv::Mat &dst)
+{
+
+}
+
+int sobolY3x3(cv::Mat &src, cv::Mat &dst)
+{
+    
 }
