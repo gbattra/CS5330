@@ -8,7 +8,7 @@ CS 5330 Prof. Maxwell
 
 ## Examples
 
-### Grayscale
+### Part 3: Grayscale
 
 **Before:**
 <br>
@@ -20,7 +20,7 @@ CS 5330 Prof. Maxwell
 <br>
 <img src="images/examples/gs_after.jpg"/>
 
-### Gaussian Filter
+### Part 4: Gaussian Filter
 
 **Before:**
 <br>
@@ -32,7 +32,7 @@ CS 5330 Prof. Maxwell
 <br>
 <img src="images/examples/blur_after.jpg"/>
 
-### Blur Quantize
+### Part 7: Blur Quantize
 
 **Before:**
 <br>
@@ -44,10 +44,7 @@ CS 5330 Prof. Maxwell
 <br>
 <img src="images/examples/bq_after.jpg"/>
 
-
-## Extensions
-
-### Negative
+### Part 9: Negative
 
 **Before:**
 <br>
@@ -58,6 +55,9 @@ CS 5330 Prof. Maxwell
 **After**
 <br>
 <img src="images/examples/negative_after.jpg"/>
+
+
+## Extensions
 
 ## Reflection
 - talk about memory issue with gaussian
