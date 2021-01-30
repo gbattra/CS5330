@@ -41,6 +41,13 @@ Press `q` to exit the program.
 Usage: `$ ./VidDisplay`
 
 This will open up a video stream, pausing at each frame and allowing the user to execute commands on that frame via keystrokes. Below are the available keystrokes:
-- `s` - Saves the frame to an image file in `images/saved`
-- `g` - Converts the image to grayscale. The user may press `s` to save this grayscale image. Otherwise press any key to continue.
-- `b` - Blurs the image using a 5x5 (1x5 seperable) Gaussian filter. Again press `s` to save the image. Otherwise any key to continue.
+- `s` - Saves the frame to an image file in `images/saved`.
+
+Filter commands:
+- `g` - Converts the image to grayscale.
+- `b` - Blurs the image using a 5x5 (1x5 seperable) Gaussian filter.
+- `x` - Applies a SobelX filter to the image.
+- `y` - Applies a SobelY filter to the image.
+- `l` - Blurs and quantizes the image.
+- `n` - Produces a negative of the image.
+ (**Note:** Press `s` after applying a filter to save the image. Or press any key to continue.)
