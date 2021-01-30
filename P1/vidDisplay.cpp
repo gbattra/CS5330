@@ -58,6 +58,21 @@ bool process_keystroke(char key, cv::Mat *frame)
 
         cv::destroyWindow("SobolY");
     }
+    if (key == 'l')
+    {
+        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        blurQuantize(*frame, *dst, 15);
+        cv::namedWindow("Blur Quantize", 1);
+        cv::imshow("Blur Quantize", *dst);
+
+        int skey = cv::waitKey(0);
+        if (skey == 's')
+        {
+            return save_frame(dst);
+        }
+
+        cv::destroyWindow("Blur Quantize");
+    }
 
     return true;
 }

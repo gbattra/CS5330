@@ -150,3 +150,21 @@ int sobelY3x3(cv::Mat &src, cv::Mat &dst)
     int vert_filter[SOBEL_FILTER_SIZE] = {1, 0, -1};
     return apply_sobel(src, dst, horiz_filter, vert_filter, SOBEL_FILTER_SIZE);
 }
+
+int blurQuantize(cv::Mat &src, cv::Mat &dst, int levels)
+{
+    blur5x5(src, dst);
+ 
+    int b = 255/levels;
+    for (int r = 0; r < src.rows; r++)
+    {
+        for (int c = 0; c < src.cols; c++)
+        {
+            dst.ptr<uchar>(r)[c * 3 + 0] = (dst.ptr<uchar>(r)[c * 3 + 0] / b) * b;
+            dst.ptr<uchar>(r)[c * 3 + 1] = (dst.ptr<uchar>(r)[c * 3 + 1] / b) * b;
+            dst.ptr<uchar>(r)[c * 3 + 2] = (dst.ptr<uchar>(r)[c * 3 + 2] / b) * b;
+        }
+    }
+
+    return SUCCESS_CODE;
+}
