@@ -10,8 +10,6 @@ CS 5330 Prof. Maxwell
 
 ### Grayscale
 
-Below are the before and after images for **Part 3**, in which the program is to convert the color scheme of the original image to grayscale:
-
 **Before:**
 <br>
 <img src="images/examples/gs_before.jpg"/>
@@ -21,6 +19,19 @@ Below are the before and after images for **Part 3**, in which the program is to
 **After**
 <br>
 <img src="images/examples/gs_after.jpg"/>
+
+### Gaussian Filter
+
+**Before:**
+<br>
+<img src="images/examples/blur_before.jpg"/>
+
+<br>
+
+**After**
+<br>
+<img src="images/examples/blur_after.jpg"/>
+
 
 ## Extensions
 
