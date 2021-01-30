@@ -168,3 +168,16 @@ int blurQuantize(cv::Mat &src, cv::Mat &dst, int levels)
 
     return SUCCESS_CODE;
 }
+
+int negative(cv::Mat &src, cv::Mat &dst)
+{
+    for (int r = 0; r < src.rows; r++)
+    {
+        for (int c = 0; c < src.cols; c++)
+        {
+            dst.ptr<uchar>(r)[c * 3 + 0] = 255 - src.ptr<uchar>(r)[c * 3 + 0];
+            dst.ptr<uchar>(r)[c * 3 + 1] = 255 - src.ptr<uchar>(r)[c * 3 + 1];
+            dst.ptr<uchar>(r)[c * 3 + 2] = 255 - src.ptr<uchar>(r)[c * 3 + 2];
+        }
+    }
+}

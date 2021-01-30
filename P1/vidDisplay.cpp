@@ -18,6 +18,7 @@ bool process_keystroke(char key, cv::Mat *frame)
     if (key == 'b')
     {
         cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        blur5x5(*frame, *dst);
         cv::namedWindow("Gaussian", 1);
         cv::imshow("Gaussian", *dst);
 
@@ -72,6 +73,21 @@ bool process_keystroke(char key, cv::Mat *frame)
         }
 
         cv::destroyWindow("Blur Quantize");
+    }
+    if (key == 'n')
+    {
+        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        negative(*frame, *dst);
+        cv::namedWindow("Negative", 1);
+        cv::imshow("Negative", *dst);
+
+        int skey = cv::waitKey(0);
+        if (skey == 's')
+        {
+            return save_frame(dst);
+        }
+
+        cv::destroyWindow("Negative");
     }
 
     return true;
