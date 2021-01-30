@@ -47,6 +47,18 @@ CS 5330 Prof. Maxwell
 
 ## Extensions
 
+### Negative
+
+**Before:**
+<br>
+<img src="images/examples/negative_before.jpg"/>
+
+<br>
+
+**After**
+<br>
+<img src="images/examples/negative_after.jpg"/>
+
 ## Reflection
 - talk about memory issue with gaussian
 

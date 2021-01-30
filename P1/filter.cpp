@@ -180,4 +180,6 @@ int negative(cv::Mat &src, cv::Mat &dst)
             dst.ptr<uchar>(r)[c * 3 + 2] = 255 - src.ptr<uchar>(r)[c * 3 + 2];
         }
     }
+
+    return SUCCESS_CODE;
 }
