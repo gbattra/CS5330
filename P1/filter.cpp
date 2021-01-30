@@ -3,7 +3,7 @@
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
-#define BLURR_FILTER_SIZE 5
+#define BLUR_FILTER_SIZE 5
 #define NUM_CHANNELS 3
 
 bool save_frame(cv::Mat *frame)
@@ -33,8 +33,8 @@ bool grayscale(cv::Mat *frame)
 
 int blur5x5(cv::Mat &src, cv::Mat &dst)
 {
-    int filter[BLURR_FILTER_SIZE] = {1, 2, 4, 2, 1};
-    int center_k = BLURR_FILTER_SIZE / 2;
+    int filter[BLUR_FILTER_SIZE] = {1, 2, 4, 2, 1};
+    int center_k = BLUR_FILTER_SIZE / 2;
 
     for (int r = 0; r < src.rows; r++)
     {
@@ -49,7 +49,7 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
             vtmp[0] = 0;
             vtmp[1] = 0;
             vtmp[2] = 0;
-            for (int k = 0; k < BLURR_FILTER_SIZE; k++)
+            for (int k = 0; k < BLUR_FILTER_SIZE; k++)
             {
                 // horizontal
                 int col = c - (center_k - k);
