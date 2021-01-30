@@ -51,7 +51,7 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
             vtmp[2] = 0;
             for (int k = 0; k < BLURR_FILTER_SIZE; k++)
             {
-                // vertical
+                // horizontal
                 int col = c - (center_k - k);
                 if (col < 0 || col > src.cols - 1)
                 {
@@ -62,7 +62,7 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
                 htmp[1] += src.ptr<uchar>(r)[col * 3 + 1] * filter[k] / 10;
                 htmp[2] += src.ptr<uchar>(r)[col * 3 + 2] * filter[k] / 10;
                 
-                // horizontal
+                // vertical
                 int row = r - (center_k - k);
                 if (row < 0 || row > src.rows - 1)
                 {
