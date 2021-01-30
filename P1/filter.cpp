@@ -41,46 +41,44 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
         for (int c = 0; c < src.cols; c++)
         {
             uchar *htmp = new uchar;
+            htmp[0] = 0;
+            htmp[1] = 0;
+            htmp[2] = 0;
             // horizontal
             for (int k = 0; k < BLURR_FILTER_SIZE; k++)
             {
                 int col = c - (center_k - k);
-                if (col < 0)
-                {
-                    col = c;
-                }
-                if (col > src.cols - 1)
+                if (col < 0 || col > src.cols - 1)
                 {
                     col = c;
                 }
 
-                htmp[0] += src.ptr<uchar>(r, col * 3)[0] * filter[k] / 10;
-                htmp[1] += src.ptr<uchar>(r, col * 3)[1] * filter[k] / 10;
-                htmp[2] += src.ptr<uchar>(r, col * 3)[2] * filter[k] / 10;
+                htmp[0] += src.ptr<uchar>(r)[col * 3 + 0] * filter[k] / 10;
+                htmp[1] += src.ptr<uchar>(r)[col * 3 + 1] * filter[k] / 10;
+                htmp[2] += src.ptr<uchar>(r)[col * 3 + 2] * filter[k] / 10;
             }
 
             // vertical
             uchar *vtmp = new uchar;
+            vtmp[0] = 0;
+            vtmp[1] = 0;
+            vtmp[2] = 0;
             for (int k = 0; k < BLURR_FILTER_SIZE; k++)
             {
                 int row = r - (center_k - k);
-                if (row < 0)
-                {
-                    row = r;
-                }
-                if (row > src.rows - 1)
+                if (row < 0 || row > src.rows - 1)
                 {
                     row = r;
                 }
 
-                vtmp[0] += src.ptr<uchar>(row, c * 3)[0] * filter[k] / 10;
-                vtmp[1] += src.ptr<uchar>(row, c * 3)[1] * filter[k] / 10;
-                vtmp[2] += src.ptr<uchar>(row, c * 3)[2] * filter[k] / 10;
+                vtmp[0] += src.ptr<uchar>(row)[c * 3 + 0] * filter[k] / 10;
+                vtmp[1] += src.ptr<uchar>(row)[c * 3 + 1] * filter[k] / 10;
+                vtmp[2] += src.ptr<uchar>(row)[c * 3 + 2] * filter[k] / 10;
             }
 
-            dst.ptr<uchar>(r, c * 3)[0] = (htmp[0] + vtmp[0]) / 2;
-            dst.ptr<uchar>(r, c * 3)[1] = (htmp[1] + vtmp[1]) / 2;
-            dst.ptr<uchar>(r, c * 3)[2] = (htmp[2] + vtmp[2]) / 2;
+            dst.ptr<uchar>(r)[c * 3 + 0] = (htmp[0] + vtmp[0]) / 2;
+            dst.ptr<uchar>(r)[c * 3 + 1] = (htmp[1] + vtmp[1]) / 2;
+            dst.ptr<uchar>(r)[c * 3 + 2] = (htmp[2] + vtmp[2]) / 2;
         }
     }
 

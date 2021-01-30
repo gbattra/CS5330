@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
+#include "filter.cpp"
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0

@@ -17,10 +17,16 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'b')
     {
-        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        blur5x5(*frame, *dst);
+        cv::Mat dst = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        blur5x5(*frame, dst);
         cv::namedWindow("Gaussian", 1);
-        cv::imshow("Gaussian", *dst);
+        cv::imshow("Gaussian", dst);
+
+        int key = cv::waitKey(0);
+        if (key == 's')
+        {
+            return save_frame(&dst);
+        }
     }
 
     return true;
