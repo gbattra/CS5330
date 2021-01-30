@@ -1,33 +1,9 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
+#include "filter.cpp"
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
-
-bool save_frame(cv::Mat *frame)
-{
-    return cv::imwrite(
-        "images/saved/" + std::to_string(std::time(0)) + ".jpg",
-        *frame);
-}
-
-bool grayscale(cv::Mat *frame)
-{
-    cv::namedWindow("Grayscale", 1);
-
-    cv::Mat gs_image;
-    cv::cvtColor(*frame, gs_image, cv::COLOR_BGR2GRAY);
-
-    cv::imshow("Grayscale", gs_image);
-
-    int key = cv::waitKey(0);
-    if (key == 's')
-    {
-        return save_frame(&gs_image);
-    }
-
-    return true;
-}
 
 bool process_keystroke(char key, cv::Mat *frame)
 {
@@ -38,6 +14,13 @@ bool process_keystroke(char key, cv::Mat *frame)
     if (key == 'g')
     {
         return grayscale(frame);
+    }
+    if (key == 'b')
+    {
+        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        blur5x5(*frame, *dst);
+        cv::namedWindow("Gaussian", 1);
+        cv::imshow("Gaussian", *dst);
     }
 
     return true;

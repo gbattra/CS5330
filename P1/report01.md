@@ -1,8 +1,6 @@
 # Project 1 Report
-
-### Greg Attra
-
-### CS 5330 Prof. Maxwell
+Greg Attra <br>
+CS 5330 Prof. Maxwell
 
 ---
 
