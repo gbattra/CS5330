@@ -44,6 +44,20 @@ bool process_keystroke(char key, cv::Mat *frame)
         }
         cv::destroyWindow("SobolX");
     }
+    if (key == 'y')
+    {
+        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, CV_16SC3, 0.0);
+        sobelY3x3(*frame, *dst);
+        cv::namedWindow("SobolX", 1);
+        cv::imshow("SobolX", *dst);
+
+        int skey = cv::waitKey(0);
+        if (skey == 's')
+        {
+            return save_frame(dst);
+        }
+        cv::destroyWindow("SobolX");
+    }
     if (key == 'l')
     {
         cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);

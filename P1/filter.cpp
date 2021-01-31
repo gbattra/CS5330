@@ -109,7 +109,7 @@ int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter,
                 int col = c - (center_k - k);
                 if (col < 0 || col > src.cols - 1)
                 {
-                    col = c;
+                    continue;
                 }
 
                 htmp[0] += src.ptr<uchar>(r)[col * 3 + 0] * horiz_filter[k] / 4;
@@ -120,7 +120,7 @@ int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter,
                 int row = r - (center_k - k);
                 if (row < 0 || row > src.rows - 1)
                 {
-                    row = r;
+                    continue;
                 }
 
                 vtmp[0] += src.ptr<uchar>(row)[c * 3 + 0] * vert_filter[k] / 4;
