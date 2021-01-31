@@ -21,11 +21,8 @@ int main(int argc, char** argv)
         return ERROR_CODE;
     }
 
-    cv::Mat *dst = new cv::Mat(img.rows, img.cols, img.type(), 0.0);
-    negative(img, *dst);
-
     cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE);
-    cv::imshow("Display Image", *dst);
+    cv::imshow("Display Image", img);
 
     while(1)
     {
@@ -37,7 +34,7 @@ int main(int argc, char** argv)
 
         if (key == 's')
         {
-            save_frame(dst);
+            save_frame(&img);
         }
     }
 

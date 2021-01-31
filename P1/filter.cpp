@@ -92,12 +92,12 @@ int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter,
     {
         for (int c = 0; c < src.cols; c++)
         {
-            uchar *htmp = new uchar;
+            ushort *htmp = new ushort;
             htmp[0] = 0;
             htmp[1] = 0;
             htmp[2] = 0;
 
-            uchar *vtmp = new uchar;
+            ushort *vtmp = new ushort;
             vtmp[0] = 0;
             vtmp[1] = 0;
             vtmp[2] = 0;
@@ -128,9 +128,9 @@ int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter,
                 vtmp[2] += src.ptr<uchar>(row)[c * 3 + 2] * vert_filter[k] / 4;
             }
 
-            dst.ptr<uchar>(r)[c * 3 + 0] = (htmp[0] + vtmp[0]) / 2;
-            dst.ptr<uchar>(r)[c * 3 + 1] = (htmp[1] + vtmp[1]) / 2;
-            dst.ptr<uchar>(r)[c * 3 + 2] = (htmp[2] + vtmp[2]) / 2;
+            dst.ptr<ushort>(r)[c * 3 + 0] = (htmp[0] + vtmp[0]) / 2;
+            dst.ptr<ushort>(r)[c * 3 + 1] = (htmp[1] + vtmp[1]) / 2;
+            dst.ptr<ushort>(r)[c * 3 + 2] = (htmp[2] + vtmp[2]) / 2;
         }
     }
 

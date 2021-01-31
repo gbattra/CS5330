@@ -32,7 +32,7 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'x')
     {
-        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, CV_16SC3, 0.0);
         sobelX3x3(*frame, *dst);
         cv::namedWindow("SobolX", 1);
         cv::imshow("SobolX", *dst);
@@ -43,21 +43,6 @@ bool process_keystroke(char key, cv::Mat *frame)
             return save_frame(dst);
         }
         cv::destroyWindow("SobolX");
-    }
-    if (key == 'y')
-    {
-        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        sobelY3x3(*frame, *dst);
-        cv::namedWindow("SobolY", 1);
-        cv::imshow("SobolY", *dst);
-
-        int skey = cv::waitKey(0);
-        if (skey == 's')
-        {
-            return save_frame(dst);
-        }
-
-        cv::destroyWindow("SobolY");
     }
     if (key == 'l')
     {
