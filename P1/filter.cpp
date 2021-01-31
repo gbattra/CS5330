@@ -9,7 +9,7 @@
 bool save_frame(cv::Mat *frame)
 {
     return cv::imwrite(
-        "images/saved/" + std::to_string(std::time(0)) + ".jpg",
+        "images/saved/" + std::to_string(std::time(0)) + ".png",
         *frame);
 }
 

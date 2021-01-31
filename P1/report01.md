@@ -32,6 +32,25 @@ CS 5330 Prof. Maxwell
 <br>
 <img src="images/examples/blur_after.jpg"/>
 
+### Part 5: Sobel Filter
+**B&W:**
+<br>
+
+**Before:**
+<br>
+<img src="images/examples/sudoku.jpeg"/>
+
+<br>
+
+**After**
+*Sobel X*
+<br>
+<img src="images/examples/sobelX_after.jpg"/>
+
+*Sobel Y*
+<br>
+<img src="images/examples/sobelY_after.jpg"/>
+
 ### Part 7: Blur Quantize
 
 **Before:**
@@ -60,7 +79,8 @@ CS 5330 Prof. Maxwell
 ## Extensions
 
 ## Reflection
-- talk about memory issue with gaussian
+- memory issue with gaussian
+- type in open cv: CV_16S -> CV_16SC3
 
 ## Resources
 - OpenCV documentation
