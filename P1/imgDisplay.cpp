@@ -5,6 +5,14 @@
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
 
+
+bool save_frame(cv::Mat *frame)
+{
+    return cv::imwrite(
+        "images/saved/" + std::to_string(std::time(0)) + ".png",
+        *frame);
+}
+
 int main(int argc, char** argv)
 {
     if (argc != 2)

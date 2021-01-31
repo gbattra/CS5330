@@ -5,6 +5,14 @@
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
 
+
+bool save_frame(cv::Mat *frame)
+{
+    return cv::imwrite(
+        "images/saved/" + std::to_string(std::time(0)) + ".png",
+        *frame);
+}
+
 bool process_keystroke(char key, cv::Mat *frame)
 {
     if (key == 's')
@@ -13,7 +21,19 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'g')
     {
-        return grayscale(frame);
+        cv::Mat *gs_image = grayscale(frame);
+        cv::namedWindow("Grayscale", 1);
+        cv::imshow("Grayscale", *gs_image);
+
+        int key = cv::waitKey(0);
+        if (key == 's')
+        {
+            return save_frame(gs_image);
+        }
+
+        cv::destroyWindow("Grayscale");
+
+        return true;
     }
     if (key == 'b')
     {
@@ -47,20 +67,33 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'y')
     {
-        cv::Mat *img = sobel(frame, 'y');
+        cv::Mat img = frame->clone();
+        cv::Sobel(*frame, img, 0, 0, 1);
+        // cv::Mat *img = sobel(frame, 'y');
         cv::namedWindow("Sobel Y", 1);
-        cv::imshow("Sobel Y", *img);
+        cv::imshow("Sobel Y", img);
+
+        int skey = cv::waitKey(0);
+        if (skey == 's')
+        {
+            save_frame(&img);
+        }
+        cv::destroyWindow("Sobel Y");
+        return true;
+    }
+    if (key == 'm')
+    {
+        cv::Mat *img = magnitude_filter(frame);
+        cv::namedWindow("Magnitude", 1);
+        cv::imshow("Magnitude", *img);
 
         int skey = cv::waitKey(0);
         if (skey == 's')
         {
             save_frame(img);
         }
-        cv::destroyWindow("Sobel Y");
-    }
-    if (key == 'm')
-    {
-        cv::Mat *img = magnitude_filter(frame);
+        cv::destroyWindow("Magnitude");
+        return true;
     }
     if (key == 'l')
     {
@@ -76,6 +109,7 @@ bool process_keystroke(char key, cv::Mat *frame)
         }
 
         cv::destroyWindow("Blur Quantize");
+        return true;
     }
     if (key == 'n')
     {
@@ -91,6 +125,7 @@ bool process_keystroke(char key, cv::Mat *frame)
         }
 
         cv::destroyWindow("Negative");
+        return true;
     }
 
     return true;
