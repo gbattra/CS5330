@@ -17,18 +17,50 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'b')
     {
-        gaussian(frame);
+        cv::Mat *img = gaussian(frame);
+        cv::namedWindow("Gaussian", 1);
+        cv::imshow("Gaussian", *img);
+
+        int skey = cv::waitKey(0);
+        if (skey == 's')
+        {
+            return save_frame(img);
+        }
+
+        cv::destroyWindow("Gaussian");
+        return true;
     }
     if (key == 'x')
     {
-        sobel(frame, 'x');
+        cv::Mat *img = sobel(frame, 'x');
+        cv::namedWindow("Sobel X", 1);
+        cv::imshow("Sobel X", *img);
+
+        int skey = cv::waitKey(0);
+        if (skey == 's')
+        {
+            return save_frame(img);
+        }
+        cv::destroyWindow("Sobel");
+        
+        return true;
     }
     if (key == 'y')
     {
-        sobel(frame, 'y');
+        cv::Mat *img = sobel(frame, 'y');
+        cv::namedWindow("Sobel Y", 1);
+        cv::imshow("Sobel Y", *img);
+
+        int skey = cv::waitKey(0);
+        if (skey == 's')
+        {
+            save_frame(img);
+        }
+        cv::destroyWindow("Sobel Y");
     }
     if (key == 'm')
     {
+        cv::Mat *img = magnitude_filter(frame);
     }
     if (key == 'l')
     {

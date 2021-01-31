@@ -151,7 +151,7 @@ int sobelY3x3(cv::Mat &src, cv::Mat &dst)
     return apply_sobel(src, dst, horiz_filter, vert_filter, SOBEL_FILTER_SIZE);
 }
 
-void sobel(cv::Mat *src, char dim)
+cv::Mat * sobel(cv::Mat *src, char dim)
 {
     cv::Mat *dst = new cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
     if (dim == 'x')
@@ -163,36 +163,30 @@ void sobel(cv::Mat *src, char dim)
         sobelY3x3(*src, *dst);
     }
 
-    cv::namedWindow("Sobel", 1);
-    cv::imshow("Sobel", *dst);
-
-    int skey = cv::waitKey(0);
-    if (skey == 's')
-    {
-        save_frame(dst);
-    }
-    cv::destroyWindow("Sobel");
+    return dst;
 }
 
-void gaussian(cv::Mat *src)
+cv::Mat * gaussian(cv::Mat *src)
 {
     cv::Mat *dst = new cv::Mat(src->rows, src->cols, src->type(), 0.0);
     blur5x5(*src, *dst);
-    cv::namedWindow("Gaussian", 1);
-    cv::imshow("Gaussian", *dst);
 
-    int skey = cv::waitKey(0);
-    if (skey == 's')
-    {
-        save_frame(dst);
-    }
-
-    cv::destroyWindow("Gaussian");
+    return dst;
 }
 
 int magnitude(cv::Mat &sx, cv::Mat &sy, cv::Mat &dst)
 {
 
+}
+
+cv::Mat * magnitude_filter(cv::Mat *src)
+{
+    cv::Mat *sx = sobel(src, 'x');
+    cv::Mat *sy = sobel(src, 'y');
+    cv::Mat *dst = new cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
+    magnitude(*sx, *sy, *dst);
+
+    return dst;
 }
 
 int blurQuantize(cv::Mat &src, cv::Mat &dst, int levels)
