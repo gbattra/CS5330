@@ -42,7 +42,9 @@ CS 5330 Prof. Maxwell
 
 <br>
 
-**After**
+**After:**
+<br>
+
 *Sobel X*
 <br>
 <img src="images/examples/sobelX_after.jpg"/>

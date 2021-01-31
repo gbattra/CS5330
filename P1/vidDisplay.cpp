@@ -17,46 +17,18 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'b')
     {
-        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        blur5x5(*frame, *dst);
-        cv::namedWindow("Gaussian", 1);
-        cv::imshow("Gaussian", *dst);
-
-        int skey = cv::waitKey(0);
-        if (skey == 's')
-        {
-            return save_frame(dst);
-        }
-
-        cv::destroyWindow("Gaussian");
+        gaussian(frame);
     }
     if (key == 'x')
     {
-        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, CV_16SC3, 0.0);
-        sobelX3x3(*frame, *dst);
-        cv::namedWindow("SobolX", 1);
-        cv::imshow("SobolX", *dst);
-
-        int skey = cv::waitKey(0);
-        if (skey == 's')
-        {
-            return save_frame(dst);
-        }
-        cv::destroyWindow("SobolX");
+        sobel(frame, 'x');
     }
     if (key == 'y')
     {
-        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, CV_16SC3, 0.0);
-        sobelY3x3(*frame, *dst);
-        cv::namedWindow("SobolX", 1);
-        cv::imshow("SobolX", *dst);
-
-        int skey = cv::waitKey(0);
-        if (skey == 's')
-        {
-            return save_frame(dst);
-        }
-        cv::destroyWindow("SobolX");
+        sobel(frame, 'y');
+    }
+    if (key == 'm')
+    {
     }
     if (key == 'l')
     {
