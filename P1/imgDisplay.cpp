@@ -29,10 +29,8 @@ int main(int argc, char** argv)
         return ERROR_CODE;
     }
 
-    cv::Mat *dst = new cv::Mat(img.rows, img.cols, CV_16SC3, 0.0);
-    sobelX3x3(img, *dst);
-    cv::Mat cimg = cv::Mat(img.rows, img.cols, img.type(), 0.0);
-    convert_to_uchar(dst, &cimg);
+    cv::Mat *dst = new cv::Mat(img.rows, img.cols, img.type(), 0.0);
+    magnitude_filter(&img, dst);
 
     cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE);
     cv::imshow("Display Image", *dst);
