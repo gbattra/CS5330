@@ -64,7 +64,7 @@ bool process_keystroke(char key, cv::Mat *frame)
         {
             return save_frame(&img);
         }
-        cv::destroyWindow("Sobel");
+        cv::destroyWindow("Sobel X");
         
         return true;
     }

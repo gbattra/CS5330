@@ -103,9 +103,9 @@ int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter,
                 vtmp[2] += src.ptr<uchar>(row)[c * 3 + 2] * vert_filter[k];
             }
 
-            dst.ptr<short>(r)[c * 3 + 0] = (htmp[0] + vtmp[0]) / 4;
-            dst.ptr<short>(r)[c * 3 + 1] = (htmp[1] + vtmp[1]) / 4;
-            dst.ptr<short>(r)[c * 3 + 2] = (htmp[2] + vtmp[2]) / 4;
+            dst.ptr<short>(r)[c * 3 + 0] = (htmp[0] * vtmp[0]) / 8;
+            dst.ptr<short>(r)[c * 3 + 1] = (htmp[1] * vtmp[1]) / 8;
+            dst.ptr<short>(r)[c * 3 + 2] = (htmp[2] * vtmp[2]) / 8;
         }
     }
 
