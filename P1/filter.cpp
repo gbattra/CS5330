@@ -262,3 +262,23 @@ int cartoon(cv::Mat &src, cv::Mat &dst, int levels, int magThreshold)
 
     return SUCCESS_CODE;
 }
+
+void orientation(cv::Mat *src, cv::Mat *dst)
+{
+    cv::Mat sx = cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
+    cv::Mat sy = cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
+    sobel(src, &sx, 'x');
+    sobel(src, &sy, 'y');
+    // cv::Canny(sx, sy, *dst, 0, 15);
+    for (int r = 0; r < sx.rows; r++)
+    {
+        for (int c = 0; c < sx.cols; c++)
+        {
+            short *pixel_sx = &sx.ptr<short>(r)[c * 3];
+            short *pixel_sy = &sy.ptr<short>(r)[c * 3];
+            dst->ptr<short>(r)[3 * c + 0] = atan2(-pixel_sy[0], pixel_sx[0]) * 180 / 3.14159365;
+            dst->ptr<short>(r)[3 * c + 1] = atan2(-pixel_sy[1], pixel_sx[1]) * 180 / 3.14159365;
+            dst->ptr<short>(r)[3 * c + 2] = atan2(-pixel_sy[2], pixel_sx[2]) * 180 / 3.14159365;
+        }
+    }
+}

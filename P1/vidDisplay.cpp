@@ -154,6 +154,22 @@ bool process_keystroke(char key, cv::Mat *frame)
         cv::destroyWindow("Cartoon");
         return true;
     }
+    if (key == 'o')
+    {
+        cv::Mat dst = cv::Mat(frame->rows, frame->cols, CV_16SC3, 0.0);
+        orientation(frame, &dst);
+        cv::namedWindow("Cartoon", 1);
+        cv::imshow("Cartoon", dst);
+
+        int skey = cv::waitKey(0);
+        if (skey == 's')
+        {
+            return save_frame(&dst);
+        }
+
+        cv::destroyWindow("Cartoon");
+        return true;
+    }
 
     return true;
 }
