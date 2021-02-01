@@ -30,7 +30,7 @@ int main(int argc, char** argv)
     }
 
     cv::Mat dst = cv::Mat(img.rows, img.cols, img.type(), 0.0);
-    blurQuantize(img, dst, 15);
+    cartoon(img, dst, 15, 15);
 
     cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE);
     cv::imshow("Display Image", dst);

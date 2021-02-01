@@ -58,7 +58,7 @@ bool process_keystroke(char key, cv::Mat *frame)
         sobel(frame, &img, 'x');
 
         cv::Mat cimg = cv::Mat(img.rows, img.cols, frame->type(), 0.0);
-        convert_to_uchar(&img, &cimg);
+        convertToUchar(&img, &cimg);
 
         cv::namedWindow("Sobel X", 1);
         cv::imshow("Sobel X", cimg);
@@ -78,7 +78,7 @@ bool process_keystroke(char key, cv::Mat *frame)
         sobel(frame, &img, 'y');
 
         cv::Mat cimg = cv::Mat(img.rows, img.cols, frame->type(), 0.0);
-        convert_to_uchar(&img, &cimg);
+        convertToUchar(&img, &cimg);
 
         cv::namedWindow("Sobel Y", 1);
         cv::imshow("Sobel Y", cimg);
@@ -94,7 +94,7 @@ bool process_keystroke(char key, cv::Mat *frame)
     if (key == 'm')
     {
         cv::Mat img = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        magnitude_filter(frame, &img);
+        magnitudeFilter(frame, &img);
         cv::namedWindow("Magnitude", 1);
         cv::imshow("Magnitude", img);
 
@@ -108,15 +108,15 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'l')
     {
-        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        blurQuantize(*frame, *dst, 15);
+        cv::Mat dst = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        blurQuantize(*frame, dst, 15);
         cv::namedWindow("Blur Quantize", 1);
-        cv::imshow("Blur Quantize", *dst);
+        cv::imshow("Blur Quantize", dst);
 
         int skey = cv::waitKey(0);
         if (skey == 's')
         {
-            return save_frame(dst);
+            return save_frame(&dst);
         }
 
         cv::destroyWindow("Blur Quantize");
@@ -124,18 +124,34 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'n')
     {
-        cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        negative(*frame, *dst);
+        cv::Mat dst = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        negative(*frame, dst);
         cv::namedWindow("Negative", 1);
-        cv::imshow("Negative", *dst);
+        cv::imshow("Negative", dst);
 
         int skey = cv::waitKey(0);
         if (skey == 's')
         {
-            return save_frame(dst);
+            return save_frame(&dst);
         }
 
         cv::destroyWindow("Negative");
+        return true;
+    }
+    if (key == 'c')
+    {
+        cv::Mat dst = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        cartoon(*frame, dst, 15, 15);
+        cv::namedWindow("Cartoon", 1);
+        cv::imshow("Cartoon", dst);
+
+        int skey = cv::waitKey(0);
+        if (skey == 's')
+        {
+            return save_frame(&dst);
+        }
+
+        cv::destroyWindow("Cartoon");
         return true;
     }
 

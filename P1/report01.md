@@ -46,6 +46,16 @@ CS 5330 Prof. Maxwell
 <br>
 <img src="images/examples/sobelY_after.png"/>
 
+### Part 6: Gradient Magnitude
+
+**Before:**
+<br>
+<img src="images/examples/sudoku.jpeg"/>
+
+**After**
+<br>
+<img src="images/examples/magnitude_after.png"/>
+
 ### Part 7: Blur Quantize
 
 **Before:**
@@ -58,15 +68,17 @@ CS 5330 Prof. Maxwell
 <br>
 <img src="images/examples/bq_after.png"/>
 
-### Part 8: Gradient Magnitude
+### Part 8: Cartoon
 
 **Before:**
 <br>
-<img src="images/examples/sudoku.jpeg"/>
+<img src="images/examples/building.jpeg"/>
+
+<br>
 
 **After**
 <br>
-<img src="images/examples/magnitude_after.png"/>
+<img src="images/examples/cartoon_after.png"/>
 
 ### Part 9: Negative
 

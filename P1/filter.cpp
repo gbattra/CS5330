@@ -6,7 +6,7 @@
 #define BLUR_FILTER_SIZE 5
 #define SOBEL_FILTER_SIZE 3
 
-void convert_to_uchar(cv::Mat *src, cv::Mat *dst)
+void convertToUchar(cv::Mat *src, cv::Mat *dst)
 {
     for (int r = 0; r < src->rows; r++)
     {
@@ -87,7 +87,7 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
     return SUCCESS_CODE;
 }
 
-int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter, int filter_size)
+int applySobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter, int filter_size)
 {
     cv::Mat tmp = cv::Mat(dst.rows, dst.cols, dst.type(), 0.0);
     for (int r = 0; r < src.rows; r++)
@@ -151,14 +151,14 @@ int sobelX3x3(cv::Mat &src, cv::Mat &dst)
 {
     int horiz_filter[SOBEL_FILTER_SIZE] = {-1, 0, 1};
     int vert_filter[SOBEL_FILTER_SIZE] = {1, 2, 1};
-    return apply_sobel(src, dst, horiz_filter, vert_filter, SOBEL_FILTER_SIZE);
+    return applySobel(src, dst, horiz_filter, vert_filter, SOBEL_FILTER_SIZE);
 }
 
 int sobelY3x3(cv::Mat &src, cv::Mat &dst)
 {
     int horiz_filter[SOBEL_FILTER_SIZE] = {1, 2, 1};
     int vert_filter[SOBEL_FILTER_SIZE] = {1, 0, -1};
-    return apply_sobel(src, dst, horiz_filter, vert_filter, SOBEL_FILTER_SIZE);
+    return applySobel(src, dst, horiz_filter, vert_filter, SOBEL_FILTER_SIZE);
 }
 
 void sobel(cv::Mat *src, cv::Mat *dst, char dim)
@@ -190,7 +190,7 @@ int magnitude(cv::Mat &sx, cv::Mat &sy, cv::Mat &dst)
     return SUCCESS_CODE;
 }
 
-void magnitude_filter(cv::Mat *src, cv::Mat *dst)
+void magnitudeFilter(cv::Mat *src, cv::Mat *dst)
 {
     cv::Mat sx = cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
     cv::Mat sy = cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
@@ -226,6 +226,37 @@ int negative(cv::Mat &src, cv::Mat &dst)
             dst.ptr<uchar>(r)[c * 3 + 0] = 255 - src.ptr<uchar>(r)[c * 3 + 0];
             dst.ptr<uchar>(r)[c * 3 + 1] = 255 - src.ptr<uchar>(r)[c * 3 + 1];
             dst.ptr<uchar>(r)[c * 3 + 2] = 255 - src.ptr<uchar>(r)[c * 3 + 2];
+        }
+    }
+
+    return SUCCESS_CODE;
+}
+
+int cartoon(cv::Mat &src, cv::Mat &dst, int levels, int magThreshold)
+{
+    cv::Mat grad_mag = cv::Mat(src.rows, src.cols, src.type(), 0.0);
+    magnitudeFilter(&src, &grad_mag);
+    blurQuantize(src, dst, levels);
+    for (int r = 0; r < dst.rows; r++)
+    {
+        uchar *drow = dst.ptr<uchar>(r);
+        uchar *gmrow = grad_mag.ptr<uchar>(r);
+        for (int c = 0; c < dst.cols; c++)
+        {
+            uchar *dpixel = &drow[c * 3];
+            uchar *gmpixel = &gmrow[c * 3];
+            if (gmpixel[0] > magThreshold)
+            {
+                dpixel[0] = 0;
+            }
+            if (gmpixel[1] > magThreshold)
+            {
+                dpixel[1] = 0;
+            }
+            if (gmpixel[2] > magThreshold)
+            {
+                dpixel[2] = 0;
+            }
         }
     }
 
