@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
-#include "filter.cpp"
+#include "filter.h"
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
@@ -29,11 +29,8 @@ int main(int argc, char** argv)
         return ERROR_CODE;
     }
 
-    cv::Mat dst = cv::Mat(img.rows, img.cols, img.type(), 0.0);
-    cartoon(img, dst, 15, 15);
-
     cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE);
-    cv::imshow("Display Image", dst);
+    cv::imshow("Display Image", img);
 
     while(1)
     {
@@ -45,7 +42,7 @@ int main(int argc, char** argv)
 
         if (key == 's')
         {
-            save_frame(&dst);
+            save_frame(&img);
         }
     }
 
