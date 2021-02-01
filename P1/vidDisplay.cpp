@@ -21,14 +21,15 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'g')
     {
-        cv::Mat *gs_image = grayscale(frame);
+        cv::Mat gs_image = cv::Mat(frame->rows, frame->cols, frame->type());
+        grayscale(frame, &gs_image);
         cv::namedWindow("Grayscale", 1);
-        cv::imshow("Grayscale", *gs_image);
+        cv::imshow("Grayscale", gs_image);
 
         int key = cv::waitKey(0);
         if (key == 's')
         {
-            return save_frame(gs_image);
+            return save_frame(&gs_image);
         }
 
         cv::destroyWindow("Grayscale");
@@ -37,14 +38,15 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'b')
     {
-        cv::Mat *img = gaussian(frame);
+        cv::Mat img = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        blur5x5(*frame, img);
         cv::namedWindow("Gaussian", 1);
-        cv::imshow("Gaussian", *img);
+        cv::imshow("Gaussian", img);
 
         int skey = cv::waitKey(0);
         if (skey == 's')
         {
-            return save_frame(img);
+            return save_frame(&img);
         }
 
         cv::destroyWindow("Gaussian");
@@ -52,14 +54,15 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'x')
     {
-        cv::Mat *img = sobel(frame, 'x');
+        cv::Mat img = cv::Mat(frame->rows, frame->cols, CV_16SC3, 0.0);
+        sobel(frame, &img, 'x');
         cv::namedWindow("Sobel X", 1);
-        cv::imshow("Sobel X", *img);
+        cv::imshow("Sobel X", img);
 
         int skey = cv::waitKey(0);
         if (skey == 's')
         {
-            return save_frame(img);
+            return save_frame(&img);
         }
         cv::destroyWindow("Sobel");
         
@@ -67,30 +70,30 @@ bool process_keystroke(char key, cv::Mat *frame)
     }
     if (key == 'y')
     {
-        cv::Mat img = frame->clone();
-        cv::Sobel(*frame, img, 0, 0, 1);
-        // cv::Mat *img = sobel(frame, 'y');
+        cv::Mat img = cv::Mat(frame->rows, frame->cols, CV_16SC3, 0.0);
+        sobel(frame, &img, 'y');
         cv::namedWindow("Sobel Y", 1);
         cv::imshow("Sobel Y", img);
 
         int skey = cv::waitKey(0);
         if (skey == 's')
         {
-            save_frame(&img);
+            return save_frame(&img);
         }
         cv::destroyWindow("Sobel Y");
         return true;
     }
     if (key == 'm')
     {
-        cv::Mat *img = magnitude_filter(frame);
+        cv::Mat img = cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
+        magnitude_filter(frame, &img);
         cv::namedWindow("Magnitude", 1);
-        cv::imshow("Magnitude", *img);
+        cv::imshow("Magnitude", img);
 
         int skey = cv::waitKey(0);
         if (skey == 's')
         {
-            save_frame(img);
+            return save_frame(&img);
         }
         cv::destroyWindow("Magnitude");
         return true;

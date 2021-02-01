@@ -6,11 +6,20 @@
 #define BLUR_FILTER_SIZE 5
 #define SOBEL_FILTER_SIZE 3
 
-cv::Mat * grayscale(cv::Mat *frame)
+void convert_to_uchar(cv::Mat *src, cv::Mat *dst)
 {
-    cv::Mat *gs_image = new cv::Mat(frame->rows, frame->cols, frame->type());
-    cv::cvtColor(*frame, *gs_image, cv::COLOR_BGR2GRAY);
-    return gs_image;
+    for (int r = 0; r < src->rows; r++)
+    {
+        for (int c = 0; c < src->cols; c++)
+        {
+            dst->ptr<uchar>(r)[c * 3 + 0] = (uchar) abs(src->ptr<short>(r)[c * 3 + 0]);
+        }
+    }
+}
+
+void grayscale(cv::Mat *src, cv::Mat *dst)
+{
+    cv::cvtColor(*src, *dst, cv::COLOR_BGR2GRAY);
 }
 
 int blur5x5(cv::Mat &src, cv::Mat &dst)
@@ -22,15 +31,8 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
     {
         for (int c = 0; c < src.cols; c++)
         {
-            uchar *htmp = new uchar;
-            htmp[0] = 0;
-            htmp[1] = 0;
-            htmp[2] = 0;
-
-            uchar *vtmp = new uchar;
-            vtmp[0] = 0;
-            vtmp[1] = 0;
-            vtmp[2] = 0;
+            uchar htmp[3] = {0, 0, 0};
+            uchar vtmp[3] = {0, 0, 0};
 
             for (int k = 0; k < BLUR_FILTER_SIZE; k++)
             {
@@ -72,15 +74,8 @@ int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter,
     {
         for (int c = 0; c < src.cols; c++)
         {
-            ushort *htmp = new ushort;
-            htmp[0] = 0;
-            htmp[1] = 0;
-            htmp[2] = 0;
-
-            ushort *vtmp = new ushort;
-            vtmp[0] = 0;
-            vtmp[1] = 0;
-            vtmp[2] = 0;
+            short htmp[3] = {0, 0, 0};
+            short vtmp[3] = {0, 0, 0};
 
             int center_k = filter_size / 2;
             for (int k = 0; k < SOBEL_FILTER_SIZE; k++)
@@ -92,9 +87,9 @@ int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter,
                     continue;
                 }
 
-                htmp[0] += (src.ptr<uchar>(r)[col * 3 + 0] * horiz_filter[k]) / 4;
-                htmp[1] += (src.ptr<uchar>(r)[col * 3 + 1] * horiz_filter[k]) / 4;
-                htmp[2] += (src.ptr<uchar>(r)[col * 3 + 2] * horiz_filter[k]) / 4;
+                htmp[0] += src.ptr<uchar>(r)[col * 3 + 0] * horiz_filter[k];
+                htmp[1] += src.ptr<uchar>(r)[col * 3 + 1] * horiz_filter[k];
+                htmp[2] += src.ptr<uchar>(r)[col * 3 + 2] * horiz_filter[k];
                 
                 // vertical
                 int row = r - (center_k - k);
@@ -103,14 +98,14 @@ int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter,
                     continue;
                 }
 
-                vtmp[0] += (src.ptr<uchar>(row)[c * 3 + 0] * vert_filter[k]) / 4;
-                vtmp[1] += (src.ptr<uchar>(row)[c * 3 + 1] * vert_filter[k]) / 4;
-                vtmp[2] += (src.ptr<uchar>(row)[c * 3 + 2] * vert_filter[k]) / 4;
+                vtmp[0] += src.ptr<uchar>(row)[c * 3 + 0] * vert_filter[k];
+                vtmp[1] += src.ptr<uchar>(row)[c * 3 + 1] * vert_filter[k];
+                vtmp[2] += src.ptr<uchar>(row)[c * 3 + 2] * vert_filter[k];
             }
 
-            dst.ptr<ushort>(r)[c * 3 + 0] = (htmp[0] + vtmp[0]) / 2;
-            dst.ptr<ushort>(r)[c * 3 + 1] = (htmp[1] + vtmp[1]) / 2;
-            dst.ptr<ushort>(r)[c * 3 + 2] = (htmp[2] + vtmp[2]) / 2;
+            dst.ptr<short>(r)[c * 3 + 0] = (htmp[0] + vtmp[0]) / 4;
+            dst.ptr<short>(r)[c * 3 + 1] = (htmp[1] + vtmp[1]) / 4;
+            dst.ptr<short>(r)[c * 3 + 2] = (htmp[2] + vtmp[2]) / 4;
         }
     }
 
@@ -131,9 +126,8 @@ int sobelY3x3(cv::Mat &src, cv::Mat &dst)
     return apply_sobel(src, dst, horiz_filter, vert_filter, SOBEL_FILTER_SIZE);
 }
 
-cv::Mat * sobel(cv::Mat *src, char dim)
+void sobel(cv::Mat *src, cv::Mat *dst, char dim)
 {
-    cv::Mat *dst = new cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
     if (dim == 'x')
     {
         sobelX3x3(*src, *dst);
@@ -142,16 +136,6 @@ cv::Mat * sobel(cv::Mat *src, char dim)
     {
         sobelY3x3(*src, *dst);
     }
-
-    return dst;
-}
-
-cv::Mat * gaussian(cv::Mat *src)
-{
-    cv::Mat *dst = new cv::Mat(src->rows, src->cols, src->type(), 0.0);
-    blur5x5(*src, *dst);
-
-    return dst;
 }
 
 int magnitude(cv::Mat &sx, cv::Mat &sy, cv::Mat &dst)
@@ -171,14 +155,13 @@ int magnitude(cv::Mat &sx, cv::Mat &sy, cv::Mat &dst)
     return SUCCESS_CODE;
 }
 
-cv::Mat * magnitude_filter(cv::Mat *src)
+void magnitude_filter(cv::Mat *src, cv::Mat *dst)
 {
-    cv::Mat *sx = sobel(src, 'x');
-    cv::Mat *sy = sobel(src, 'y');
-    cv::Mat *dst = new cv::Mat(src->rows, src->cols, src->type(), 0.0);
-    magnitude(*sx, *sy, *dst);
-
-    return dst;
+    cv::Mat sx = cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
+    cv::Mat sy = cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
+    sobel(src, &sx, 'x');
+    sobel(src, &sy, 'y');
+    magnitude(sx, sy, *dst);
 }
 
 int blurQuantize(cv::Mat &src, cv::Mat &dst, int levels)
