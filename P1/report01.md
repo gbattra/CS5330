@@ -36,23 +36,23 @@ CS 5330 Prof. Maxwell
 
 *Sobel X*
 <br>
-<img src="images/examples/sobelX_after.jpg"/>
+<img src="images/examples/sobelX_after.png"/>
 
 *Sobel Y*
 <br>
-<img src="images/examples/sobelY_after.jpg"/>
+<img src="images/examples/sobelY_after.png"/>
 
 ### Part 7: Blur Quantize
 
 **Before:**
 <br>
-<img src="images/examples/bq_before.jpg"/>
+<img src="images/examples/dog.jpeg"/>
 
 <br>
 
 **After**
 <br>
-<img src="images/examples/bq_after.jpg"/>
+<img src="images/examples/bq_after.png"/>
 
 ### Part 9: Negative
 
