@@ -24,6 +24,7 @@ void grayscale(cv::Mat *src, cv::Mat *dst)
 
 int blur5x5(cv::Mat &src, cv::Mat &dst)
 {
+    cv::Mat tmp = cv::Mat(dst.rows, dst.cols, dst.type(), 0.0);
     int filter[BLUR_FILTER_SIZE] = {1, 2, 4, 2, 1};
     int center_k = BLUR_FILTER_SIZE / 2;
 
@@ -46,7 +47,23 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
                 htmp[0] += src.ptr<uchar>(r)[col * 3 + 0] * filter[k] / 10;
                 htmp[1] += src.ptr<uchar>(r)[col * 3 + 1] * filter[k] / 10;
                 htmp[2] += src.ptr<uchar>(r)[col * 3 + 2] * filter[k] / 10;
-                
+            }
+
+            tmp.ptr<uchar>(r)[c * 3 + 0] = htmp[0];
+            tmp.ptr<uchar>(r)[c * 3 + 1] = htmp[1];
+            tmp.ptr<uchar>(r)[c * 3 + 2] = htmp[2];
+        }
+    }
+
+    for (int r = 0; r < src.rows; r++)
+    {
+        for (int c = 0; c < src.cols; c++)
+        {
+            uchar htmp[3] = {0, 0, 0};
+            uchar vtmp[3] = {0, 0, 0};
+
+            for (int k = 0; k < BLUR_FILTER_SIZE; k++)
+            {
                 // vertical
                 int row = r - (center_k - k);
                 if (row < 0 || row > src.rows - 1)
@@ -54,14 +71,14 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
                     row = r;
                 }
 
-                vtmp[0] += src.ptr<uchar>(row)[c * 3 + 0] * filter[k] / 10;
-                vtmp[1] += src.ptr<uchar>(row)[c * 3 + 1] * filter[k] / 10;
-                vtmp[2] += src.ptr<uchar>(row)[c * 3 + 2] * filter[k] / 10;
+                vtmp[0] += tmp.ptr<uchar>(row)[c * 3 + 0] * filter[k] / 10;
+                vtmp[1] += tmp.ptr<uchar>(row)[c * 3 + 1] * filter[k] / 10;
+                vtmp[2] += tmp.ptr<uchar>(row)[c * 3 + 2] * filter[k] / 10;
             }
 
-            dst.ptr<uchar>(r)[c * 3 + 0] = (htmp[0] + vtmp[0]) / 2;
-            dst.ptr<uchar>(r)[c * 3 + 1] = (htmp[1] + vtmp[1]) / 2;
-            dst.ptr<uchar>(r)[c * 3 + 2] = (htmp[2] + vtmp[2]) / 2;
+            dst.ptr<uchar>(r)[c * 3 + 0] = vtmp[0];
+            dst.ptr<uchar>(r)[c * 3 + 1] = vtmp[1];
+            dst.ptr<uchar>(r)[c * 3 + 2] = vtmp[2];
         }
     }
 
@@ -70,18 +87,19 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
 
 int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter, int filter_size)
 {
+    cv::Mat tmp = cv::Mat(dst.rows, dst.cols, dst.type(), 0.0);
     for (int r = 0; r < src.rows; r++)
     {
         for (int c = 0; c < src.cols; c++)
         {
             short htmp[3] = {0, 0, 0};
-            short vtmp[3] = {0, 0, 0};
+            // short vtmp[3] = {0, 0, 0};
 
             int center_k = filter_size / 2;
             for (int k = 0; k < SOBEL_FILTER_SIZE; k++)
             {
                 // horizontal
-                int col = c - (center_k - k);
+                int col = c + (center_k - k);
                 if (col < 0 || col > src.cols - 1)
                 {
                     continue;
@@ -90,22 +108,39 @@ int apply_sobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter,
                 htmp[0] += src.ptr<uchar>(r)[col * 3 + 0] * horiz_filter[k];
                 htmp[1] += src.ptr<uchar>(r)[col * 3 + 1] * horiz_filter[k];
                 htmp[2] += src.ptr<uchar>(r)[col * 3 + 2] * horiz_filter[k];
-                
+            }
+
+            tmp.ptr<short>(r)[c * 3 + 0] = htmp[0];
+            tmp.ptr<short>(r)[c * 3 + 1] = htmp[1];
+            tmp.ptr<short>(r)[c * 3 + 2] = htmp[2];
+        }
+    }
+
+    for (int r = 0; r < src.rows; r++)
+    {
+        for (int c = 0; c < src.cols; c++)
+        {
+            // short htmp[3] = {0, 0, 0};
+            short vtmp[3] = {0, 0, 0};
+
+            int center_k = filter_size / 2;
+            for (int k = 0; k < SOBEL_FILTER_SIZE; k++)
+            {
                 // vertical
-                int row = r - (center_k - k);
+                int row = r + (center_k - k);
                 if (row < 0 || row > src.rows - 1)
                 {
                     continue;
                 }
 
-                vtmp[0] += src.ptr<uchar>(row)[c * 3 + 0] * vert_filter[k];
-                vtmp[1] += src.ptr<uchar>(row)[c * 3 + 1] * vert_filter[k];
-                vtmp[2] += src.ptr<uchar>(row)[c * 3 + 2] * vert_filter[k];
+                vtmp[0] += tmp.ptr<short>(row)[c * 3 + 0] * vert_filter[k];
+                vtmp[1] += tmp.ptr<short>(row)[c * 3 + 1] * vert_filter[k];
+                vtmp[2] += tmp.ptr<short>(row)[c * 3 + 2] * vert_filter[k];
             }
 
-            dst.ptr<short>(r)[c * 3 + 0] = (htmp[0] * vtmp[0]) / 8;
-            dst.ptr<short>(r)[c * 3 + 1] = (htmp[1] * vtmp[1]) / 8;
-            dst.ptr<short>(r)[c * 3 + 2] = (htmp[2] * vtmp[2]) / 8;
+            dst.ptr<short>(r)[c * 3 + 0] = vtmp[0];
+            dst.ptr<short>(r)[c * 3 + 1] = vtmp[1];
+            dst.ptr<short>(r)[c * 3 + 2] = vtmp[2];
         }
     }
 
