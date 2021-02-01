@@ -24,13 +24,13 @@ CS 5330 Prof. Maxwell
 
 **Before:**
 <br>
-<img src="images/examples/blur_before.jpg"/>
+<img src="images/examples/cat.jpeg"/>
 
 <br>
 
 **After**
 <br>
-<img src="images/examples/blur_after.jpg"/>
+<img src="images/examples/blur_after.png"/>
 
 ### Part 5: Sobel Filter
 **B&W:**
