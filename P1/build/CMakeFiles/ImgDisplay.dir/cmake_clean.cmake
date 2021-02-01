@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/ImgDisplay.dir/filter.cpp.o"
   "CMakeFiles/ImgDisplay.dir/imgDisplay.cpp.o"
   "ImgDisplay"
   "ImgDisplay.pdb"

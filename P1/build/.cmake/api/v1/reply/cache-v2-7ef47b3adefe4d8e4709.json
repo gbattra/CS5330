@@ -1168,6 +1168,30 @@
 			],
 			"type" : "STATIC",
 			"value" : "/home/gattra/Projects/NEU/CV/P1"
+		},
+		{
+			"name" : "Project_BINARY_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "/home/gattra/Projects/NEU/CV/P1/build"
+		},
+		{
+			"name" : "Project_SOURCE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "/home/gattra/Projects/NEU/CV/P1"
 		}
 	],
 	"kind" : "cache",
