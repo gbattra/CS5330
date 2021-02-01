@@ -33,17 +33,6 @@ CS 5330 Prof. Maxwell
 <img src="images/examples/blur_after.png"/>
 
 ### Part 5: Sobel Filter
-**B&W:**
-<br>
-
-**Before:**
-<br>
-<img src="images/examples/sudoku.jpeg"/>
-
-<br>
-
-**After:**
-<br>
 
 *Sobel X*
 <br>
