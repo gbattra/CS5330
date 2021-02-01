@@ -34,6 +34,10 @@ CS 5330 Prof. Maxwell
 
 ### Part 5: Sobel Filter
 
+**Before:**
+<br>
+<img src="images/examples/sudoky.jpeg/>
+
 *Sobel X*
 <br>
 <img src="images/examples/sobelX_after.png"/>
@@ -54,11 +58,21 @@ CS 5330 Prof. Maxwell
 <br>
 <img src="images/examples/bq_after.png"/>
 
+### Part 8: Gradient Magnitude
+
+**Before:**
+<br>
+<img src="images/examples/sudoky.jpeg/>
+
+**After**
+<br>
+<img src="images/examples/magnitude_after.png"/>
+
 ### Part 9: Negative
 
 **Before:**
 <br>
-<img src="images/examples/negative_before.jpg"/>
+<img src="images/examples/cat.jpesg"/>
 
 <br>
 
