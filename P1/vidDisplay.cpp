@@ -56,13 +56,17 @@ bool process_keystroke(char key, cv::Mat *frame)
     {
         cv::Mat img = cv::Mat(frame->rows, frame->cols, CV_16SC3, 0.0);
         sobel(frame, &img, 'x');
+
+        cv::Mat cimg = cv::Mat(img.rows, img.cols, frame->type(), 0.0);
+        convert_to_uchar(&img, &cimg);
+
         cv::namedWindow("Sobel X", 1);
-        cv::imshow("Sobel X", img);
+        cv::imshow("Sobel X", cimg);
 
         int skey = cv::waitKey(0);
         if (skey == 's')
         {
-            return save_frame(&img);
+            return save_frame(&cimg);
         }
         cv::destroyWindow("Sobel X");
         
@@ -72,13 +76,17 @@ bool process_keystroke(char key, cv::Mat *frame)
     {
         cv::Mat img = cv::Mat(frame->rows, frame->cols, CV_16SC3, 0.0);
         sobel(frame, &img, 'y');
+
+        cv::Mat cimg = cv::Mat(img.rows, img.cols, frame->type(), 0.0);
+        convert_to_uchar(&img, &cimg);
+
         cv::namedWindow("Sobel Y", 1);
-        cv::imshow("Sobel Y", img);
+        cv::imshow("Sobel Y", cimg);
 
         int skey = cv::waitKey(0);
         if (skey == 's')
         {
-            return save_frame(&img);
+            return save_frame(&cimg);
         }
         cv::destroyWindow("Sobel Y");
         return true;
