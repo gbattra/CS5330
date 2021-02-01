@@ -36,7 +36,7 @@ CS 5330 Prof. Maxwell
 
 **Before:**
 <br>
-<img src="images/examples/sudoky.jpeg/>
+<img src="images/examples/sudoku.jpeg"/>
 
 *Sobel X*
 <br>
@@ -72,7 +72,7 @@ CS 5330 Prof. Maxwell
 
 **Before:**
 <br>
-<img src="images/examples/cat.jpesg"/>
+<img src="images/examples/cat.jpeg"/>
 
 <br>
 
