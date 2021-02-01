@@ -62,7 +62,7 @@ CS 5330 Prof. Maxwell
 
 **Before:**
 <br>
-<img src="images/examples/sudoky.jpeg/>
+<img src="images/examples/sudoku.jpeg"/>
 
 **After**
 <br>
