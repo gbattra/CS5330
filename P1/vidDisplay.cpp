@@ -109,7 +109,7 @@ bool process_keystroke(char key, cv::Mat *frame)
     if (key == 'l')
     {
         cv::Mat *dst = new cv::Mat(frame->rows, frame->cols, frame->type(), 0.0);
-        blurQuantize(*frame, *dst, 10);
+        blurQuantize(*frame, *dst, 15);
         cv::namedWindow("Blur Quantize", 1);
         cv::imshow("Blur Quantize", *dst);
 
