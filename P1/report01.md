@@ -105,6 +105,29 @@ The negative filter is applied when the user presses `n`. This is a simple filte
 
 ## Extensions
 
+### Orientation with cv::Canny
+
+The orientation filter is applied when the user presses `o`. This filter first computes the SobelX and SobelY images using the methods implemented for this project. It then passes these images through OpenCV's built in `cv::Canny` method which computes the gradient direction of the two images, creating the sort of outline effect you see below.
+
+Note that there are two images here, the first is the result of the orientation filter applied to the original image. The second is the result of the orientation filter applied to the blur-quantized version of the original image. What I found interesting here is that the result from using the blurred image does a better job of conveying the content of the original image than the non-blurred version. With the reduction of unecessary details and sharp edges, the Sobel filter only picked up on the defining features of the original image. If building an edge-detection system, it might be beneficial to first slightly blur-quantize so as to eliminate minor details that don't constitute significant edges.
+
+**Before:**
+<br>
+<img src="images/examples/cat.jpeg"/>
+
+<br>
+
+**After**
+
+*Non-blur-quantized*
+<br>
+<img src="images/examples/orientation_after_normal.png"/>
+
+*Blur-quantized*
+<br>
+<img src="images/examples/orientation_after_blur.png"/>
+
+
 ## Reflection
 To succeed in this project, it was necessary to develop an intuitive understanding of how images are stored in memory, how the individual channels of each pixel are accessed, and how to convert between various data types like `uchar` and `signed short`. I struggled dealing with memory issues caused by improperly initializing variables. As an example: for the Gaussian filter, the temporary pointer variables which stored the product of each filter application were not zero'd out properly, resulting in an abnormal banner of strange pixel values running across the top ten rows of the final image. This was because the location in memory where the pointers pointed already contained non-zero values. So when the filter values were applied, these pre-existing values were added to the final pixel value.
 
