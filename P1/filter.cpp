@@ -81,9 +81,10 @@ int blur5x5(cv::Mat &src, cv::Mat &dst)
                     row = r;
                 }
 
-                vtmp[0] += tmp.ptr<uchar>(row)[c * 3 + 0] * filter[k] / 10;
-                vtmp[1] += tmp.ptr<uchar>(row)[c * 3 + 1] * filter[k] / 10;
-                vtmp[2] += tmp.ptr<uchar>(row)[c * 3 + 2] * filter[k] / 10;
+                int row_offset = -(r - row) * src.cols * 3;
+                vtmp[0] += trow[(row_offset) + c * 3 + 0] * filter[k] / 10;
+                vtmp[1] += trow[(row_offset) + c * 3 + 1] * filter[k] / 10;
+                vtmp[2] += trow[(row_offset) + c * 3 + 2] * filter[k] / 10;
             }
 
             drow[c * 3 + 0] = vtmp[0];
@@ -110,7 +111,7 @@ int applySobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter, 
             for (int k = 0; k < SOBEL_FILTER_SIZE; k++)
             {
                 // horizontal
-                int col = c + (center_k - k);
+                int col = c - (center_k - k);
                 if (col < 0 || col > src.cols - 1)
                 {
                     continue;
@@ -129,6 +130,8 @@ int applySobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter, 
 
     for (int r = 0; r < src.rows; r++)
     {
+        short *trow = tmp.ptr<short>(r);
+        short *drow = dst.ptr<short>(r);
         for (int c = 0; c < src.cols; c++)
         {
             short vtmp[3] = {0, 0, 0};
@@ -137,20 +140,22 @@ int applySobel(cv::Mat &src, cv::Mat &dst, int *horiz_filter, int *vert_filter, 
             for (int k = 0; k < SOBEL_FILTER_SIZE; k++)
             {
                 // vertical
-                int row = r + (center_k - k);
+                int row = r - (center_k - k);
                 if (row < 0 || row > src.rows - 1)
                 {
                     continue;
                 }
 
-                vtmp[0] += tmp.ptr<short>(row)[c * 3 + 0] * vert_filter[k];
-                vtmp[1] += tmp.ptr<short>(row)[c * 3 + 1] * vert_filter[k];
-                vtmp[2] += tmp.ptr<short>(row)[c * 3 + 2] * vert_filter[k];
+                int row_offset = -(r - row) * src.cols * 3;
+
+                vtmp[0] += trow[(row_offset) + c * 3 + 0] * vert_filter[k];
+                vtmp[1] += trow[(row_offset) + c * 3 + 1] * vert_filter[k];
+                vtmp[2] += trow[(row_offset) + c * 3 + 2] * vert_filter[k];
             }
 
-            dst.ptr<short>(r)[c * 3 + 0] = vtmp[0] / 4;
-            dst.ptr<short>(r)[c * 3 + 1] = vtmp[1] / 4;
-            dst.ptr<short>(r)[c * 3 + 2] = vtmp[2] / 4;
+            drow[c * 3 + 0] = vtmp[0] / 4;
+            drow[c * 3 + 1] = vtmp[1] / 4;
+            drow[c * 3 + 2] = vtmp[2] / 4;
         }
     }
 

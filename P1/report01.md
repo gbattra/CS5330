@@ -81,7 +81,7 @@ The cartoon filter is applied when the user presses `c`. This filter combines th
 
 **Before:**
 <br>
-<img src="images/examples/building.jpeg"/>
+<img src="images/examples/cliffs.jpeg"/>
 
 <br>
 
