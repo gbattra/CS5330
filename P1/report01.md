@@ -38,7 +38,7 @@ The Gaussian filter is applied when the user presses `b`. The program applies th
 <img src="images/examples/blur_after.png"/>
 
 ### Part 5: Sobel Filter
-The Sobel filter is applied when a user presses either `x` or `y`, with `x` corresponding to the SobelX filter and `y` corresponding to the SobelY filter. This filter is a classic edge detection filter. One half of the filter suppresses the region of pixels to one side of the current pixel, while the other magnifies those on the other side. If the area under the filter is entirely white or black, the product of this filter will be roughly zero, as the two sides will negate one another. Whereas, if one side of the area under the filter is white and the other black (or in other words, if there is a sharp difference in pixel values on either side of the area under the filter), the product of this filter will amplify that difference, producing a white edge in the final image.
+The Sobel filter is applied when a user presses either `x` or `y`, with `x` corresponding to the SobelX filter and `y` corresponding to the SobelY filter. This filter is a classic edge detection filter. One half of the filter makes negative the region of pixels to one side of the current pixel, while the pixels under the middle are zero'd out. If the area under the filter is entirely white or black, the product of this filter will be roughly zero, as the two sides will negate one another. Whereas, if one side of the area under the filter is white and the other black (or in other words, if there is a sharp difference in pixel values on either side of the area under the filter), the product of this filter will amplify that difference, producing a white edge in the final image.
 
 **Before:**
 <br>

@@ -44,10 +44,15 @@ This will open up a video stream, pausing at each frame and allowing the user to
 - `s` - Saves the frame to an image file in `images/saved`.
 
 Filter commands:
-- `g` - Converts the image to grayscale.
-- `b` - Blurs the image using a 5x5 (1x5 seperable) Gaussian filter.
-- `x` - Applies a SobelX filter to the image.
-- `y` - Applies a SobelY filter to the image.
-- `l` - Blurs and quantizes the image.
-- `n` - Produces a negative of the image.
+
  (**Note:** Press `s` after applying a filter to save the image. Or press any key to continue.)
+
+- `g` - **Grayscale**: Converts the image to grayscale.
+- `b` - **Blur**: Blurs the image using a 5x5 (1x5 seperable) Gaussian filter.
+- `c` - **Cartoon**: Converts the image into the style of a cartoon.
+- `x` - **SobelX**: Applies a SobelX filter to the image.
+- `y` - **SobelY**: Applies a SobelY filter to the image.
+- `m` - **Magnitude**: Computes the gradient magnitude of the SobelX and SobelY filters of the image.
+- `l` - **Quantize**: Blurs and quantizes the image.
+- `n` - **Negative**: Produces a negative of the image.
+- `o` - **Orientation**: Produces an orientation map of the graidents of the SobelX and SobelY filters of the image.
