@@ -16,13 +16,11 @@ The grayscale filter is applied when the user presses `g`. The program takes a c
 
 **Before:**
 <br>
-<img src="images/examples/gs_before.jpg"/>
+<img src="images/examples/dog.jpeg"/>
 
+**After:**
 <br>
-
-**After**
-<br>
-<img src="images/examples/gs_after.jpg"/>
+<img src="images/examples/gs_after.png"/>
 
 ### Part 4: Gaussian Filter
 The Gaussian filter is applied when the user presses `b`. The program applies the filter as two separable filters, convolving the original image with one vector, then convolving the product of that first pass with the second. For each pixel in the image, the filter computes a gaussian amplification of the pixels under the filter. This averages out the pixel values in a given region of the image, reducing sharp edges and details, thus creating a blurred effect.
@@ -31,9 +29,7 @@ The Gaussian filter is applied when the user presses `b`. The program applies th
 <br>
 <img src="images/examples/cat.jpeg"/>
 
-<br>
-
-**After**
+**After:**
 <br>
 <img src="images/examples/blur_after.png"/>
 
@@ -44,6 +40,8 @@ The Sobel filter is applied when a user presses either `x` or `y`, with `x` corr
 <br>
 <img src="images/examples/sudoku.jpeg"/>
 
+**After:**
+<br>
 *Sobel X*
 <br>
 <img src="images/examples/sobelX_after.png"/>
@@ -59,7 +57,7 @@ The Gradient Magnitude filter is applied when the user presses `m`. This filter 
 <br>
 <img src="images/examples/sudoku.jpeg"/>
 
-**After**
+**After:**
 <br>
 <img src="images/examples/magnitude_after.png"/>
 
@@ -70,9 +68,7 @@ The blur quantize filter is applied when the user presses `l`. First, the origin
 <br>
 <img src="images/examples/dog.jpeg"/>
 
-<br>
-
-**After**
+**After:**
 <br>
 <img src="images/examples/bq_after.png"/>
 
@@ -83,9 +79,7 @@ The cartoon filter is applied when the user presses `c`. This filter combines th
 <br>
 <img src="images/examples/cliffs.jpeg"/>
 
-<br>
-
-**After**
+**After:**
 <br>
 <img src="images/examples/cartoon_after.png"/>
 
@@ -96,9 +90,7 @@ The negative filter is applied when the user presses `n`. This is a simple filte
 <br>
 <img src="images/examples/cat.jpeg"/>
 
-<br>
-
-**After**
+**After:**
 <br>
 <img src="images/examples/negative_after.jpg"/>
 
@@ -115,10 +107,8 @@ Note that there are two images here, the first is the result of the orientation 
 <br>
 <img src="images/examples/cat.jpeg"/>
 
+**After:**
 <br>
-
-**After**
-
 *Non-blur-quantized*
 <br>
 <img src="images/examples/orientation_after_normal.png"/>

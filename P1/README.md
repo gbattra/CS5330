@@ -55,4 +55,6 @@ Filter commands:
 - `m` - **Magnitude**: Computes the gradient magnitude of the SobelX and SobelY filters of the image.
 - `l` - **Quantize**: Blurs and quantizes the image.
 - `n` - **Negative**: Produces a negative of the image.
+
+Extensions:
 - `o` - **Orientation**: Produces an orientation map of the graidents of the SobelX and SobelY filters of the image.
