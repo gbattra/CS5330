@@ -135,8 +135,9 @@ Another issue similarly related to memory was in dealing with the conversion of 
 
 A third, more challenging issue I faced involved the Sobel filter. First, I was originally applying the filter improperly--multiplying the product of the horizontal pass with the vertical pass instead of summing them together. However, when calculating the gradient magnitude, the resulting image was a hyper-saturated color image that seemed to lose all edge-detection properties. This was because the pixel values of the Sobel image were outside the range of `[-255, 255]`. After correcting the math, the desired gradient magnitude image was achieved. However, this produced another issue: When displaying the product of the sobel filter, my program would simply display the `16SC3` image in a window. To the naked eye, this image appeared to be a blank gray canvas. However, on closer inspection, I noticed there was infact the vague resemblance of the original image, just severely muted. This is because I was now adding the horizontal pass to the vertical pass, vs. multiplying them together. When I converted to `uchar` for display, the result was what is shown above: the non-edge areas in black and the edges in white.
 
-These challenges were certainly frustrating but through the process I gained a strong understanding of OpenCV, C++ and memory management, as well as image filtering and manipulation.
+These challenges were certainly frustrating but through the process I gained a strong understanding of OpenCV, C++ and memory management, and an intuition for the math behind image filtering and manipulation.
 
 ## Resources
 - OpenCV documentation
 - Video code sample from Project 1 assignment on Canvas
+- Wiki on seperable filters https://en.wikipedia.org/wiki/Separable_filter
