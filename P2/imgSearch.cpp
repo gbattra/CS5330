@@ -12,7 +12,7 @@ cv::Mat * searchAndRank(
     std::string metric_type,
     int count)
 {
-    float *target_features = features::compute(&target_img, feature_type);
+    std::vector<float> target_features = features::compute(&target_img, feature_type);
 }
 
 int main(int argc, char** argv)

@@ -4,17 +4,17 @@
 
 namespace features {
 
-    float * square9x9(cv::Mat *target_img)
+    std::vector<float> square9x9(cv::Mat *target_img)
     {
         int rows = target_img->rows;
         int cols = target_img->cols;
         if (rows < 9 || cols < 9)
         {
             printf("Target image too small for feature type. Must be at least 9x9.\n");
-            return NULL;
+            return std::vector<float>(0);
         }
 
-        float features[9 * 9 * 3] = {0};
+        std::vector<float> features(9 * 9 * 3);
         int feature_row = 0;
         for (int r = (rows / 2) - 4; r < (rows / 2) + 4; r++)
         {
@@ -30,13 +30,17 @@ namespace features {
             }
             feature_row++;
         }
+
+        return features;
     }
 
-    float * compute(cv::Mat *target_img, std::string feature_type)
+    std::vector<float> compute(cv::Mat *target_img, std::string feature_type)
     {
         if (feature_type == "square9x9")
         {
             return square9x9(target_img);
         }
+
+        return std::vector<float>(0);
     }
 }

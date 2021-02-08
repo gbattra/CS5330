@@ -3,6 +3,6 @@
 
 namespace features
 {
-    float * compute(cv::Mat *target_img, std::string feature_type);
+    std::vector<float> compute(cv::Mat *target_img, std::string feature_type);
 } // namespace features
 
