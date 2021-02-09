@@ -21,12 +21,17 @@ namespace metrics
         return distance;
     }
 
-    ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, std::string metric_type)
+    ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, METRIC metric_type)
     {
         ImgMetric img_metric;
         img_metric.img = sample.img;
         
-        if (metric_type == "sumSquaredDistance")
+        if (metric_type == METRIC::INVALID)
+        {
+            printf("Invalid metric provided.\n");
+            return img_metric;
+        }
+        if (metric_type == METRIC::SUM_SQUARED_DISTANCE)
         {
             img_metric.value = sumSquaredDistance(target.features, sample.features);
         }

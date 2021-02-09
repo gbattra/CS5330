@@ -6,6 +6,11 @@
 
 #define ARG_COUNT 5
 
+bool sort_metrics(metrics::ImgMetric first, metrics::ImgMetric second)
+{
+    return first.value < second.value;
+}
+
 cv::Mat * searchAndRank(
     cv::Mat *target_img,
     std::string db_path,
@@ -16,11 +21,13 @@ cv::Mat * searchAndRank(
     features::ImgFeature target_features = features::compute(target_img, feature_type);
     std::vector<features::ImgFeature> db_features = features::load(&db_path, feature_type);
 
-    std::vector<metrics::ImgMetric> db_metrics;
-    for (int i = 0; i < db_features.size(); i++)
-    {
-        db_metrics.push_back(metrics::compute(target_features, db_features[i], metric_type));
-    }
+    // std::vector<metrics::ImgMetric> db_metrics;
+    // for (int i = 0; i < db_features.size(); i++)
+    // {
+    //     db_metrics.push_back(metrics::compute(target_features, db_features[i], metric_type));
+    // }
+
+    // std::sort(db_metrics.begin(), db_metrics.end(), sort_metrics);
 }
 
 int main(int argc, char** argv)

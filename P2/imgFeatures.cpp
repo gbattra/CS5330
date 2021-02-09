@@ -17,7 +17,7 @@ namespace features
         int feature_row = 0;
         for (int r = (rows / 2) - 4; r < (rows / 2) + 4; r++)
         {
-            uchar * im_row = img->ptr<uchar>(r);
+            uchar *im_row = img->ptr<uchar>(r);
             int feature_col = 0;
             for (int c = (cols / 2) - 4; c < (cols / 2) + 4; c++)
             {
@@ -38,6 +38,12 @@ namespace features
         ImgFeature img_feature = ImgFeature();
         img_feature.img = img;
 
+        if (feature_type == FEATURE::INVALID)
+        {
+            printf("Invalid feature type provided.\n");
+            img_feature.features = std::vector<float>(0);
+            return img_feature;
+        }
         if (feature_type == FEATURE::SQUARE_9x9)
         {
             img_feature.features = square9x9(img);
