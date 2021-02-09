@@ -3,8 +3,8 @@
 #include "imgMetrics.h"
 
 namespace metrics {
-    MetricNode sumSquaredDistance(cv::Mat *target, cv::Mat *sample)
+    float sumSquaredDistance(std::vector<float> target, std::vector<float> sample)
     {
-        
+
     }
 }

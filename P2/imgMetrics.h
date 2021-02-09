@@ -1,6 +1,6 @@
 #include <opencv2/opencv.hpp>
-#include "MetricNode.cpp"
+#include <stdio.h>
 
 namespace metrics {
-    MetricNode sumSquaredDistance(cv::Mat *target, cv::Mat *sample);
+    float sumSquaredDistance(std::vector<float> target, std::vector<float> sample);
 }

@@ -12,8 +12,8 @@ cv::Mat * searchAndRank(
     std::string metric_type,
     int count)
 {
-    ImgFeature targetFeatures = features::compute(&target_img, feature_type);
-
+    ImgFeature target_features = features::compute(&target_img, feature_type);
+    std::list<ImgFeature> db_features = features::load(db_path, feature_type);
 }
 
 int main(int argc, char** argv)

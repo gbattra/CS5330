@@ -1,9 +1,7 @@
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
 #include "imgFeatures.h"
+#include "dbReader.h"
 
 namespace features {
-
     std::vector<float> square9x9(cv::Mat *target_img)
     {
         int rows = target_img->rows;
@@ -36,14 +34,19 @@ namespace features {
 
     ImgFeature compute(cv::Mat *target_img, std::string feature_type)
     {
-        ImgFeature imgFeature = ImgFeature();
-        imgFeature.img = target_img;
+        ImgFeature img_feature = ImgFeature();
+        img_feature.img = target_img;
 
         if (feature_type == "square9x9")
         {
-            imgFeature.features = square9x9(target_img);
+            img_feature.features = square9x9(target_img);
         }
 
-        return imgFeature;
+        return img_feature;
+    }
+
+    std::list<ImgFeature> load(std::string db_path, std::string feature_type)
+    {
+        std::list<std::string> image_files = db::list(db_path);
     }
 }
