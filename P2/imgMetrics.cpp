@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include "imgMetrics.h"
 
-namespace metrics {
+namespace metrics
+{
     float sumSquaredDistance(std::vector<float> target, std::vector<float> sample)
     {
 

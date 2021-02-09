@@ -1,7 +1,8 @@
 #include "imgFeatures.h"
 #include "dbReader.h"
 
-namespace features {
+namespace features
+{
     std::vector<float> square9x9(cv::Mat *target_img)
     {
         int rows = target_img->rows;

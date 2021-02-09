@@ -1,6 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
 
-namespace metrics {
+namespace metrics
+{
     float sumSquaredDistance(std::vector<float> target, std::vector<float> sample);
 }
