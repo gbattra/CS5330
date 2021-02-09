@@ -3,10 +3,10 @@
 
 namespace features
 {
-    std::vector<float> square9x9(cv::Mat *target_img)
+    std::vector<float> square9x9(cv::Mat *img)
     {
-        int rows = target_img->rows;
-        int cols = target_img->cols;
+        int rows = img->rows;
+        int cols = img->cols;
         if (rows < 9 || cols < 9)
         {
             printf("Target image too small for feature type. Must be at least 9x9.\n");
@@ -17,7 +17,7 @@ namespace features
         int feature_row = 0;
         for (int r = (rows / 2) - 4; r < (rows / 2) + 4; r++)
         {
-            uchar * im_row = target_img->ptr<uchar>(r);
+            uchar * im_row = img->ptr<uchar>(r);
             int feature_col = 0;
             for (int c = (cols / 2) - 4; c < (cols / 2) + 4; c++)
             {
@@ -33,27 +33,28 @@ namespace features
         return features;
     }
 
-    ImgFeature compute(cv::Mat *target_img, std::string feature_type)
+    features::ImgFeature compute(cv::Mat *img, std::string feature_type)
     {
         ImgFeature img_feature = ImgFeature();
-        img_feature.img = target_img;
+        img_feature.img = img;
 
         if (feature_type == "square9x9")
         {
-            img_feature.features = square9x9(target_img);
+            img_feature.features = square9x9(img);
         }
 
         return img_feature;
     }
 
-    std::vector<ImgFeature> load(std::string *db_path, std::string feature_type)
+    std::vector<features::ImgFeature> load(std::string *db_path, std::string feature_type)
     {
         std::vector<ImgFeature> images_features = std::vector<ImgFeature>(0);
 
         std::vector<std::string> image_files = db::list(db_path);
         for (int i = 0; i < image_files.size(); i++)
         {
-            printf("%s\n", image_files[i].c_str());
+            cv::Mat sample = cv::imread(image_files[i]);
+            images_features.push_back(compute(&sample, feature_type));
         }
 
         return images_features;

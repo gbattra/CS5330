@@ -2,18 +2,21 @@
 #include <cstdlib>
 #include <opencv2/opencv.hpp>
 #include "imgFeatures.h"
+#include "imgMetrics.h"
 
 #define ARG_COUNT 5
 
 cv::Mat * searchAndRank(
-    cv::Mat target_img,
+    cv::Mat *target_img,
     std::string db_path,
     std::string feature_type,
     std::string metric_type,
     int count)
 {
-    ImgFeature target_features = features::compute(&target_img, feature_type);
-    std::vector<ImgFeature> db_features = features::load(&db_path, feature_type);
+    features::ImgFeature target_features = features::compute(target_img, feature_type);
+    metrics::ImgMetric img_metric = metrics::compute(target_features, target_features, "sumSquaredDistance");
+
+    std::vector<features::ImgFeature> db_features = features::load(&db_path, feature_type);
 }
 
 int main(int argc, char** argv)
@@ -42,7 +45,7 @@ int main(int argc, char** argv)
     printf("Press any key to continue...\n");
     cv::waitKey(0);
 
-    searchAndRank(target_img, db_path, feature_type, metric_type, count);
+    searchAndRank(&target_img, db_path, feature_type, metric_type, count);
 
     return 0;;
 }
