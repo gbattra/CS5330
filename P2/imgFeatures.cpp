@@ -34,13 +34,16 @@ namespace features {
         return features;
     }
 
-    std::vector<float> compute(cv::Mat *target_img, std::string feature_type)
+    ImgFeature compute(cv::Mat *target_img, std::string feature_type)
     {
+        ImgFeature imgFeature = ImgFeature();
+        imgFeature.img = target_img;
+
         if (feature_type == "square9x9")
         {
-            return square9x9(target_img);
+            imgFeature.features = square9x9(target_img);
         }
 
-        return std::vector<float>(0);
+        return imgFeature;
     }
 }
