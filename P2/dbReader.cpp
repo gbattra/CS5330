@@ -9,7 +9,7 @@
 
 namespace db
 {
-    std::list<std::string> list(std::string *db_path)
+    std::vector<std::string> list(std::string *db_path)
     {
         FILE *f;
         DIR *dir;
@@ -20,10 +20,10 @@ namespace db
         if (dir == NULL)
         {
             printf("Invalid db directory.\n");
-            return std::list<std::string>(0);
+            return std::vector<std::string>(0);
         }
 
-        std::list<std::string> image_files;
+        std::vector<std::string> image_files;
         while ((dirent = readdir(dir)) != NULL)
         {
             if (

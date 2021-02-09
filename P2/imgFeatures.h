@@ -6,5 +6,5 @@
 namespace features
 {
     ImgFeature compute(cv::Mat *target_img, std::string feature_type);
-    std::list<ImgFeature> load(std::string db_path, std::string feature_type);
+    std::vector<ImgFeature> load(std::string *db_path, std::string feature_type);
 }

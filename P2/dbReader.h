@@ -1,7 +1,7 @@
-#include <list>
+#include <vector>
 #include <string>
 
 namespace db
 {
-    std::list<std::string> list(std::string db_path);
+    std::vector<std::string> list(std::string *db_path);
 }

@@ -5,7 +5,7 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 add_executable(
     ImgSearch imgSearch.cpp
+    dbReader.h dbReader.cpp
     imgFeatures.h imgFeatures.cpp
-    imgMetrics.h imgMetrics.cpp
-    dbReader.h dbReader.cpp)
+    imgMetrics.h imgMetrics.cpp)
 target_link_libraries( ImgSearch ${OpenCV_LIBS} )

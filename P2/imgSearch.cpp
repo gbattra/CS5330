@@ -13,7 +13,7 @@ cv::Mat * searchAndRank(
     int count)
 {
     ImgFeature target_features = features::compute(&target_img, feature_type);
-    std::list<ImgFeature> db_features = features::load(db_path, feature_type);
+    std::vector<ImgFeature> db_features = features::load(&db_path, feature_type);
 }
 
 int main(int argc, char** argv)

@@ -46,8 +46,16 @@ namespace features
         return img_feature;
     }
 
-    std::list<ImgFeature> load(std::string db_path, std::string feature_type)
+    std::vector<ImgFeature> load(std::string *db_path, std::string feature_type)
     {
-        std::list<std::string> image_files = db::list(db_path);
+        std::vector<ImgFeature> images_features = std::vector<ImgFeature>(0);
+
+        std::vector<std::string> image_files = db::list(db_path);
+        for (int i = 0; i < image_files.size(); i++)
+        {
+            printf("%s\n", image_files[i].c_str());
+        }
+
+        return images_features;
     }
 }
