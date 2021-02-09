@@ -33,12 +33,12 @@ namespace features
         return features;
     }
 
-    features::ImgFeature compute(cv::Mat *img, std::string feature_type)
+    ImgFeature compute(cv::Mat *img, FEATURE feature_type)
     {
         ImgFeature img_feature = ImgFeature();
         img_feature.img = img;
 
-        if (feature_type == "square9x9")
+        if (feature_type == FEATURE::SQUARE_9x9)
         {
             img_feature.features = square9x9(img);
         }
@@ -46,7 +46,7 @@ namespace features
         return img_feature;
     }
 
-    std::vector<features::ImgFeature> load(std::string *db_path, std::string feature_type)
+    std::vector<ImgFeature> load(std::string *db_path, FEATURE feature_type)
     {
         std::vector<ImgFeature> images_features = std::vector<ImgFeature>(0);
 
@@ -58,5 +58,15 @@ namespace features
         }
 
         return images_features;
+    }
+
+    FEATURE stringToFeatureType(std::string feature_type)
+    {
+        if (feature_type == "square9x9")
+        {
+            return FEATURE::SQUARE_9x9;
+        }
+
+        return FEATURE::INVALID;
     }
 }

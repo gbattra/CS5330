@@ -9,7 +9,7 @@ namespace metrics
         if (target.size() != sample.size())
         {
             printf("Cannot compute sum of squared distance. Vectors are not of equal size.\n");
-            return NULL;
+            return 0.0;
         }
 
         float distance = 0.0;
@@ -32,5 +32,15 @@ namespace metrics
         }
 
         return img_metric;
+    }
+
+    METRIC stringToMetricType(std::string metric_type)
+    {
+        if (metric_type == "sumSquaredDistance")
+        {
+            return METRIC::SUM_SQUARED_DISTANCE;
+        }
+
+        return METRIC::INVALID;
     }
 }

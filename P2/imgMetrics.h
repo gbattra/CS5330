@@ -7,6 +7,11 @@
 
 namespace metrics
 {
+    enum METRIC {
+        SUM_SQUARED_DISTANCE,
+        INVALID
+    };
+
     class ImgMetric
     {
         public:
@@ -14,7 +19,8 @@ namespace metrics
             cv::Mat *img;
     };
 
-    ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, std::string metric_type);
+    METRIC stringToMetricType(std::string metric_type);
+    ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, METRIC metric_type);
     float sumSquaredDistance(std::vector<float> target, std::vector<float> sample);
 }
 

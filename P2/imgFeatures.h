@@ -7,6 +7,11 @@
 
 namespace features
 {
+    enum FEATURE {
+        SQUARE_9x9,
+        INVALID
+    };
+
     class ImgFeature
     {
         public:
@@ -14,8 +19,9 @@ namespace features
             cv::Mat *img;
     };
 
-    features::ImgFeature compute(cv::Mat *target_img, std::string feature_type);
-    std::vector<features::ImgFeature> load(std::string *db_path, std::string feature_type);
+    ImgFeature compute(cv::Mat *target_img, FEATURE feature_type);
+    std::vector<ImgFeature> load(std::string *db_path, FEATURE feature_type);
+    FEATURE stringToFeatureType(std::string feature_type);
 }
 
 #endif

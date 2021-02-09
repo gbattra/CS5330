@@ -9,14 +9,18 @@
 cv::Mat * searchAndRank(
     cv::Mat *target_img,
     std::string db_path,
-    std::string feature_type,
-    std::string metric_type,
+    features::FEATURE feature_type,
+    metrics::METRIC metric_type,
     int count)
 {
     features::ImgFeature target_features = features::compute(target_img, feature_type);
-    metrics::ImgMetric img_metric = metrics::compute(target_features, target_features, "sumSquaredDistance");
-
     std::vector<features::ImgFeature> db_features = features::load(&db_path, feature_type);
+
+    std::vector<metrics::ImgMetric> db_metrics;
+    for (int i = 0; i < db_features.size(); i++)
+    {
+        db_metrics.push_back(metrics::compute(target_features, db_features[i], metric_type));
+    }
 }
 
 int main(int argc, char** argv)
@@ -45,7 +49,12 @@ int main(int argc, char** argv)
     printf("Press any key to continue...\n");
     cv::waitKey(0);
 
-    searchAndRank(&target_img, db_path, feature_type, metric_type, count);
+    searchAndRank(
+        &target_img,
+        db_path,
+        features::stringToFeatureType(feature_type),
+        metrics::stringToMetricType(metric_type),
+        count);
 
     return 0;;
 }
