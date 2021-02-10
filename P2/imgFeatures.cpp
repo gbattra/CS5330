@@ -7,16 +7,16 @@ namespace features
 {
     std::vector<float> redGreenHistorgram(cv::Mat *img)
     {
-        int range = 255 / COLOR_BUCKET_COUNT;
+        float range = 256.0 / (float) COLOR_BUCKET_COUNT;
         std::vector<float> histogram(COLOR_BUCKET_COUNT * COLOR_BUCKET_COUNT, 0.0);
         for (int r = 0; r < img->rows; r++)
         {
-            uchar *row = img->ptr(r);
+            uchar *row = img->ptr<uchar>(r);
             for (int c = 0; c < img->cols; c++)
             {
                 uchar *pixel = &row[c * 3];
-                int red_bucket = pixel[0] / range;
-                int green_bucket = pixel[1] / range;
+                int red_bucket = ((float) pixel[0]) / range;
+                int green_bucket = ((float) pixel[1]) / range;
                 histogram[(red_bucket * COLOR_BUCKET_COUNT) + (green_bucket)] += 1.0;
             }
         }
@@ -66,7 +66,7 @@ namespace features
 
     ImgFeature compute(cv::Mat img, FEATURE feature_type)
     {
-        ImgFeature img_feature = ImgFeature();
+        ImgFeature img_feature;
         img_feature.img = img;
 
         if (feature_type == FEATURE::INVALID)
@@ -89,13 +89,12 @@ namespace features
 
     std::vector<ImgFeature> load(std::string *db_path, FEATURE feature_type)
     {
-        std::vector<ImgFeature> images_features = std::vector<ImgFeature>(0);
-
         std::vector<std::string> image_files = db::list(db_path);
+        std::vector<ImgFeature> images_features = std::vector<ImgFeature>(image_files.size());
         for (int i = 0; i < image_files.size(); i++)
         {
             cv::Mat sample = cv::imread(image_files[i]);
-            images_features.push_back(compute(sample, feature_type));
+            images_features[i] = compute(sample, feature_type);
         }
         
         return images_features;

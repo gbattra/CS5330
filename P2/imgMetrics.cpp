@@ -25,7 +25,6 @@ namespace metrics
     {
         ImgMetric img_metric;
         img_metric.img = sample.img;
-        
         if (metric_type == METRIC::INVALID)
         {
             printf("Invalid metric provided.\n");

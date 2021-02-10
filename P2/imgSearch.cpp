@@ -21,18 +21,18 @@ std::vector<cv::Mat> searchAndRank(
     features::ImgFeature target_features = features::compute(target_img, feature_type);
     std::vector<features::ImgFeature> db_features = features::load(&db_path, feature_type);
 
-    std::vector<metrics::ImgMetric> db_metrics;
+    std::vector<metrics::ImgMetric> db_metrics(db_features.size());
     for (int i = 0; i < db_features.size(); i++)
     {
-        db_metrics.push_back(metrics::compute(target_features, db_features[i], metric_type));
+        db_metrics[i] = metrics::compute(target_features, db_features[i], metric_type);
     }
 
-    std::sort(db_metrics.begin(), db_metrics.end(), sort_metrics);
+    // std::sort(db_metrics.begin(), db_metrics.end(), sort_metrics);
 
-    std::vector<cv::Mat> results;
+    std::vector<cv::Mat> results(count);
     for (int n = 0; n < count; n++)
     {
-        results.push_back(db_metrics[n].img);
+        results[0] = db_metrics[n].img;
     }
 
     return results;
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
                                         features::stringToFeatureType(feature_type),
                                         metrics::stringToMetricType(metric_type),
                                         count);
-    
+
     for (int n = 0; n < results.size(); n++)
     {
         cv::namedWindow("Result " + std::to_string(n));
@@ -79,5 +79,6 @@ int main(int argc, char** argv)
         cv::waitKey(0);
         cv::destroyWindow("Result " + std::to_string(n));
     }
-    return 0;;
+
+    return 0;
 }
