@@ -27,7 +27,7 @@ std::vector<cv::Mat> searchAndRank(
         db_metrics[i] = metrics::compute(target_features, db_features[i], metric_type);
     }
 
-    // std::sort(db_metrics.begin(), db_metrics.end(), sort_metrics);
+    std::sort(db_metrics.begin(), db_metrics.end(), sort_metrics);
 
     std::vector<cv::Mat> results(count);
     for (int n = 0; n < count; n++)
