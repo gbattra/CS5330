@@ -18,7 +18,7 @@ namespace metrics
             intersection += std::min(one[i], two[i]);
         }
 
-        return intersection;
+        return -intersection;
     }
 
     float sumSquaredDistance(std::vector<float> one, std::vector<float> two)

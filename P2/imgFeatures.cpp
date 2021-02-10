@@ -9,25 +9,25 @@ namespace features
     {
         float range = 256.0 / (float) COLOR_BUCKET_COUNT;
         std::vector<float> histogram(COLOR_BUCKET_COUNT * COLOR_BUCKET_COUNT, 0.0);
-        for (int r = 0; r < img->rows; r++)
+        for (int i = 0; i < img->rows; i++)
         {
-            uchar *row = img->ptr<uchar>(r);
-            for (int c = 0; c < img->cols; c++)
+            uchar *row = img->ptr<uchar>(i);
+            for (int j = 0; j < img->cols; j++)
             {
-                uchar *pixel = &row[c * 3];
+                uchar *pixel = &row[j * 3];
                 int red_bucket = ((float) pixel[0]) / range;
                 int green_bucket = ((float) pixel[1]) / range;
-                histogram[(red_bucket * COLOR_BUCKET_COUNT) + (green_bucket)] += 1.0;
+                histogram[(red_bucket * COLOR_BUCKET_COUNT) + green_bucket] += 1.0;
             }
         }
 
         // normalize histogram
         float max_bucket = *std::max_element(histogram.begin(), histogram.end());
-        for (int i = 0; i < COLOR_BUCKET_COUNT; i++)
+        for (int r = 0; r < COLOR_BUCKET_COUNT; r++)
         {
-            for (int j = 0; j < COLOR_BUCKET_COUNT; j++)
+            for (int g = 0; g < COLOR_BUCKET_COUNT; g++)
             {
-                histogram[(i * COLOR_BUCKET_COUNT) + j] /= max_bucket;
+                histogram[(r * COLOR_BUCKET_COUNT) + g] /= max_bucket;
             }
         }
 
