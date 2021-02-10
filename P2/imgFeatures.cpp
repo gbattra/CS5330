@@ -1,8 +1,39 @@
 #include "imgFeatures.h"
 #include "dbReader.h"
 
+#define COLOR_BUCKET_COUNT 32
+
 namespace features
 {
+    std::vector<float> redGreenHistorgram(cv::Mat *img)
+    {
+        int range = 255 / COLOR_BUCKET_COUNT;
+        std::vector<float> histogram(COLOR_BUCKET_COUNT * COLOR_BUCKET_COUNT, 0.0);
+        for (int r = 0; r < img->rows; r++)
+        {
+            uchar *row = img->ptr(r);
+            for (int c = 0; c < img->cols; c++)
+            {
+                uchar *pixel = &row[c * 3];
+                int red_bucket = pixel[0] / range;
+                int green_bucket = pixel[1] / range;
+                histogram[(red_bucket * COLOR_BUCKET_COUNT) + (green_bucket)] += 1.0;
+            }
+        }
+
+        // normalize histogram
+        float max_bucket = *std::max_element(histogram.begin(), histogram.end());
+        for (int i = 0; i < COLOR_BUCKET_COUNT; i++)
+        {
+            for (int j = 0; j < COLOR_BUCKET_COUNT; j++)
+            {
+                histogram[(i * COLOR_BUCKET_COUNT) + j] /= max_bucket;
+            }
+        }
+
+        return histogram;
+    }
+
     std::vector<float> square9x9(cv::Mat *img)
     {
         int rows = img->rows;
@@ -44,9 +75,13 @@ namespace features
             img_feature.features = std::vector<float>(0);
             return img_feature;
         }
-        if (feature_type == FEATURE::SQUARE_9x9)
+        else if (feature_type == FEATURE::SQUARE_9x9)
         {
             img_feature.features = square9x9(&img);
+        }
+        else if (feature_type == FEATURE::RG_HISTOGRAM)
+        {
+            img_feature.features = redGreenHistorgram(&img);
         }
 
         return img_feature;
@@ -71,6 +106,10 @@ namespace features
         if (feature_type == "square9x9")
         {
             return FEATURE::SQUARE_9x9;
+        }
+        else if (feature_type == "redGreenHistogram")
+        {
+            return FEATURE::RG_HISTOGRAM;
         }
 
         return FEATURE::INVALID;
