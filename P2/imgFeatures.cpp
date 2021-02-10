@@ -1,14 +1,16 @@
 #include "imgFeatures.h"
 #include "dbReader.h"
 
-#define COLOR_BUCKET_COUNT 32
-
 namespace features
 {
+    std::vector<float> multiHistogram(cv::Mat *img)
+    {
+    }
+
     std::vector<float> redGreenHistorgram(cv::Mat *img)
     {
-        float range = 256.0 / (float) COLOR_BUCKET_COUNT;
-        std::vector<float> histogram(COLOR_BUCKET_COUNT * COLOR_BUCKET_COUNT, 0.0);
+        float range = 256.0 / (float) RG_HISTO_BUCKET_COUNT;
+        std::vector<float> histogram(RG_HISTO_BUCKET_COUNT * RG_HISTO_BUCKET_COUNT, 0.0);
         for (int i = 0; i < img->rows; i++)
         {
             uchar *row = img->ptr<uchar>(i);
@@ -17,17 +19,17 @@ namespace features
                 uchar *pixel = &row[j * 3];
                 int red_bucket = ((float) pixel[0]) / range;
                 int green_bucket = ((float) pixel[1]) / range;
-                histogram[(red_bucket * COLOR_BUCKET_COUNT) + green_bucket] += 1.0;
+                histogram[(red_bucket * RG_HISTO_BUCKET_COUNT) + green_bucket] += 1.0;
             }
         }
 
         // normalize histogram
         float max_bucket = *std::max_element(histogram.begin(), histogram.end());
-        for (int r = 0; r < COLOR_BUCKET_COUNT; r++)
+        for (int r = 0; r < RG_HISTO_BUCKET_COUNT; r++)
         {
-            for (int g = 0; g < COLOR_BUCKET_COUNT; g++)
+            for (int g = 0; g < RG_HISTO_BUCKET_COUNT; g++)
             {
-                histogram[(r * COLOR_BUCKET_COUNT) + g] /= max_bucket;
+                histogram[(r * RG_HISTO_BUCKET_COUNT) + g] /= max_bucket;
             }
         }
 
