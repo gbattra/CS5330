@@ -11,6 +11,13 @@ bool sort_metrics(metrics::ImgMetric first, metrics::ImgMetric second)
     return first.value < second.value;
 }
 
+bool save_img(cv::Mat *img)
+{
+    return cv::imwrite(
+        "images/saved/" + std::to_string(std::time(0)) + ".png",
+        *img);
+}
+
 std::vector<cv::Mat> searchAndRank(
     cv::Mat target_img,
     std::string db_path,
@@ -76,7 +83,11 @@ int main(int argc, char** argv)
     {
         cv::namedWindow("Result " + std::to_string(n));
         cv::imshow("Result " + std::to_string(n), results[n]);
-        cv::waitKey(0);
+        int key = cv::waitKey(0);
+        if (key == 's')
+        {
+            save_img(&results[n]);
+        }
         cv::destroyWindow("Result " + std::to_string(n));
     }
 
