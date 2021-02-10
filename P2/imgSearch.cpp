@@ -11,8 +11,8 @@ bool sort_metrics(metrics::ImgMetric first, metrics::ImgMetric second)
     return first.value < second.value;
 }
 
-cv::Mat * searchAndRank(
-    cv::Mat *target_img,
+std::vector<cv::Mat> searchAndRank(
+    cv::Mat target_img,
     std::string db_path,
     features::FEATURE feature_type,
     metrics::METRIC metric_type,
@@ -28,6 +28,14 @@ cv::Mat * searchAndRank(
     }
 
     std::sort(db_metrics.begin(), db_metrics.end(), sort_metrics);
+
+    std::vector<cv::Mat> results;
+    for (int n = 0; n < count; n++)
+    {
+        results.push_back(db_metrics[n].img);
+    }
+
+    return results;
 }
 
 int main(int argc, char** argv)
@@ -55,13 +63,21 @@ int main(int argc, char** argv)
 
     printf("Press any key to continue...\n");
     cv::waitKey(0);
+    cv::destroyWindow("Target Image");
 
-    searchAndRank(
-        &target_img,
-        db_path,
-        features::stringToFeatureType(feature_type),
-        metrics::stringToMetricType(metric_type),
-        count);
-
+    std::vector<cv::Mat> results = searchAndRank(
+                                        target_img,
+                                        db_path,
+                                        features::stringToFeatureType(feature_type),
+                                        metrics::stringToMetricType(metric_type),
+                                        count);
+    
+    for (int n = 0; n < results.size(); n++)
+    {
+        cv::namedWindow("Result " + std::to_string(n));
+        cv::imshow("Result " + std::to_string(n), results[n]);
+        cv::waitKey(0);
+        cv::destroyWindow("Result " + std::to_string(n));
+    }
     return 0;;
 }

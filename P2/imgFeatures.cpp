@@ -21,9 +21,9 @@ namespace features
             int feature_col = 0;
             for (int c = (cols / 2) - 4; c < (cols / 2) + 4; c++)
             {
-                features[(feature_row * 9 * 3) + (c * 3) + 0] = (float) im_row[feature_col * 3 + 0];
-                features[(feature_row * 9 * 3) + (c * 3) + 1] = (float) im_row[feature_col * 3 + 1];
-                features[(feature_row * 9 * 3) + (c * 3) + 2] = (float) im_row[feature_col * 3 + 2];
+                features[(feature_row * 9 * 3) + (feature_col * 3) + 0] = (float) im_row[c * 3 + 0];
+                features[(feature_row * 9 * 3) + (feature_col * 3) + 1] = (float) im_row[c * 3 + 1];
+                features[(feature_row * 9 * 3) + (feature_col * 3) + 2] = (float) im_row[c * 3 + 2];
 
                 feature_col++;
             }
@@ -33,7 +33,7 @@ namespace features
         return features;
     }
 
-    ImgFeature compute(cv::Mat *img, FEATURE feature_type)
+    ImgFeature compute(cv::Mat img, FEATURE feature_type)
     {
         ImgFeature img_feature = ImgFeature();
         img_feature.img = img;
@@ -46,7 +46,7 @@ namespace features
         }
         if (feature_type == FEATURE::SQUARE_9x9)
         {
-            img_feature.features = square9x9(img);
+            img_feature.features = square9x9(&img);
         }
 
         return img_feature;
@@ -60,9 +60,9 @@ namespace features
         for (int i = 0; i < image_files.size(); i++)
         {
             cv::Mat sample = cv::imread(image_files[i]);
-            images_features.push_back(compute(&sample, feature_type));
+            images_features.push_back(compute(sample, feature_type));
         }
-
+        
         return images_features;
     }
 

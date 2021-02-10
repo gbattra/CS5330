@@ -16,7 +16,7 @@ namespace metrics
     {
         public:
             float value;
-            cv::Mat *img;
+            cv::Mat img;
     };
 
     METRIC stringToMetricType(std::string metric_type);

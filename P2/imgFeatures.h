@@ -16,10 +16,10 @@ namespace features
     {
         public:
             std::vector<float> features;
-            cv::Mat *img;
+            cv::Mat img;
     };
 
-    ImgFeature compute(cv::Mat *target_img, FEATURE feature_type);
+    ImgFeature compute(cv::Mat target_img, FEATURE feature_type);
     std::vector<ImgFeature> load(std::string *db_path, FEATURE feature_type);
     FEATURE stringToFeatureType(std::string feature_type);
 }
