@@ -4,18 +4,35 @@
 
 namespace metrics
 {
-    float sumSquaredDistance(std::vector<float> target, std::vector<float> sample)
+    float intersection(std::vector<float> one, std::vector<float> two)
     {
-        if (target.size() != sample.size())
+        if (one.size() != two.size())
+        {
+            printf("Cannot compute histogram intersection. Vectors are not of equal size.\n");
+            return 0.0;
+        }
+
+        float intersection = 0.0;
+        for (int i = 0; i < one.size(); i++)
+        {
+            intersection += std::min(one[i], two[i]);
+        }
+
+        return intersection;
+    }
+
+    float sumSquaredDistance(std::vector<float> one, std::vector<float> two)
+    {
+        if (one.size() != two.size())
         {
             printf("Cannot compute sum of squared distance. Vectors are not of equal size.\n");
             return 0.0;
         }
 
         float distance = 0.0;
-        for (int i = 0; i < target.size(); i++)
+        for (int i = 0; i < one.size(); i++)
         {
-            distance += pow(target[i] - sample[i], 2);
+            distance += pow(one[i] - two[i], 2);
         }
 
         return distance;
@@ -34,6 +51,10 @@ namespace metrics
         {
             img_metric.value = sumSquaredDistance(target.features, sample.features);
         }
+        else if (metric_type == METRIC::INTERSECTION)
+        {
+            img_metric.value = intersection(target.features, sample.features);
+        }
 
         return img_metric;
     }
@@ -43,6 +64,10 @@ namespace metrics
         if (metric_type == "sumSquaredDistance")
         {
             return METRIC::SUM_SQUARED_DISTANCE;
+        }
+        else if (metric_type == "intersection")
+        {
+            return METRIC::INTERSECTION;
         }
 
         return METRIC::INVALID;

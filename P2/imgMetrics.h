@@ -9,6 +9,7 @@ namespace metrics
 {
     enum METRIC {
         SUM_SQUARED_DISTANCE,
+        INTERSECTION,
         INVALID
     };
 
