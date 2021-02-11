@@ -10,6 +10,7 @@ namespace features
     enum FEATURE {
         SQUARE_9x9,
         RG_HISTOGRAM,
+        MIN_MAX_HISTOGRAM,
         INVALID
     };
 

@@ -7,6 +7,54 @@ namespace features
     {
     }
 
+    std::vector<float> minMaxHistogram(cv::Mat *img)
+    {
+        std::vector<float> histogram(3 * 3, 0.0);
+        for (int i = 0; i < img->rows; i++)
+        {
+            uchar *row = img->ptr<uchar>(i);
+            for (int j = 0; j < img->cols; j++)
+            {
+                uchar *pixel = &row[j * 3];
+                float red = pixel[0];
+                float green = pixel[1];
+                float blue = pixel[2];
+                float rgb[3] = {red, green, blue};
+                float max = 0;
+                float min = 0;
+                int max_i = 0;
+                int min_i = 0;
+                for (int k = 0; k < 3; k++)
+                {
+                    if (rgb[k] > max)
+                    {
+                        max = rgb[k];
+                        max_i = k;
+                    }
+                    if (rgb[k] < min)
+                    {
+                        min = rgb[k];
+                        min_i = k;
+                    }
+                }
+                
+                histogram[(max_i * 3) + min_i] += 1.0;
+            }
+        }
+
+        // normalize histogram
+        float max_bucket = *std::max_element(histogram.begin(), histogram.end());
+        for (int n = 0; n < 3; n++)
+        {
+            for (int m = 0; m < 3; m++)
+            {
+                histogram[(n * 3) + m] /= max_bucket;
+            }
+        }
+
+        return histogram;
+    }
+
     std::vector<float> redGreenHistorgram(cv::Mat *img)
     {
         std::vector<float> histogram(100 * 100, 0.0);
@@ -95,6 +143,10 @@ namespace features
         {
             img_feature.features = redGreenHistorgram(&img);
         }
+        else if (feature_type == FEATURE::MIN_MAX_HISTOGRAM)
+        {
+            img_feature.features = minMaxHistogram(&img);
+        }
 
         return img_feature;
     }
@@ -121,6 +173,10 @@ namespace features
         else if (feature_type == "redGreenHistogram")
         {
             return FEATURE::RG_HISTOGRAM;
+        }
+        else if (feature_type == "minMaxHistogram")
+        {
+            return FEATURE::MIN_MAX_HISTOGRAM;
         }
 
         return FEATURE::INVALID;
