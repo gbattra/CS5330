@@ -9,27 +9,37 @@ namespace features
 
     std::vector<float> redGreenHistorgram(cv::Mat *img)
     {
-        float range = 256.0 / (float) RG_HISTO_BUCKET_COUNT;
-        std::vector<float> histogram(RG_HISTO_BUCKET_COUNT * RG_HISTO_BUCKET_COUNT, 0.0);
+        std::vector<float> histogram(100 * 100, 0.0);
         for (int i = 0; i < img->rows; i++)
         {
             uchar *row = img->ptr<uchar>(i);
             for (int j = 0; j < img->cols; j++)
             {
                 uchar *pixel = &row[j * 3];
-                int red_bucket = ((float) pixel[0]) / range;
-                int green_bucket = ((float) pixel[1]) / range;
-                histogram[(red_bucket * RG_HISTO_BUCKET_COUNT) + green_bucket] += 1.0;
+                uchar red = pixel[0];
+                uchar green = pixel[1];
+                uchar blue = pixel[2];
+                float denom = red + green + blue;
+                if (denom == 0)
+                {
+                    histogram[0] += 1.0;
+                }
+                else
+                {
+                    int red_bucket = (red / denom) * 100;
+                    int green_bucket = (green / denom) * 100;
+                    histogram[(red_bucket * 100) + green_bucket] += 1.0;
+                }
             }
         }
 
         // normalize histogram
         float max_bucket = *std::max_element(histogram.begin(), histogram.end());
-        for (int r = 0; r < RG_HISTO_BUCKET_COUNT; r++)
+        for (int r = 0; r < 100; r++)
         {
-            for (int g = 0; g < RG_HISTO_BUCKET_COUNT; g++)
+            for (int g = 0; g < 100; g++)
             {
-                histogram[(r * RG_HISTO_BUCKET_COUNT) + g] /= max_bucket;
+                histogram[(r * 100) + g] /= max_bucket;
             }
         }
 

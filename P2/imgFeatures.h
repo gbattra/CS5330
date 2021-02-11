@@ -5,8 +5,6 @@
 #include <stdio.h>
 #include <list>
 
-#define RG_HISTO_BUCKET_COUNT 32
-
 namespace features
 {
     enum FEATURE {
