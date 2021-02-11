@@ -38,6 +38,22 @@ namespace metrics
         return distance;
     }
 
+    float multiHistogram(std::vector<float> one, std::vector<float> two)
+    {
+        int rgRange = 100 * 100;
+        std::vector<float> rgHistoOne = std::vector<float>(one.begin(), one.begin() + rgRange);
+        std::vector<float> rgHistoTwo = std::vector<float>(two.begin(), two.begin() + rgRange);
+        std::vector<float> rgbHistoOne = std::vector<float>(one.begin() + rgRange, one.end());
+        std::vector<float> rgbHistoTwo = std::vector<float>(two.begin() + rgRange, two.end());
+        
+        float rgHistoIntersection = intersection(rgHistoOne, rgHistoTwo);
+        float rgbHistoIntersection = intersection(rgbHistoOne, rgbHistoTwo);
+
+        float distance = (0.75 * rgHistoIntersection) - (0.25 * rgbHistoIntersection);
+
+        return distance;
+    }
+
     ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, METRIC metric_type)
     {
         ImgMetric img_metric;
@@ -55,6 +71,10 @@ namespace metrics
         {
             img_metric.value = intersection(target.features, sample.features);
         }
+        else if (metric_type == METRIC::MULTI_HISTOGRAM)
+        {
+            img_metric.value = multiHistogram(target.features, sample.features);
+        }
 
         return img_metric;
     }
@@ -68,6 +88,10 @@ namespace metrics
         else if (metric_type == "intersection")
         {
             return METRIC::INTERSECTION;
+        }
+        else if (metric_type == "multiHistogram")
+        {
+            return METRIC::MULTI_HISTOGRAM;
         }
 
         return METRIC::INVALID;

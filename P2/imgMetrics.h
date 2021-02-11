@@ -10,6 +10,7 @@ namespace metrics
     enum METRIC {
         SUM_SQUARED_DISTANCE,
         INTERSECTION,
+        MULTI_HISTOGRAM,
         INVALID
     };
 

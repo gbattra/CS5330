@@ -110,8 +110,8 @@ namespace features
     std::vector<float> multiHistogram(cv::Mat *img)
     {
         std::vector<float> rgHisto = redGreenHistorgram(img);
-        std::vector<float> minMaxHisto = redGreenBlueHistogram(img, 9);
-        rgHisto.insert(rgHisto.end(), minMaxHisto.begin(), minMaxHisto.end());
+        std::vector<float> rgbHisto = redGreenBlueHistogram(img, 9);
+        rgHisto.insert(rgHisto.end(), rgbHisto.begin(), rgbHisto.end());
 
         return rgHisto;
     }
@@ -135,9 +135,9 @@ namespace features
         {
             img_feature.features = redGreenHistorgram(&img);
         }
-        else if (feature_type == FEATURE::RGB_HISTOGRAM)
+        else if (feature_type == FEATURE::MULTI_HISTOGRAM)
         {
-            img_feature.features = redGreenBlueHistogram(&img, 9);
+            img_feature.features = multiHistogram(&img);
         }
 
         return img_feature;
@@ -166,9 +166,9 @@ namespace features
         {
             return FEATURE::RG_HISTOGRAM;
         }
-        else if (feature_type == "redGreenBlueHistogram")
+        else if (feature_type == "multiHistogram")
         {
-            return FEATURE::RGB_HISTOGRAM;
+            return FEATURE::MULTI_HISTOGRAM;
         }
 
         return FEATURE::INVALID;

@@ -5,14 +5,14 @@
 #include <stdio.h>
 #include <list>
 
-#define RGB_BUCKET_SIZE 32
+#define RGB_BUCKET_SIZE 15
 
 namespace features
 {
     enum FEATURE {
         SQUARE_9x9,
         RG_HISTOGRAM,
-        RGB_HISTOGRAM,
+        MULTI_HISTOGRAM,
         INVALID
     };
 
