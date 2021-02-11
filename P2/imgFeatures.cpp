@@ -1,54 +1,38 @@
 #include "imgFeatures.h"
 #include "dbReader.h"
+#include <vector>
+#include <numeric>
 
 namespace features
 {
-    std::vector<float> multiHistogram(cv::Mat *img)
+    std::vector<float> redGreenBlueHistogram(cv::Mat *img, int range)
     {
-    }
-
-    std::vector<float> minMaxHistogram(cv::Mat *img)
-    {
-        std::vector<float> histogram(3 * 3, 0.0);
-        for (int i = 0; i < img->rows; i++)
+        std::vector<float> histogram(pow(RGB_BUCKET_SIZE, 3), 0.0);
+        float distance = 256.0 / RGB_BUCKET_SIZE;
+        for (int i = (img->rows / range) - (range / 2); i < (img->rows / 2) + (range / 2); i++)
         {
             uchar *row = img->ptr<uchar>(i);
-            for (int j = 0; j < img->cols; j++)
+            for (int j = (img->cols / 2) - (range / 2); j < (img->cols / 2) + (range / 2); j++)
             {
                 uchar *pixel = &row[j * 3];
-                float red = pixel[0];
-                float green = pixel[1];
-                float blue = pixel[2];
-                float rgb[3] = {red, green, blue};
-                float max = 0;
-                float min = 0;
-                int max_i = 0;
-                int min_i = 0;
-                for (int k = 0; k < 3; k++)
-                {
-                    if (rgb[k] > max)
-                    {
-                        max = rgb[k];
-                        max_i = k;
-                    }
-                    if (rgb[k] < min)
-                    {
-                        min = rgb[k];
-                        min_i = k;
-                    }
-                }
-                
-                histogram[(max_i * 3) + min_i] += 1.0;
+                int red_bucket = pixel[0] / distance;
+                int green_bucket = pixel[1] / distance;
+                int blue_bucket = pixel[2] / distance;
+                int offset = (RGB_BUCKET_SIZE * RGB_BUCKET_SIZE * red_bucket) + (RGB_BUCKET_SIZE * green_bucket) + blue_bucket;
+                histogram[offset] += 1.0;
             }
         }
 
         // normalize histogram
-        float max_bucket = *std::max_element(histogram.begin(), histogram.end());
-        for (int n = 0; n < 3; n++)
+        for (int r = 0; r < RGB_BUCKET_SIZE; r++)
         {
-            for (int m = 0; m < 3; m++)
+            for (int g = 0; g < RGB_BUCKET_SIZE; g++)
             {
-                histogram[(n * 3) + m] /= max_bucket;
+                for (int b = 0; b < RGB_BUCKET_SIZE; b++)
+                {
+                    int offset = (RGB_BUCKET_SIZE * RGB_BUCKET_SIZE * r) + (RGB_BUCKET_SIZE * g) + b;
+                    histogram[offset] /= img->rows * img->cols;
+                }
             }
         }
 
@@ -82,12 +66,11 @@ namespace features
         }
 
         // normalize histogram
-        float max_bucket = *std::max_element(histogram.begin(), histogram.end());
         for (int r = 0; r < 100; r++)
         {
             for (int g = 0; g < 100; g++)
             {
-                histogram[(r * 100) + g] /= max_bucket;
+                histogram[(r * 100) + g] /= img->rows * img->cols;
             }
         }
 
@@ -124,6 +107,15 @@ namespace features
         return features;
     }
 
+    std::vector<float> multiHistogram(cv::Mat *img)
+    {
+        std::vector<float> rgHisto = redGreenHistorgram(img);
+        std::vector<float> minMaxHisto = redGreenBlueHistogram(img, 9);
+        rgHisto.insert(rgHisto.end(), minMaxHisto.begin(), minMaxHisto.end());
+
+        return rgHisto;
+    }
+
     ImgFeature compute(cv::Mat img, FEATURE feature_type)
     {
         ImgFeature img_feature;
@@ -143,9 +135,9 @@ namespace features
         {
             img_feature.features = redGreenHistorgram(&img);
         }
-        else if (feature_type == FEATURE::MIN_MAX_HISTOGRAM)
+        else if (feature_type == FEATURE::RGB_HISTOGRAM)
         {
-            img_feature.features = minMaxHistogram(&img);
+            img_feature.features = redGreenBlueHistogram(&img, 9);
         }
 
         return img_feature;
@@ -174,9 +166,9 @@ namespace features
         {
             return FEATURE::RG_HISTOGRAM;
         }
-        else if (feature_type == "minMaxHistogram")
+        else if (feature_type == "redGreenBlueHistogram")
         {
-            return FEATURE::MIN_MAX_HISTOGRAM;
+            return FEATURE::RGB_HISTOGRAM;
         }
 
         return FEATURE::INVALID;
