@@ -47,9 +47,9 @@ namespace metrics
         std::vector<float> rgbHistoTwo = std::vector<float>(two.begin() + rgRange, two.end());
         
         float rgHistoIntersection = intersection(rgHistoOne, rgHistoTwo);
-        float rgbHistoIntersection = intersection(rgbHistoOne, rgbHistoTwo);
+        float rgbHistoSum = sumSquaredDistance(rgbHistoOne, rgbHistoTwo);
 
-        float distance = (0.75 * rgHistoIntersection) - (0.25 * rgbHistoIntersection);
+        float distance = (0.75 * rgHistoIntersection) - (0.25 * rgbHistoSum);
 
         return distance;
     }

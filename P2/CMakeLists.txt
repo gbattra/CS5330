@@ -7,5 +7,6 @@ add_executable(
     ImgSearch imgSearch.cpp
     dbReader.h dbReader.cpp
     imgFeatures.h imgFeatures.cpp
-    imgMetrics.h imgMetrics.cpp)
+    imgMetrics.h imgMetrics.cpp
+    filters.h filters.cpp)
 target_link_libraries( ImgSearch ${OpenCV_LIBS} )

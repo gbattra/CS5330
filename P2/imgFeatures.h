@@ -6,6 +6,7 @@
 #include <list>
 
 #define RGB_BUCKET_SIZE 15
+#define N_GMS_STEPS 6
 
 namespace features
 {

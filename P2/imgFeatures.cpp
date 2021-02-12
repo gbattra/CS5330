@@ -1,5 +1,6 @@
 #include "imgFeatures.h"
 #include "dbReader.h"
+#include "filters.h"
 #include <vector>
 #include <numeric>
 
@@ -109,11 +110,50 @@ namespace features
 
     std::vector<float> multiHistogram(cv::Mat *img)
     {
-        std::vector<float> rgHisto = redGreenHistorgram(img);
-        std::vector<float> rgbHisto = redGreenBlueHistogram(img, 9);
-        rgHisto.insert(rgHisto.end(), rgbHisto.begin(), rgbHisto.end());
+        std::vector<float> rg_histo = redGreenHistorgram(img);
+        std::vector<float> rgb_histo = redGreenBlueHistogram(img, 9);
+        rg_histo.insert(rg_histo.end(), rgb_histo.begin(), rgb_histo.end());
 
-        return rgHisto;
+        return rg_histo;
+    }
+
+    std::vector<float> gradientMagnitudeSum(cv::Mat *img)
+    {
+        cv::Mat grad_mag_img = cv::Mat(img->rows, img->cols, img->type(), 0.0);
+        filters::magnitudeFilter(img, &grad_mag_img);
+        
+        std::vector<float> histogram(N_GMS_STEPS * N_GMS_STEPS, 0.0);
+        int row_step_size = img->rows / N_GMS_STEPS;
+        int col_step_size = img->cols / N_GMS_STEPS;
+        for (int step_row = 0; step_row < N_GMS_STEPS; step_row++)
+        {
+            for (int step_col = 0; step_col < N_GMS_STEPS; step_col++)
+            {
+                float sum = 0.0;
+                for (int r = (step_row * row_step_size); r < (step_row * row_step_size); r++)
+                {
+                    uchar *row = grad_mag_img.ptr<uchar>(r);
+                    for (int c = (step_col * col_step_size); c < (step_col * col_step_size); c++)
+                    {
+                        sum += row[c * 3 + 0];
+                        sum += row[c * 3 + 1];
+                        sum += row[c * 3 + 2];
+                    }
+                }
+                histogram[(step_row * N_GMS_STEPS) + step_col] = sum;
+            }
+        }
+
+        return histogram;
+    }
+
+    std::vector<float> textureAndColor(cv::Mat *img)
+    {
+        std::vector<float> color_histogram = redGreenHistorgram(img);
+        std::vector<float> texture_histogram = gradientMagnitudeSum(img);
+        color_histogram.insert(color_histogram.end(), texture_histogram.begin(), texture_histogram.end());
+
+        return color_histogram;
     }
 
     ImgFeature compute(cv::Mat img, FEATURE feature_type)
