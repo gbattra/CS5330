@@ -33,7 +33,7 @@ namespace features
         return histogram;
     }
 
-    std::vector<float> redGreenHistorgram(cv::Mat *img)
+    std::vector<float> redGreenHistogram(cv::Mat *img)
     {
         std::vector<float> histogram(100 * 100, 0.0);
         for (int i = 0; i < img->rows; i++)
@@ -100,7 +100,7 @@ namespace features
 
     std::vector<float> multiHistogram(cv::Mat *img)
     {
-        std::vector<float> rg_histo = redGreenHistorgram(img);
+        std::vector<float> rg_histo = redGreenHistogram(img);
         std::vector<float> rgb_histo = redGreenBlueHistogram(img, 9);
         rg_histo.insert(rg_histo.end(), rgb_histo.begin(), rgb_histo.end());
 
@@ -116,6 +116,7 @@ namespace features
         int row_step_size = img->rows / N_GMS_STEPS;
         int col_step_size = img->cols / N_GMS_STEPS;
         float total_sum = 0.0;
+        float threshold = 15.0;
         for (int step_row = 0; step_row < N_GMS_STEPS; step_row++)
         {
             for (int step_col = 0; step_col < N_GMS_STEPS; step_col++)
@@ -128,9 +129,10 @@ namespace features
                     int cell_col = step_col * col_step_size;
                     for (int c = cell_col; c < cell_col + col_step_size; c++)
                     {
-                        sum += row[c * 3 + 0];
-                        sum += row[c * 3 + 1];
-                        sum += row[c * 3 + 2];
+                        if (row[c * 3 + 0] > threshold && row[c * 3 + 1] > threshold && row[c * 3 + 2] > threshold)
+                        {
+                            sum += 1.0;
+                        }
                     }
                 }
                 histogram[(step_row * N_GMS_STEPS) + step_col] = sum;
@@ -149,10 +151,9 @@ namespace features
 
     std::vector<float> colorAndTexture(cv::Mat *img)
     {
-        std::vector<float> color_histogram = redGreenHistorgram(img);
+        std::vector<float> color_histogram = redGreenHistogram(img);
         std::vector<float> texture_histogram = gradientMagnitudeSum(img);
-        color_histogram.insert(color_histogram.end(), texture_histogram.begin(), texture_histogram.end());
-
+        color_histogram.insert(color_histogram.end(), texture_histogram.begin(), texture_histogram.end());  
         return color_histogram;
     }
 
@@ -173,7 +174,7 @@ namespace features
         }
         else if (feature_type == FEATURE::RG_HISTOGRAM)
         {
-            img_feature.features = redGreenHistorgram(&img);
+            img_feature.features = redGreenHistogram(&img);
         }
         else if (feature_type == FEATURE::MULTI_HISTOGRAM)
         {

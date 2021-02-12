@@ -49,7 +49,7 @@ namespace metrics
         float rg_histo_intersection = intersection(rg_histo_one, rg_histo_two);
         float rgb_histo_sum = sumSquaredDistance(rgb_histo_one, rgb_histo_two);
 
-        float distance = (0.75 * rg_histo_intersection) - (0.25 * rgb_histo_sum);
+        float distance = (0.75 * rg_histo_intersection) + (0.25 * rgb_histo_sum);
 
         return distance;
     }
@@ -63,9 +63,9 @@ namespace metrics
 
         std::vector<float> gms_histo_one = std::vector<float>(one.begin() + rg_range, one.end());
         std::vector<float> gms_histo_two = std::vector<float>(two.begin() + rg_range, two.end());
-        float gms_ssd = sumSquaredDistance(gms_histo_one, gms_histo_two);
+        float gms_intersection = intersection(gms_histo_one, gms_histo_two);
 
-        return rg_intersection - gms_ssd;
+        return rg_intersection + gms_intersection;
     }
 
     ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, METRIC metric_type)
