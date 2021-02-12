@@ -38,20 +38,34 @@ namespace metrics
         return distance;
     }
 
-    float multiHistogram(std::vector<float> one, std::vector<float> two)
+    float rgRgbHistogram(std::vector<float> one, std::vector<float> two)
     {
-        int rgRange = 100 * 100;
-        std::vector<float> rgHistoOne = std::vector<float>(one.begin(), one.begin() + rgRange);
-        std::vector<float> rgHistoTwo = std::vector<float>(two.begin(), two.begin() + rgRange);
-        std::vector<float> rgbHistoOne = std::vector<float>(one.begin() + rgRange, one.end());
-        std::vector<float> rgbHistoTwo = std::vector<float>(two.begin() + rgRange, two.end());
+        int rg_range = 100 * 100;
+        std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rg_range);
+        std::vector<float> rg_histo_two = std::vector<float>(two.begin(), two.begin() + rg_range);
+        std::vector<float> rgb_histo_one = std::vector<float>(one.begin() + rg_range, one.end());
+        std::vector<float> rgb_histo_two = std::vector<float>(two.begin() + rg_range, two.end());
         
-        float rgHistoIntersection = intersection(rgHistoOne, rgHistoTwo);
-        float rgbHistoSum = sumSquaredDistance(rgbHistoOne, rgbHistoTwo);
+        float rg_histo_intersection = intersection(rg_histo_one, rg_histo_two);
+        float rgb_histo_sum = sumSquaredDistance(rgb_histo_one, rgb_histo_two);
 
-        float distance = (0.75 * rgHistoIntersection) - (0.25 * rgbHistoSum);
+        float distance = (0.75 * rg_histo_intersection) - (0.25 * rgb_histo_sum);
 
         return distance;
+    }
+
+    float colorTextureHistogram(std::vector<float> one, std::vector<float> two)
+    {
+        int rg_range = 100 * 100;
+        std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rg_range);
+        std::vector<float> rg_histo_two = std::vector<float>(two.begin(), two.begin() + rg_range);
+        float rg_intersection = intersection(rg_histo_one, rg_histo_two);
+
+        std::vector<float> gms_histo_one = std::vector<float>(one.begin() + rg_range, one.end());
+        std::vector<float> gms_histo_two = std::vector<float>(two.begin() + rg_range, two.end());
+        float gms_ssd = sumSquaredDistance(gms_histo_one, gms_histo_two);
+
+        return rg_intersection - gms_ssd;
     }
 
     ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, METRIC metric_type)
@@ -71,9 +85,13 @@ namespace metrics
         {
             img_metric.value = intersection(target.features, sample.features);
         }
-        else if (metric_type == METRIC::MULTI_HISTOGRAM)
+        else if (metric_type == METRIC::RG_RGB_HISTOGRAM)
         {
-            img_metric.value = multiHistogram(target.features, sample.features);
+            img_metric.value = rgRgbHistogram(target.features, sample.features);
+        }
+        else if (metric_type == METRIC::COLOR_TEXTURE_HISTOGRAM)
+        {
+            img_metric.value = colorTextureHistogram(target.features, sample.features);
         }
 
         return img_metric;
@@ -91,7 +109,11 @@ namespace metrics
         }
         else if (metric_type == "multiHistogram")
         {
-            return METRIC::MULTI_HISTOGRAM;
+            return METRIC::RG_RGB_HISTOGRAM;
+        }
+        else if (metric_type == "colorTextureHistogram")
+        {
+            return METRIC::COLOR_TEXTURE_HISTOGRAM;
         }
 
         return METRIC::INVALID;

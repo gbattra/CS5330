@@ -14,6 +14,7 @@ namespace features
         SQUARE_9x9,
         RG_HISTOGRAM,
         MULTI_HISTOGRAM,
+        COLOR_TEXTURE_HISTOGRAM,
         INVALID
     };
 

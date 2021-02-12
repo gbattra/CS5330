@@ -25,16 +25,9 @@ namespace features
         }
 
         // normalize histogram
-        for (int r = 0; r < RGB_BUCKET_SIZE; r++)
+        for (int k = 0; k < histogram.size(); k++)
         {
-            for (int g = 0; g < RGB_BUCKET_SIZE; g++)
-            {
-                for (int b = 0; b < RGB_BUCKET_SIZE; b++)
-                {
-                    int offset = (RGB_BUCKET_SIZE * RGB_BUCKET_SIZE * r) + (RGB_BUCKET_SIZE * g) + b;
-                    histogram[offset] /= img->rows * img->cols;
-                }
-            }
+            histogram[k] /= img->rows * img->cols;
         }
 
         return histogram;
@@ -67,13 +60,10 @@ namespace features
         }
 
         // normalize histogram
-        for (int r = 0; r < 100; r++)
+        for (int k = 0; k < histogram.size(); k++)
         {
-            for (int g = 0; g < 100; g++)
-            {
-                histogram[(r * 100) + g] /= img->rows * img->cols;
-            }
-        }
+            histogram[k] /= img->rows * img->cols;
+        } 
 
         return histogram;
     }
@@ -125,15 +115,18 @@ namespace features
         std::vector<float> histogram(N_GMS_STEPS * N_GMS_STEPS, 0.0);
         int row_step_size = img->rows / N_GMS_STEPS;
         int col_step_size = img->cols / N_GMS_STEPS;
+        float total_sum = 0.0;
         for (int step_row = 0; step_row < N_GMS_STEPS; step_row++)
         {
             for (int step_col = 0; step_col < N_GMS_STEPS; step_col++)
             {
                 float sum = 0.0;
-                for (int r = (step_row * row_step_size); r < (step_row * row_step_size); r++)
+                int cell_row = step_row * row_step_size;
+                for (int r = cell_row; r < cell_row + row_step_size; r++)
                 {
                     uchar *row = grad_mag_img.ptr<uchar>(r);
-                    for (int c = (step_col * col_step_size); c < (step_col * col_step_size); c++)
+                    int cell_col = step_col * col_step_size;
+                    for (int c = cell_col; c < cell_col + col_step_size; c++)
                     {
                         sum += row[c * 3 + 0];
                         sum += row[c * 3 + 1];
@@ -141,13 +134,20 @@ namespace features
                     }
                 }
                 histogram[(step_row * N_GMS_STEPS) + step_col] = sum;
+                total_sum += sum;
             }
+        }
+
+        // normalize
+        for (int i = 0; i < histogram.size(); i++)
+        {
+            histogram[i] /= total_sum;
         }
 
         return histogram;
     }
 
-    std::vector<float> textureAndColor(cv::Mat *img)
+    std::vector<float> colorAndTexture(cv::Mat *img)
     {
         std::vector<float> color_histogram = redGreenHistorgram(img);
         std::vector<float> texture_histogram = gradientMagnitudeSum(img);
@@ -179,6 +179,10 @@ namespace features
         {
             img_feature.features = multiHistogram(&img);
         }
+        else if (feature_type == FEATURE::COLOR_TEXTURE_HISTOGRAM)
+        {
+            img_feature.features = colorAndTexture(&img);
+        }
 
         return img_feature;
     }
@@ -209,6 +213,10 @@ namespace features
         else if (feature_type == "multiHistogram")
         {
             return FEATURE::MULTI_HISTOGRAM;
+        }
+        else if (feature_type == "colorTextureHistogram")
+        {
+            return FEATURE::COLOR_TEXTURE_HISTOGRAM;
         }
 
         return FEATURE::INVALID;
