@@ -6,16 +6,20 @@ namespace imageOps
     cv::Mat sliceImg(cv::Mat *img, int size)
     {
         cv::Mat slice = cv::Mat(size, size, img->type());
+        int row = 0;
         for (int r = (img->rows / 2) - (size / 2); r < (img->rows / 2) + (size / 2); r++)
         {
             uchar *irow = img->ptr<uchar>(r);
-            uchar *srow = slice.ptr<uchar>(r);
+            uchar *srow = slice.ptr<uchar>(row);
+            int col = 0;
             for (int c = (img->cols / 2) - (size / 2); c < (img->cols / 2) + (size / 2); c++)
             {
-                srow[c * 3 + 0] = irow[c * 3 + 0];
-                srow[c * 3 + 1] = irow[c * 3 + 1];
-                srow[c * 3 + 2] = irow[c * 3 + 2];
+                srow[col * 3 + 0] = irow[c * 3 + 0];
+                srow[col * 3 + 1] = irow[c * 3 + 1];
+                srow[col * 3 + 2] = irow[c * 3 + 2];
+                col++;
             }
+            row++;
         }
 
         return slice;
@@ -33,7 +37,7 @@ namespace imageOps
 
             for (int c = 0; c < one->cols; c++)
             {
-                dst_row[c] = one_row[c] + two_row[c];
+                dst_row[c] = sqrt(pow(one_row[c], 2) + pow(two_row[c], 2));
             }
         }
 

@@ -27,7 +27,7 @@ std::vector<cv::Mat> searchAndRank(
 {
     features::ImgFeature target_features = features::compute(target_img, feature_type);
     std::vector<features::ImgFeature> db_features = features::load(&db_path, feature_type);
-
+    
     std::vector<metrics::ImgMetric> db_metrics(db_features.size());
     for (int i = 0; i < db_features.size(); i++)
     {
