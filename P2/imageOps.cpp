@@ -63,8 +63,11 @@ namespace imageOps
         }
     }
 
-    std::vector<float> bucketize(cv::Mat *src, float min, float max, int n_buckets)
+    std::vector<float> bucketize(cv::Mat *src, int n_buckets)
     {
+        double min, max;
+        cv::minMaxLoc(*src, &min, &max);
+
         float diff = max - min;
         float range = diff / n_buckets;
 

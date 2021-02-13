@@ -158,40 +158,47 @@ namespace features
         return color_histogram;
     }
 
+    cv::Mat computeLawsHistogram(cv::Mat *src, filters::FILTER filter_one, filters::FILTER filter_two)
+    {
+        std::vector<float> filter_one_vec = filters::getFilter(filter_one);
+        std::vector<float> filter_two_vec = filters::getFilter(filter_two);
+
+        cv::Mat one = cv::Mat(src->rows, src->cols, CV_16SC1);
+        cv::Mat two = cv::Mat(src->rows, src->cols, CV_16SC1);
+        filters::applyLawsFilter(*src, one, filter_one_vec, filter_two_vec);
+        filters::applyLawsFilter(*src, two, filter_two_vec, filter_one_vec);
+        cv::Mat merged = imageOps::mergeImg(&one, &two);
+
+        return merged;
+    }
+
     std::vector<float> lawsHistogram(cv::Mat *img)
     {
         cv::Mat gs_slice = imageOps::sliceImg(img, LAWS_SLICE_SIZE);
         cv::Mat gs_image;
         cv::cvtColor(gs_slice, gs_image, cv::COLOR_BGR2GRAY);
 
-        // // gauss + spot
-        cv::Mat gausSpot = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
-        cv::Mat spotGaus = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
-        std::vector<float> gausFilter = filters::getFilter(filters::FILTER::GAUSSIAN);
-        std::vector<float> spotFilter = filters::getFilter(filters::FILTER::SPOT);
-        filters::applyLawsFilter(gs_slice, gausSpot, gausFilter, spotFilter);
-        filters::applyLawsFilter(gs_slice, spotGaus, spotFilter, gausFilter);
-        cv::Mat gausSpotMerged = imageOps::mergeImg(&gausSpot, &spotGaus);
+        // gauss + spot
+        cv::Mat gaus_spot = computeLawsHistogram(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::SPOT);
 
         // gauss + derivative
 
         // wave + ripple
 
         // gauss + gauss
+        std::vector<float> gaus_filter = filters::getFilter(filters::FILTER::GAUSSIAN);
         cv::Mat gaus = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
-        filters::applyLawsFilter(gs_slice, gaus, gausFilter, gausFilter);
+        filters::applyLawsFilter(gs_slice, gaus, gaus_filter, gaus_filter);
 
         // normalize
-        imageOps::normalize(&gausSpotMerged, &gaus);
+        imageOps::normalize(&gaus_spot, &gaus);
 
         // bucketize
-        double min, max;
-        cv::minMaxLoc(gausSpotMerged, &min, &max);
-        std::vector<float> gausSpotHisto = imageOps::bucketize(&gausSpotMerged, min, max, N_LAWS_BUCKETS);
+        std::vector<float> gaus_spot_histo = imageOps::bucketize(&gaus_spot, N_LAWS_BUCKETS);
 
         // concatenate
 
-        return std::vector<float>(0);
+        return gaus_spot_histo;
     }
 
     ImgFeature compute(cv::Mat img, FEATURE feature_type)
