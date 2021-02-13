@@ -39,4 +39,18 @@ namespace imageOps
 
         return dst;
     }
+
+    void normalize(cv::Mat *src, cv::Mat *norm)
+    {
+        for (int r = 0; r < src->rows; r++)
+        {
+            short *src_row = src->ptr<short>(r);
+            short *norm_row = src->ptr<short>(r);
+
+            for (int c = 0; c < src->cols; c++)
+            {
+                src_row[c] = src_row[c] / norm_row[c];
+            }
+        }
+    }
 }

@@ -182,6 +182,7 @@ namespace features
         filters::applyLawsFilter(gs_slice, gaus, gausFilter, gausFilter);
 
         // normalize
+        imageOps::normalize(&gausSpotMerged, &gaus);
 
         // bucketize
 
