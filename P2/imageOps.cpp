@@ -53,6 +53,10 @@ namespace imageOps
 
             for (int c = 0; c < src->cols; c++)
             {
+                if (norm_row[c] == 0)
+                {
+                    continue;
+                }
                 src_row[c] = src_row[c] / norm_row[c];
             }
         }
