@@ -22,8 +22,21 @@ namespace imageOps
     }
 
 
-    cv::Mat mergeImg(cv::Mat *one, cv::Mat *two, cv::Mat *dst)
+    cv::Mat mergeImg(cv::Mat *one, cv::Mat *two)
     {
+        cv::Mat dst = cv::Mat(one->rows, one->cols, one->type());
+        for (int r = 0; r < one->rows; r++)
+        {
+            short *one_row = one->ptr<short>(r);
+            short *two_row = two->ptr<short>(r);
+            short *dst_row = dst.ptr<short>(r);
 
+            for (int c = 0; c < one->cols; c++)
+            {
+                dst_row[c] = one_row[c] + two_row[c];
+            }
+        }
+
+        return dst;
     }
 }

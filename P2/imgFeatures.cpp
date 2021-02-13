@@ -167,12 +167,12 @@ namespace features
         // gauss + spot
         cv::Mat gausSpot = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
         cv::Mat spotGaus = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
-        cv::Mat gausSpotMerged = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
         std::vector<float> gausFilter = filters::getFilter(filters::FILTER::GAUSSIAN);
         std::vector<float> spotFilter = filters::getFilter(filters::FILTER::SPOT);
         filters::applyLawsFilter(gs_slice, gausSpot, gausFilter, spotFilter);
         filters::applyLawsFilter(gs_slice, spotGaus, spotFilter, gausFilter);
-        imageOps::mergeImg(&gausSpot, &spotGaus, &gausSpotMerged);
+        cv::Mat gausSpotMerged = imageOps::mergeImg(&gausSpot, &spotGaus);
+
         // gauss + derivative
 
         // wave + ripple
