@@ -1,6 +1,7 @@
 #include "imgFeatures.h"
 #include "dbReader.h"
 #include "filters.h"
+#include "imageOps.h"
 #include <vector>
 #include <numeric>
 
@@ -157,6 +158,36 @@ namespace features
         return color_histogram;
     }
 
+    std::vector<float> lawsHistogram(cv::Mat *img)
+    {
+        cv::Mat gs_slice = imageOps::sliceImg(img, LAWS_SLICE_SIZE);
+        cv::Mat gs_image = cv::Mat(gs_slice.rows, gs_slice.cols, gs_slice.type());
+        cv::cvtColor(gs_slice, gs_image, cv::COLOR_BGR2GRAY);
+
+        // gauss + spot
+        cv::Mat gausSpot = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
+        cv::Mat spotGaus = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
+        cv::Mat gausSpotMerged = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
+        std::vector<float> gausFilter = filters::getFilter(filters::FILTER::GAUSSIAN);
+        std::vector<float> spotFilter = filters::getFilter(filters::FILTER::SPOT);
+        filters::applyLawsFilter(gs_slice, gausSpot, gausFilter, spotFilter);
+        filters::applyLawsFilter(gs_slice, spotGaus, spotFilter, gausFilter);
+        imageOps::mergeImg(&gausSpot, &spotGaus, &gausSpotMerged);
+        // gauss + derivative
+
+        // wave + ripple
+
+        // gauss + gauss
+        cv::Mat gaus = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
+        filters::applyLawsFilter(gs_slice, gaus, gausFilter, gausFilter);
+
+        // normalize
+
+        // bucketize
+
+        // concatenate
+    }
+
     ImgFeature compute(cv::Mat img, FEATURE feature_type)
     {
         ImgFeature img_feature;
@@ -184,6 +215,10 @@ namespace features
         {
             img_feature.features = colorAndTexture(&img);
         }
+        else if (feature_type == FEATURE::CUSTOM_HISTOGRAM)
+        {
+            img_feature.features = lawsHistogram(&img);
+        }
 
         return img_feature;
     }
@@ -207,17 +242,21 @@ namespace features
         {
             return FEATURE::SQUARE_9x9;
         }
-        else if (feature_type == "redGreenHistogram")
+        else if (feature_type == "redGreen")
         {
             return FEATURE::RG_HISTOGRAM;
         }
-        else if (feature_type == "multiHistogram")
+        else if (feature_type == "multi")
         {
             return FEATURE::MULTI_HISTOGRAM;
         }
-        else if (feature_type == "colorTextureHistogram")
+        else if (feature_type == "colorTexture")
         {
             return FEATURE::COLOR_TEXTURE_HISTOGRAM;
+        }
+        else if (feature_type == "custom")
+        {
+            return FEATURE::CUSTOM_HISTOGRAM;
         }
 
         return FEATURE::INVALID;

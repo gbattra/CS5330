@@ -38,7 +38,7 @@ namespace metrics
         return distance;
     }
 
-    float rgRgbHistogram(std::vector<float> one, std::vector<float> two)
+    float multiHistogram(std::vector<float> one, std::vector<float> two)
     {
         int rg_range = 100 * 100;
         std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rg_range);
@@ -47,9 +47,9 @@ namespace metrics
         std::vector<float> rgb_histo_two = std::vector<float>(two.begin() + rg_range, two.end());
         
         float rg_histo_intersection = intersection(rg_histo_one, rg_histo_two);
-        float rgb_histo_sum = sumSquaredDistance(rgb_histo_one, rgb_histo_two);
+        float rgb_histo_intersection = intersection(rgb_histo_one, rgb_histo_two);
 
-        float distance = (0.75 * rg_histo_intersection) + (0.25 * rgb_histo_sum);
+        float distance = (0.75 * rg_histo_intersection) + (0.25 * rgb_histo_intersection);
 
         return distance;
     }
@@ -85,9 +85,9 @@ namespace metrics
         {
             img_metric.value = intersection(target.features, sample.features);
         }
-        else if (metric_type == METRIC::RG_RGB_HISTOGRAM)
+        else if (metric_type == METRIC::MULTI_HISTOGRAM)
         {
-            img_metric.value = rgRgbHistogram(target.features, sample.features);
+            img_metric.value = multiHistogram(target.features, sample.features);
         }
         else if (metric_type == METRIC::COLOR_TEXTURE_HISTOGRAM)
         {
@@ -107,11 +107,11 @@ namespace metrics
         {
             return METRIC::INTERSECTION;
         }
-        else if (metric_type == "multiHistogram")
+        else if (metric_type == "multi")
         {
-            return METRIC::RG_RGB_HISTOGRAM;
+            return METRIC::MULTI_HISTOGRAM;
         }
-        else if (metric_type == "colorTextureHistogram")
+        else if (metric_type == "colorTexture")
         {
             return METRIC::COLOR_TEXTURE_HISTOGRAM;
         }

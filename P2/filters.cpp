@@ -4,72 +4,51 @@
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
-#define BLUR_FILTER_SIZE 5
 #define SOBEL_FILTER_SIZE 3
 
 namespace filters
 {
-    void convertToUchar(cv::Mat *src, cv::Mat *dst)
+    std::vector<float> getFilter(FILTER filter)
     {
-        for (int r = 0; r < src->rows; r++)
+        if (filter == FILTER::GAUSSIAN)
         {
-            uchar *row = dst->ptr<uchar>(r);
-            for (int c = 0; c < src->cols; c++)
-            {
-                row[c * 3 + 0] = (uchar) abs(src->ptr<short>(r)[c * 3 + 0]);
-                row[c * 3 + 1] = (uchar) abs(src->ptr<short>(r)[c * 3 + 1]);
-                row[c * 3 + 2] = (uchar) abs(src->ptr<short>(r)[c * 3 + 2]);
-            }
+            return std::vector<float>(5) = { 1, 4, 6, 4, 1 };
         }
+        else if (filter == FILTER::DERIVATIVE)
+        {
+            return std::vector<float>(5) = { 1, 2, 0, -2, -1 };
+        }
+        else if (filter == FILTER::SPOT)
+        {
+            return std::vector<float>(5) = { -1, 0, 2, 0, -1 };
+        }
+        else if (filter == FILTER::WAVE)
+        {
+            return std::vector<float>(5) = { 1, -2, 0, 2, -1 };
+        }
+        else if (filter == FILTER::RIPPLE)
+        {
+            return std::vector<float>(5) = { 1, -4, 5, -4, 1 };
+        }
+
+        return std::vector<float>(5) = { 1, 1, 1, 1, 1 };
     }
 
-    int blur5x5(cv::Mat &src, cv::Mat &dst)
+    int applyLawsFilter(cv::Mat &src, cv::Mat &dst, std::vector<float> v_filter, std::vector<float> h_filter)
     {
-        cv::Mat tmp = cv::Mat(dst.rows, dst.cols, dst.type(), 0.0);
-        int filter[BLUR_FILTER_SIZE] = {1, 2, 4, 2, 1};
-        int center_k = BLUR_FILTER_SIZE / 2;
+        cv::Mat tmp = cv::Mat(dst.rows, dst.cols, CV_16SC1, 0.0);
 
         for (int r = 0; r < src.rows; r++)
         {
             uchar *srow = src.ptr<uchar>(r);
-            uchar *trow = tmp.ptr<uchar>(r);
+            short *trow = tmp.ptr<short>(r);
 
             for (int c = 0; c < src.cols; c++)
             {
-                uchar htmp[3] = {0, 0, 0};
-                uchar vtmp[3] = {0, 0, 0};
+                short vtmp = 0;
 
-                for (int k = 0; k < BLUR_FILTER_SIZE; k++)
-                {
-                    // horizontal
-                    int col = c - (center_k - k);
-                    if (col < 0 || col > src.cols - 1)
-                    {
-                        col = c;
-                    }
-
-                    htmp[0] += srow[col * 3 + 0] * filter[k] / 10;
-                    htmp[1] += srow[col * 3 + 1] * filter[k] / 10;
-                    htmp[2] += srow[col * 3 + 2] * filter[k] / 10;
-                }
-
-                trow[c * 3 + 0] = htmp[0];
-                trow[c * 3 + 1] = htmp[1];
-                trow[c * 3 + 2] = htmp[2];
-            }
-        }
-
-        for (int r = 0; r < src.rows; r++)
-        {
-            uchar *trow = tmp.ptr<uchar>(r);
-            uchar *drow = dst.ptr<uchar>(r);
-
-            for (int c = 0; c < src.cols; c++)
-            {
-                uchar htmp[3] = {0, 0, 0};
-                uchar vtmp[3] = {0, 0, 0};
-
-                for (int k = 0; k < BLUR_FILTER_SIZE; k++)
+                int center_k = v_filter.size() / 2;
+                for (int k = 0; k < v_filter.size(); k++)
                 {
                     // vertical
                     int row = r - (center_k - k);
@@ -78,15 +57,37 @@ namespace filters
                         row = r;
                     }
 
-                    int row_offset = -(r - row) * src.cols * 3;
-                    vtmp[0] += trow[(row_offset) + c * 3 + 0] * filter[k] / 10;
-                    vtmp[1] += trow[(row_offset) + c * 3 + 1] * filter[k] / 10;
-                    vtmp[2] += trow[(row_offset) + c * 3 + 2] * filter[k] / 10;
+                    int row_offset = -(r - row) * src.cols;
+                    vtmp += srow[row_offset + c] * v_filter[k];
                 }
 
-                drow[c * 3 + 0] = vtmp[0];
-                drow[c * 3 + 1] = vtmp[1];
-                drow[c * 3 + 2] = vtmp[2];
+                trow[c] = vtmp;
+            }
+        }
+
+        for (int r = 0; r < src.rows; r++)
+        {
+            short *trow = tmp.ptr<short>(r);
+            short *drow = tmp.ptr<short>(r);
+
+            for (int c = 0; c < src.cols; c++)
+            {
+                short htmp = 0;
+
+                int center_k = h_filter.size() / 2;
+                for (int k = 0; k < h_filter.size(); k++)
+                {
+                    // horizontal
+                    int col = c - (center_k - k);
+                    if (col < 0 || col > src.cols - 1)
+                    {
+                        col = c;
+                    }
+
+                    htmp += trow[col] * h_filter[k];
+                }
+
+                drow[c] = htmp;
             }
         }
 
@@ -212,33 +213,5 @@ namespace filters
         sobel(src, &sx, 'x');
         sobel(src, &sy, 'y');
         magnitude(sx, sy, *dst);
-    }
-
-    int blurQuantize(cv::Mat &src, cv::Mat &dst, int levels)
-    {
-        blur5x5(src, dst);
-    
-        int b = 255/levels;
-        for (int r = 0; r < src.rows; r++)
-        {
-            uchar *row = dst.ptr<uchar>(r);
-            for (int c = 0; c < src.cols; c++)
-            {
-                row[c * 3 + 0] = (row[c * 3 + 0] / b) * b;
-                row[c * 3 + 1] = (row[c * 3 + 1] / b) * b;
-                row[c * 3 + 2] = (row[c * 3 + 2] / b) * b;
-            }
-        }
-
-        return SUCCESS_CODE;
-    }
-
-    void orientation(cv::Mat *src, cv::Mat *dst)
-    {
-        cv::Mat sx = cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
-        cv::Mat sy = cv::Mat(src->rows, src->cols, CV_16SC3, 0.0);
-        sobel(src, &sx, 'x');
-        sobel(src, &sy, 'y');
-        cv::Canny(sx, sy, *dst, 0, 15);
-    }    
+    } 
 }

@@ -7,6 +7,7 @@
 
 #define RGB_BUCKET_SIZE 15
 #define N_GMS_STEPS 500
+#define LAWS_SLICE_SIZE 100
 
 namespace features
 {
@@ -15,6 +16,7 @@ namespace features
         RG_HISTOGRAM,
         MULTI_HISTOGRAM,
         COLOR_TEXTURE_HISTOGRAM,
+        CUSTOM_HISTOGRAM,
         INVALID
     };
 
