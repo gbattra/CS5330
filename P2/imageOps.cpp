@@ -49,7 +49,7 @@ namespace imageOps
         for (int r = 0; r < src->rows; r++)
         {
             short *src_row = src->ptr<short>(r);
-            short *norm_row = src->ptr<short>(r);
+            short *norm_row = norm->ptr<short>(r);
 
             for (int c = 0; c < src->cols; c++)
             {
@@ -57,8 +57,36 @@ namespace imageOps
                 {
                     continue;
                 }
-                src_row[c] = src_row[c] / norm_row[c];
+
+                src_row[c] = ((float) src_row[c] / (float) norm_row[c]) * 100;
             }
         }
+    }
+
+    std::vector<float> bucketize(cv::Mat *src, float min, float max, int n_buckets)
+    {
+        float diff = max - min;
+        float range = diff / n_buckets;
+
+        std::vector<float> buckets(n_buckets, 0.0);
+
+        float sum = 0.0;
+        for (int r = 0; r < src->rows; r++)
+        {
+            short *srow = src->ptr<short>(r);
+            for (int c = 0; c < src->cols; c++)
+            {
+                int bucket = (srow[c] - min) / range;
+                buckets[bucket] += srow[c];
+                sum += srow[c];
+            }
+        }
+
+        for (int i = 0; i < buckets.size(); i++)
+        {
+            buckets[i] /= sum;
+        }
+
+        return buckets;
     }
 }

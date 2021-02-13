@@ -185,6 +185,9 @@ namespace features
         imageOps::normalize(&gausSpotMerged, &gaus);
 
         // bucketize
+        double min, max;
+        cv::minMaxLoc(gausSpotMerged, &min, &max);
+        std::vector<float> gausSpotHisto = imageOps::bucketize(&gausSpotMerged, min, max, N_LAWS_BUCKETS);
 
         // concatenate
 
