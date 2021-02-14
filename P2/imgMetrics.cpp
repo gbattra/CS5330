@@ -38,9 +38,9 @@ namespace metrics
         return distance;
     }
 
-    float multiHistogram(std::vector<float> one, std::vector<float> two)
+    float multiHistogramMetric(std::vector<float> one, std::vector<float> two)
     {
-        int rg_range = 100 * 100;
+        int rg_range = 10 * 10;
         std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rg_range);
         std::vector<float> rg_histo_two = std::vector<float>(two.begin(), two.begin() + rg_range);
         std::vector<float> rgb_histo_one = std::vector<float>(one.begin() + rg_range, one.end());
@@ -54,9 +54,9 @@ namespace metrics
         return distance;
     }
 
-    float colorTextureHistogram(std::vector<float> one, std::vector<float> two)
+    float colorTextureHistogramMetric(std::vector<float> one, std::vector<float> two)
     {
-        int rg_range = 100 * 100;
+        int rg_range = 10 * 10;
         std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rg_range);
         std::vector<float> rg_histo_two = std::vector<float>(two.begin(), two.begin() + rg_range);
         float rg_intersection = intersection(rg_histo_one, rg_histo_two);
@@ -66,6 +66,21 @@ namespace metrics
         float gms_intersection = intersection(gms_histo_one, gms_histo_two);
 
         return rg_intersection + gms_intersection;
+    }
+
+    float lawsRgHistogramMetric(std::vector<float> one, std::vector<float> two)
+    {
+        int rg_range = 10 * 10;
+        std::vector<float> laws_histo_one = std::vector<float>(one.begin(), one.end() - rg_range);
+        std::vector<float> laws_histo_two = std::vector<float>(two.begin(), two.end() - rg_range);
+        float laws_distance = sumSquaredDistance(laws_histo_one, laws_histo_two);
+
+        std::vector<float> rg_histo_one = std::vector<float>(one.end() - rg_range, one.end());
+        std::vector<float> rg_histo_two = std::vector<float>(two.end() - rg_range, two.end());
+        float rg_distance = intersection(rg_histo_one, rg_histo_two);
+        std::cout << rg_distance << "\n";
+
+        return laws_distance + rg_distance;
     }
 
     ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, METRIC metric_type)
@@ -87,11 +102,15 @@ namespace metrics
         }
         else if (metric_type == METRIC::MULTI_HISTOGRAM)
         {
-            img_metric.value = multiHistogram(target.features, sample.features);
+            img_metric.value = multiHistogramMetric(target.features, sample.features);
         }
         else if (metric_type == METRIC::COLOR_TEXTURE_HISTOGRAM)
         {
-            img_metric.value = colorTextureHistogram(target.features, sample.features);
+            img_metric.value = colorTextureHistogramMetric(target.features, sample.features);
+        }
+        else if (metric_type == METRIC::LAWS_RG_HISTOGRAM)
+        {
+            img_metric.value = lawsRgHistogramMetric(target.features, sample.features);
         }
 
         return img_metric;

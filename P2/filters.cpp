@@ -86,7 +86,7 @@ namespace filters
 
                     htmp += trow[col] * h_filter[k];
                 }
-                drow[c] = htmp;
+                drow[c] = sqrt(abs(htmp));
             }
         }
 

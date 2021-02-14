@@ -36,7 +36,7 @@ namespace features
 
     std::vector<float> redGreenHistogram(cv::Mat *img)
     {
-        std::vector<float> histogram(100 * 100, 0.0);
+        std::vector<float> histogram(10 * 10, 0.0);
         for (int i = 0; i < img->rows; i++)
         {
             uchar *row = img->ptr<uchar>(i);
@@ -49,13 +49,13 @@ namespace features
                 float denom = red + green + blue;
                 if (denom == 0)
                 {
-                    histogram[0] += 1.0;
+                    continue;
                 }
                 else
                 {
-                    int red_bucket = (red / denom) * 100;
-                    int green_bucket = (green / denom) * 100;
-                    histogram[(red_bucket * 100) + green_bucket] += 1.0;
+                    int red_bucket = (red / denom) * 10;
+                    int green_bucket = (green / denom) * 10;
+                    histogram[(red_bucket * 10) + green_bucket] += 1.0;
                 }
             }
         }
