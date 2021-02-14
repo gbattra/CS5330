@@ -3,6 +3,32 @@
 
 namespace imageOps
 {
+    cv::Mat sliceImg(cv::Mat *img, int size, int row_offset, int col_offset)
+    {
+        cv::Mat slice = cv::Mat(size, size, img->type());
+        int row = 0;
+        int start_row = row_offset * size;
+        int end_row = std::min(start_row + size, img->rows);
+        int start_col = col_offset * size;
+        int end_col = std::min(start_col + size, img->cols);
+        for (int r = start_row; r < end_row; r++)
+        {
+            uchar *irow = img->ptr<uchar>(r);
+            uchar *srow = slice.ptr<uchar>(row);
+            int col = 0;
+            for (int c = start_col; c < end_col; c++)
+            {
+                srow[col * 3 + 0] = irow[c * 3 + 0];
+                srow[col * 3 + 1] = irow[c * 3 + 1];
+                srow[col * 3 + 2] = irow[c * 3 + 2];
+                col++;
+            }
+            row++;
+        }
+
+        return slice;
+    }
+
     cv::Mat sliceImg(cv::Mat *img, int size)
     {
         cv::Mat slice = cv::Mat(size, size, img->type());

@@ -194,24 +194,40 @@ namespace features
         // normalize
         cv::Mat gaus_spot_norm = imageOps::normalize(&gaus_spot, &gaus);
         cv::Mat gaus_deriv_norm = imageOps::normalize(&gaus_deriv, &gaus);
-        cv::Mat wave_rupe_norm = imageOps::normalize(&wave_ripple, &gaus);
+        cv::Mat wave_ripple_norm = imageOps::normalize(&wave_ripple, &gaus);
 
         // bucketize
         std::vector<float> gaus_spot_histo = imageOps::bucketize(&gaus_spot_norm, N_LAWS_BUCKETS);
         std::vector<float> gaus_deriv_histo = imageOps::bucketize(&gaus_deriv_norm, N_LAWS_BUCKETS);
-        std::vector<float> wave_ripple_histo = imageOps::bucketize(&wave_rupe_norm, N_LAWS_BUCKETS);
+        std::vector<float> wave_ripple_histo = imageOps::bucketize(&wave_ripple_norm, N_LAWS_BUCKETS);
 
         // concatenate
-        gaus_deriv_histo.insert(gaus_deriv_histo.end(), wave_ripple_histo.begin(), wave_ripple_histo.end());
-        gaus_spot_histo.insert(gaus_spot_histo.end(), gaus_deriv_histo.begin(), gaus_deriv_histo.end());
+        // gaus_deriv_histo.insert(gaus_deriv_histo.end(), wave_ripple_histo.begin(), wave_ripple_histo.end());
+        // gaus_spot_histo.insert(gaus_spot_histo.end(), gaus_deriv_histo.begin(), gaus_deriv_histo.end());
 
         return gaus_spot_histo;
     }
     
     std::vector<float> customHistogram(cv::Mat *img)
     {
-        cv::Mat gs_slice = imageOps::sliceImg(img, LAWS_SLICE_SIZE);
-        return lawsHistogram(&gs_slice);
+        std::vector<float> laws_histo(1, 0.0);
+        int size = std::min(img->rows, img->cols) / sqrt(N_LAWS_SLICES);
+        for (int r = 0; r < sqrt(N_LAWS_SLICES); r++)
+        {
+            for (int c = 0; c < sqrt(N_LAWS_SLICES); c++)
+            {
+                cv::Mat img_slice = imageOps::sliceImg(img, size, r, c);
+                std::vector<float> laws_response = lawsHistogram(&img_slice);
+                std::vector<float> rg_response = redGreenHistogram(&img_slice);
+                std::vector<float> mag_response = gradientMagnitudeSum(&img_slice);
+
+                laws_histo.insert(laws_histo.end(), laws_response.begin(), laws_response.end());
+                // rg_histo.insert(rg_histo.end(), laws_histo.begin(), laws_histo.end());
+            }
+        }
+
+
+        return laws_histo;
     }
 
     ImgFeature compute(cv::Mat img, FEATURE feature_type)
