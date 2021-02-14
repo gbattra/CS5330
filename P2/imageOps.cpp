@@ -69,8 +69,7 @@ namespace imageOps
 
     std::vector<float> bucketize(cv::Mat *src, int n_buckets)
     {
-        std::vector<short> buckets_short(n_buckets, 0.0);
-        std::vector<float> buckets_float(n_buckets, 0.0);
+        std::vector<float> buckets(n_buckets, 0.0);
 
         int row_step_size = src->rows / sqrt(n_buckets);
         int col_step_size = src->cols / sqrt(n_buckets);
@@ -90,16 +89,17 @@ namespace imageOps
                         sum += row[c];
                     }
                 }
-                buckets_short[(step_row * sqrt(n_buckets)) + step_col] = sum;
+                buckets[(step_row * sqrt(n_buckets)) + step_col] = sum;
                 total_sum += sum;
             }
         }
+        
 
-        // for (int i = 0; i < buckets_short.size(); i++)
-        // {
-        //     buckets_float[i] = buckets_short[i] / total_sum;
-        // }
+        for (int i = 0; i < buckets.size(); i++)
+        {
+            buckets[i] = buckets[i] / total_sum;
+        }
 
-        return buckets_float;
+        return buckets;
     }
 }

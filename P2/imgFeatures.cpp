@@ -204,11 +204,6 @@ namespace features
 
         // concatenate
 
-        for (int i = 0; i < gaus_spot_histo.size(); i++)
-        {
-            std::cout << gaus_spot_histo[i] << "\n";
-        }
-
         return gaus_spot_histo;
     }
 

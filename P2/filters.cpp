@@ -62,17 +62,13 @@ namespace filters
                 }
 
                 trow[c] = vtmp;
-                if (vtmp == 0)
-                {
-                    std::cout << vtmp << "\n";
-                }
             }
         }
 
         for (int r = 0; r < src.rows; r++)
         {
             short *trow = tmp.ptr<short>(r);
-            short *drow = tmp.ptr<short>(r);
+            short *drow = dst.ptr<short>(r);
 
             for (int c = 0; c < src.cols; c++)
             {
@@ -90,7 +86,7 @@ namespace filters
 
                     htmp += trow[col] * h_filter[k];
                 }
-                drow[c] = htmp;
+                drow[c] = sqrt(abs(htmp));
             }
         }
 
