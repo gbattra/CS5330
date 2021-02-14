@@ -78,9 +78,8 @@ namespace metrics
         std::vector<float> rg_histo_one = std::vector<float>(one.end() - rg_range, one.end());
         std::vector<float> rg_histo_two = std::vector<float>(two.end() - rg_range, two.end());
         float rg_distance = intersection(rg_histo_one, rg_histo_two);
-        std::cout << rg_distance << "\n";
 
-        return laws_distance + rg_distance;
+        return 0.75 * laws_distance + 0.25 * rg_distance;
     }
 
     ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, METRIC metric_type)
