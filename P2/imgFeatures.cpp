@@ -271,6 +271,10 @@ namespace features
         {
             img_feature.features = lawsRgHistogram(&img);
         }
+        else if (feature_type == FEATURE::SLIDING_LAWS_RG_HISTOGRAM)
+        {
+            img_feature.features = slidingLawsRgHistogram(&img);
+        }
 
         return img_feature;
     }
@@ -309,6 +313,10 @@ namespace features
         else if (feature_type == "lawsRg")
         {
             return FEATURE::LAWS_RG_HISTOGRAM;
+        }
+        else if (feature_type == "slidingLawsRg")
+        {
+            return FEATURE::SLIDING_LAWS_RG_HISTOGRAM;
         }
 
         return FEATURE::INVALID;

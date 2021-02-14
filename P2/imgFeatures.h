@@ -20,6 +20,7 @@ namespace features
         MULTI_HISTOGRAM,
         COLOR_TEXTURE_HISTOGRAM,
         LAWS_RG_HISTOGRAM,
+        SLIDING_LAWS_RG_HISTOGRAM,
         INVALID
     };
 
