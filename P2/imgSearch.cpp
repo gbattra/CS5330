@@ -35,10 +35,10 @@ std::vector<cv::Mat> searchAndRank(
 
     std::sort(db_metrics.begin(), db_metrics.end(), sort_metrics);
 
-    std::vector<cv::Mat> results(count);
-    for (int n = 1; n <= count; n++)
+    std::vector<cv::Mat> results(count + 1);
+    for (int n = 0; n <= count; n++)
     {
-        results[n - 1] = db_metrics[n].img;
+        results[n] = db_metrics[n].img;
     }
 
     return results;

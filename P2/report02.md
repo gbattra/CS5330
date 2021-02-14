@@ -1,6 +1,27 @@
 
 
 ## Part 4: Color & Texture
+**Features**
+
+For this part, I implemented a feature vector consisting of a whole-image Red/Green histogram and a whole-image gradient magnitude histogram. For the gradient magnitude texture-gram, I wanted to capture some spatial information about the textures in the image. To accomplish this, I divided the gradient magnitude image into 9 sections and summed the pixel values for each section into a bucket. Each of the 9 buckets would make up the texture feature vector.
+
+**Metric**
+
+To measure the distance between the two feature vectors, I separated the texture-gram and the color-gram, computing Intersection on each, and weighing the corresponding outputs equally.
+
+**Testing**
+
+As the feature vector for texture is rather simple, I wanted to test the architecture first with a set of "easy" images: where the texture in the image was simple and easily distinguishable. So I chose the following image:
+
+<img src="images/examples/part4/target1.jpg" width="250px"/>
+
+This image has a smooth texture covering most of the image, with complex texture in the center. I expected that the gradient magnitude values for the buckets representing the smooth areas would be low, and the the values for the buckets representing the center area to be high. Using texture alone, the content of the resulting top images might be different, but the texture should be roughly the same. This would act as a sanity check the texture features were at least doing *something* to help find similar images.
+
+To further isolate the effectiveness of the texture features, I ignored the Red/Green histogram when computing the distance between two feature vectors (I add the color histogram back in when testing the image specified by the project assignment).
+
+Using the `db` dataset, here are the top results:
+
+
 
 **Without Color**
 - show results for pic.0035.jpg <- good results that generally match the texture of the original image
@@ -15,7 +36,7 @@ sophisticated enough for complex images.
 same results. which indicates that the color histogram determines the lion's share of the distance between two images
 
 ## Part 5: Custom Feature Vector
-**Feature Vector**
+**Features**
 
 For this part, I chose to implement a feature vector consisting of a texture feature vector using Laws filters and a color feature vector of the Red/Green space of the image. The Laws filters were applied over a 100 x 100 centered slice of the image, while the R/G feature vector was built over the whole image.
 
@@ -74,7 +95,7 @@ Here are the results of the `db` dataset:
 <img src="images/examples/part5/db/9.png" width="200px"/>
 <img src="images/examples/part5/db/10.png" width="200px"/>
 
-As you can tell, the results here are not as good. However, we can still see some patterns in texture, and roughly half of the images contain brick walls, like the target image. Not a complete failure, but definitely leaves room for improvement. In the `Extensions` sections below, I expand upon this initial architecture and produce much better results.
+As you can tell, the results here are not as good. However, we can still see some patterns in texture, and roughly half of the images contain brick walls, like the target image. Not a complete failure, but definitely leaves room for improvement. In the `Extensions` section below, I expand upon this initial architecture and produce much better results.
 
 ## Extensions
 

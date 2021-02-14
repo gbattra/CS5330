@@ -103,9 +103,11 @@ namespace features
     {
         std::vector<float> rg_histo = redGreenHistogram(img);
         std::vector<float> rgb_histo = redGreenBlueHistogram(img, 9);
-        rg_histo.insert(rg_histo.end(), rgb_histo.begin(), rgb_histo.end());
 
-        return rg_histo;
+        std::vector<float> histogram = rg_histo;
+        histogram.insert(histogram.end(), rgb_histo.begin(), rgb_histo.end());
+
+        return histogram;
     }
 
     std::vector<float> gradientMagnitudeSum(cv::Mat *img)
@@ -154,8 +156,9 @@ namespace features
     {
         std::vector<float> color_histogram = redGreenHistogram(img);
         std::vector<float> texture_histogram = gradientMagnitudeSum(img);
-        color_histogram.insert(color_histogram.end(), texture_histogram.begin(), texture_histogram.end());  
-        return color_histogram;
+        std::vector<float> histogram = color_histogram;
+        histogram.insert(histogram.end(), texture_histogram.begin(), texture_histogram.end());
+        return histogram;
     }
 
     cv::Mat computeLawsHistogram(cv::Mat *src, filters::FILTER filter_one, filters::FILTER filter_two)
@@ -202,19 +205,21 @@ namespace features
         std::vector<float> wave_ripple_histo = imageOps::bucketize(&wave_ripple_norm, N_LAWS_BUCKETS);
 
         // concatenate
-        gaus_deriv_histo.insert(gaus_deriv_histo.end(), wave_ripple_histo.begin(), wave_ripple_histo.end());
-        gaus_spot_histo.insert(gaus_spot_histo.end(), gaus_deriv_histo.begin(), gaus_deriv_histo.end());
+        std::vector<float> histogram = gaus_spot_histo;
+        histogram.insert(histogram.end(), wave_ripple_histo.begin(), wave_ripple_histo.end());
+        histogram.insert(histogram.end(), gaus_deriv_histo.begin(), gaus_deriv_histo.end());
 
-        return gaus_spot_histo;
+        return histogram;
     }
 
     std::vector<float> lawsRgHistogram(cv::Mat *img)
 {
         cv::Mat img_slice = imageOps::sliceImg(img, LAWS_SLICE_SIZE);
         std::vector<float> laws_histo = lawsHistogram(&img_slice);
-
         std::vector<float> rg_histo = redGreenHistogram(img);
-        laws_histo.insert(laws_histo.end(), rg_histo.begin(), rg_histo.end());
+
+        std::vector<float> histogram = laws_histo;
+        histogram.insert(histogram.end(), rg_histo.begin(), rg_histo.end());
         
         return laws_histo;
     }
@@ -235,9 +240,10 @@ namespace features
         }
 
         std::vector<float> rg_histo = redGreenHistogram(img);
-        laws_histo.insert(laws_histo.end(), rg_histo.begin(), rg_histo.end());
+        std::vector<float> histogram = laws_histo;
+        histogram.insert(histogram.end(), rg_histo.begin(), rg_histo.end());
         
-        return laws_histo;
+        return histogram;
     }
 
     ImgFeature compute(cv::Mat img, FEATURE feature_type)
