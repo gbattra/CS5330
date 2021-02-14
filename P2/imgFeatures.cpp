@@ -207,8 +207,19 @@ namespace features
 
         return gaus_spot_histo;
     }
-    
+
     std::vector<float> lawsRgHistogram(cv::Mat *img)
+{
+        cv::Mat img_slice = imageOps::sliceImg(img, LAWS_SLICE_SIZE);
+        std::vector<float> laws_histo = lawsHistogram(&img_slice);
+
+        std::vector<float> rg_histo = redGreenHistogram(img);
+        laws_histo.insert(laws_histo.end(), rg_histo.begin(), rg_histo.end());
+        
+        return laws_histo;
+    }
+    
+    std::vector<float> slidingLawsRgHistogram(cv::Mat *img)
     {
         std::vector<float> laws_histo(1, 0.0);
         int size = std::min(img->rows, img->cols) / sqrt(N_LAWS_SLICES);

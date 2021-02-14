@@ -36,9 +36,9 @@ std::vector<cv::Mat> searchAndRank(
     std::sort(db_metrics.begin(), db_metrics.end(), sort_metrics);
 
     std::vector<cv::Mat> results(count);
-    for (int n = 0; n < count; n++)
+    for (int n = 1; n <= count; n++)
     {
-        results[n] = db_metrics[n].img;
+        results[n - 1] = db_metrics[n].img;
     }
 
     return results;
@@ -80,14 +80,14 @@ int main(int argc, char** argv)
 
     for (int n = 0; n < results.size(); n++)
     {
-        cv::namedWindow("Result " + std::to_string(n));
-        cv::imshow("Result " + std::to_string(n), results[n]);
+        cv::namedWindow("Result " + std::to_string(n + 1));
+        cv::imshow("Result " + std::to_string(n + 1), results[n]);
         int key = cv::waitKey(0);
         if (key == 's')
         {
             save_img(&results[n]);
         }
-        cv::destroyWindow("Result " + std::to_string(n));
+        cv::destroyWindow("Result " + std::to_string(n + 1));
     }
 
     return 0;
