@@ -174,18 +174,17 @@ namespace features
 
     std::vector<float> lawsHistogram(cv::Mat *img)
     {
-        cv::Mat gs_slice = imageOps::sliceImg(img, LAWS_SLICE_SIZE);
         cv::Mat gs_image;
-        cv::cvtColor(gs_slice, gs_image, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(*img, gs_image, cv::COLOR_BGR2GRAY);
 
         // gauss + spot
         cv::Mat gaus_spot = computeLawsHistogram(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::SPOT);
 
         // gauss + derivative
-        // cv::Mat gaus_deriv = computeLawsHistogram(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::DERIVATIVE);
+        cv::Mat gaus_deriv = computeLawsHistogram(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::DERIVATIVE);
 
         // wave + ripple
-        // cv::Mat wave_ripple = computeLawsHistogram(&gs_image, filters::FILTER::WAVE, filters::FILTER::RIPPLE);
+        cv::Mat wave_ripple = computeLawsHistogram(&gs_image, filters::FILTER::WAVE, filters::FILTER::RIPPLE);
 
         // gauss + gauss
         std::vector<float> gaus_filter = filters::getFilter(filters::FILTER::GAUSSIAN);
@@ -194,17 +193,25 @@ namespace features
 
         // normalize
         cv::Mat gaus_spot_norm = imageOps::normalize(&gaus_spot, &gaus);
-        // imageOps::normalize(&gaus_deriv, &gaus);
-        // imageOps::normalize(&wave_ripple, &gaus);
+        cv::Mat gaus_deriv_norm = imageOps::normalize(&gaus_deriv, &gaus);
+        cv::Mat wave_rupe_norm = imageOps::normalize(&wave_ripple, &gaus);
 
         // bucketize
         std::vector<float> gaus_spot_histo = imageOps::bucketize(&gaus_spot_norm, N_LAWS_BUCKETS);
-        // std::vector<float> gaus_deriv_histo = imageOps::bucketize(&gaus_deriv, N_LAWS_BUCKETS);
-        // std::vector<float> wave_ripple_histo = imageOps::bucketize(&wave_ripple, N_LAWS_BUCKETS);
+        std::vector<float> gaus_deriv_histo = imageOps::bucketize(&gaus_deriv_norm, N_LAWS_BUCKETS);
+        std::vector<float> wave_ripple_histo = imageOps::bucketize(&wave_rupe_norm, N_LAWS_BUCKETS);
 
         // concatenate
+        gaus_deriv_histo.insert(gaus_deriv_histo.end(), wave_ripple_histo.begin(), wave_ripple_histo.end());
+        gaus_spot_histo.insert(gaus_spot_histo.end(), gaus_deriv_histo.begin(), gaus_deriv_histo.end());
 
         return gaus_spot_histo;
+    }
+    
+    std::vector<float> customHistogram(cv::Mat *img)
+    {
+        cv::Mat gs_slice = imageOps::sliceImg(img, LAWS_SLICE_SIZE);
+        return lawsHistogram(&gs_slice);
     }
 
     ImgFeature compute(cv::Mat img, FEATURE feature_type)
@@ -236,7 +243,7 @@ namespace features
         }
         else if (feature_type == FEATURE::CUSTOM_HISTOGRAM)
         {
-            img_feature.features = lawsHistogram(&img);
+            img_feature.features = customHistogram(&img);
         }
 
         return img_feature;
