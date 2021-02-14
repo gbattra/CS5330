@@ -115,6 +115,10 @@ namespace metrics
         {
             return METRIC::COLOR_TEXTURE_HISTOGRAM;
         }
+        else if (metric_type == "lawsRg")
+        {
+            return METRIC::LAWS_RG_HISTOGRAM;
+        }
 
         return METRIC::INVALID;
     }

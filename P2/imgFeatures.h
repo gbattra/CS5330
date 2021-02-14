@@ -18,7 +18,7 @@ namespace features
         RG_HISTOGRAM,
         MULTI_HISTOGRAM,
         COLOR_TEXTURE_HISTOGRAM,
-        CUSTOM_HISTOGRAM,
+        LAWS_RG_HISTOGRAM,
         INVALID
     };
 

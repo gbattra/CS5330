@@ -12,6 +12,7 @@ namespace metrics
         INTERSECTION,
         MULTI_HISTOGRAM,
         COLOR_TEXTURE_HISTOGRAM,
+        LAWS_RG_HISTOGRAM,
         INVALID
     };
 

@@ -208,10 +208,9 @@ namespace features
         return gaus_spot_histo;
     }
     
-    std::vector<float> customHistogram(cv::Mat *img)
+    std::vector<float> lawsRgHistogram(cv::Mat *img)
     {
         std::vector<float> laws_histo(1, 0.0);
-        std::vector<float> rg_histo(1, 0.0);
         int size = std::min(img->rows, img->cols) / sqrt(N_LAWS_SLICES);
         for (int r = 0; r < sqrt(N_LAWS_SLICES); r++)
         {
@@ -219,15 +218,14 @@ namespace features
             {
                 cv::Mat img_slice = imageOps::sliceImg(img, size, r, c);
                 std::vector<float> laws_response = lawsHistogram(&img_slice);
-                std::vector<float> rg_response = redGreenHistogram(&img_slice);
-                std::vector<float> mag_response = gradientMagnitudeSum(&img_slice);
 
                 laws_histo.insert(laws_histo.end(), laws_response.begin(), laws_response.end());
-                rg_histo.insert(rg_histo.end(), rg_response.begin(), rg_response.end());
             }
         }
 
+        std::vector<float> rg_histo = redGreenHistogram(img);
         laws_histo.insert(laws_histo.end(), rg_histo.begin(), rg_histo.end());
+        
         return laws_histo;
     }
 
@@ -258,9 +256,9 @@ namespace features
         {
             img_feature.features = colorAndTexture(&img);
         }
-        else if (feature_type == FEATURE::CUSTOM_HISTOGRAM)
+        else if (feature_type == FEATURE::LAWS_RG_HISTOGRAM)
         {
-            img_feature.features = customHistogram(&img);
+            img_feature.features = lawsRgHistogram(&img);
         }
 
         return img_feature;
@@ -297,9 +295,9 @@ namespace features
         {
             return FEATURE::COLOR_TEXTURE_HISTOGRAM;
         }
-        else if (feature_type == "custom")
+        else if (feature_type == "lawsRg")
         {
-            return FEATURE::CUSTOM_HISTOGRAM;
+            return FEATURE::LAWS_RG_HISTOGRAM;
         }
 
         return FEATURE::INVALID;
