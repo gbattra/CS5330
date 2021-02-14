@@ -5,8 +5,6 @@
 
 namespace filters
 {
-    #define N_LAWS_BUCKETS 8
-    
     enum FILTER {
         GAUSSIAN,
         DERIVATIVE,

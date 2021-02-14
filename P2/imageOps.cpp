@@ -44,12 +44,14 @@ namespace imageOps
         return dst;
     }
 
-    void normalize(cv::Mat *src, cv::Mat *norm)
+    cv::Mat normalize(cv::Mat *src, cv::Mat *norm)
     {
+        cv::Mat dst = cv::Mat(src->rows, src->cols, CV_64F);
         for (int r = 0; r < src->rows; r++)
         {
             short *src_row = src->ptr<short>(r);
             short *norm_row = norm->ptr<short>(r);
+            float *dst_row = dst.ptr<float>(r);
 
             for (int c = 0; c < src->cols; c++)
             {
@@ -58,38 +60,46 @@ namespace imageOps
                     continue;
                 }
 
-                src_row[c] = ((float) src_row[c] / (float) norm_row[c]) * 100;
+                dst_row[c] = (float) src_row[c] / (float) norm_row[c];
             }
         }
+
+        return dst;
     }
 
     std::vector<float> bucketize(cv::Mat *src, int n_buckets)
     {
-        double min, max;
-        cv::minMaxLoc(*src, &min, &max);
+        std::vector<short> buckets_short(n_buckets, 0.0);
+        std::vector<float> buckets_float(n_buckets, 0.0);
 
-        float diff = max - min;
-        float range = diff / n_buckets;
-
-        std::vector<float> buckets(n_buckets, 0.0);
-
-        float sum = 0.0;
-        for (int r = 0; r < src->rows; r++)
+        int row_step_size = src->rows / sqrt(n_buckets);
+        int col_step_size = src->cols / sqrt(n_buckets);
+        short total_sum = 0.0;
+        for (int step_row = 0; step_row < sqrt(n_buckets); step_row++)
         {
-            short *srow = src->ptr<short>(r);
-            for (int c = 0; c < src->cols; c++)
+            for (int step_col = 0; step_col < sqrt(n_buckets); step_col++)
             {
-                int bucket = (srow[c] - min) / range;
-                buckets[bucket] += srow[c];
-                sum += srow[c];
+                float sum = 0.0;
+                int cell_row = step_row * row_step_size;
+                for (int r = cell_row; r < cell_row + row_step_size; r++)
+                {
+                    float *row = src->ptr<float>(r);
+                    int cell_col = step_col * col_step_size;
+                    for (int c = cell_col; c < cell_col + col_step_size; c++)
+                    {
+                        sum += row[c];
+                    }
+                }
+                buckets_short[(step_row * sqrt(n_buckets)) + step_col] = sum;
+                total_sum += sum;
             }
         }
 
-        for (int i = 0; i < buckets.size(); i++)
-        {
-            buckets[i] /= sum;
-        }
+        // for (int i = 0; i < buckets_short.size(); i++)
+        // {
+        //     buckets_float[i] = buckets_short[i] / total_sum;
+        // }
 
-        return buckets;
+        return buckets_float;
     }
 }

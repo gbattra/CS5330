@@ -11,6 +11,7 @@ namespace features
     #define RGB_BUCKET_SIZE 15
     #define N_GMS_STEPS 500
     #define LAWS_SLICE_SIZE 100
+    #define N_LAWS_BUCKETS 9
 
     enum FEATURE {
         SQUARE_9x9,

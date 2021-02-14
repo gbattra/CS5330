@@ -36,7 +36,7 @@ namespace filters
 
     int applyLawsFilter(cv::Mat &src, cv::Mat &dst, std::vector<float> v_filter, std::vector<float> h_filter)
     {
-        cv::Mat tmp = cv::Mat(dst.rows, dst.cols, CV_16S);
+        cv::Mat tmp = cv::Mat(dst.rows, dst.cols, CV_16SC1, 0.0);
 
         for (int r = 0; r < src.rows; r++)
         {
@@ -62,6 +62,10 @@ namespace filters
                 }
 
                 trow[c] = vtmp;
+                if (vtmp == 0)
+                {
+                    std::cout << vtmp << "\n";
+                }
             }
         }
 
@@ -86,7 +90,6 @@ namespace filters
 
                     htmp += trow[col] * h_filter[k];
                 }
-
                 drow[c] = htmp;
             }
         }

@@ -182,21 +182,32 @@ namespace features
         cv::Mat gaus_spot = computeLawsHistogram(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::SPOT);
 
         // gauss + derivative
+        // cv::Mat gaus_deriv = computeLawsHistogram(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::DERIVATIVE);
 
         // wave + ripple
+        // cv::Mat wave_ripple = computeLawsHistogram(&gs_image, filters::FILTER::WAVE, filters::FILTER::RIPPLE);
 
         // gauss + gauss
         std::vector<float> gaus_filter = filters::getFilter(filters::FILTER::GAUSSIAN);
-        cv::Mat gaus = cv::Mat(gs_slice.rows, gs_slice.cols, CV_16SC1);
-        filters::applyLawsFilter(gs_slice, gaus, gaus_filter, gaus_filter);
+        cv::Mat gaus = cv::Mat(gs_image.rows, gs_image.cols, CV_16SC1);
+        filters::applyLawsFilter(gs_image, gaus, gaus_filter, gaus_filter);
 
         // normalize
-        imageOps::normalize(&gaus_spot, &gaus);
+        cv::Mat gaus_spot_norm = imageOps::normalize(&gaus_spot, &gaus);
+        // imageOps::normalize(&gaus_deriv, &gaus);
+        // imageOps::normalize(&wave_ripple, &gaus);
 
         // bucketize
-        std::vector<float> gaus_spot_histo = imageOps::bucketize(&gaus_spot, N_LAWS_BUCKETS);
+        std::vector<float> gaus_spot_histo = imageOps::bucketize(&gaus_spot_norm, N_LAWS_BUCKETS);
+        // std::vector<float> gaus_deriv_histo = imageOps::bucketize(&gaus_deriv, N_LAWS_BUCKETS);
+        // std::vector<float> wave_ripple_histo = imageOps::bucketize(&wave_ripple, N_LAWS_BUCKETS);
 
         // concatenate
+
+        for (int i = 0; i < gaus_spot_histo.size(); i++)
+        {
+            std::cout << gaus_spot_histo[i] << "\n";
+        }
 
         return gaus_spot_histo;
     }
