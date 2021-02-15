@@ -17,23 +17,24 @@ As the feature vector for texture is rather simple, I wanted to test the archite
 
 This image has a smooth texture covering most of the image, with complex texture in the center. I expected that the gradient magnitude values for the buckets representing the smooth areas would be low, and the the values for the buckets representing the center area to be high. Using texture alone, the content of the resulting top images might be different, but the texture should be roughly the same. This would act as a sanity check the texture features were at least doing *something* to help find similar images.
 
-To further isolate the effectiveness of the texture features, I ignored the Red/Green histogram when computing the distance between two feature vectors (I add the color histogram back in when testing the image specified by the project assignment).
-
 Using the `db` dataset, here are the top results:
 
+**Results**
+<br>
+<img src="images/examples/part4/test/1.png" width="200px"/>
+<img src="images/examples/part4/test/2.png" width="200px"/>
+<img src="images/examples/part4/test/3.png" width="200px"/>
+<img src="images/examples/part4/test/4.png" width="200px"/>
+<img src="images/examples/part4/test/5.png" width="200px"/>
+<img src="images/examples/part4/test/6.png" width="200px"/>
+<img src="images/examples/part4/test/7.png" width="200px"/>
+<img src="images/examples/part4/test/8.png" width="200px"/>
+<img src="images/examples/part4/test/9.png" width="200px"/>
+<img src="images/examples/part4/test/10.png" width="200px"/>
 
+While the content of the images is not consistent, the texture is clearly consistent with the target image. We have a complex texture in the center and smooth texture everywhere else.
 
-**Without Color**
-- show results for pic.0035.jpg <- good results that generally match the texture of the original image
-- show results for pic.0035.jpg with just color histo <- ok results but not as good as with texture feature included
-- show results for pic.0535.jpg <- bad results which have no correlation with one another
-I used pic.0035.jpg as a baseline to see if the gms texture filter even really worked. in an optimal scenario it worked,
-so I figured the bad results with other images was due to the fact that summing up gradient magnitudes wasn't
-sophisticated enough for complex images.
-
-**With Color**
-- we see better results but still not great. if we remove the texture distance from overall distance metric, we get roughly the
-same results. which indicates that the color histogram determines the lion's share of the distance between two images
+Now with the target image requested in the assignment:
 
 ## Part 5: Custom Feature Vector
 **Features**
@@ -59,7 +60,7 @@ Below are the results for the `test` dataset, in order of best match to worst ma
 
 **Target Image**
 <br>
-<img src="images/examples/part5/target.png" width="300px"/>
+<img src="images/examples/part5/target.png" width="250px"/>
 
 **Results**
 <br>
@@ -80,7 +81,7 @@ Here are the results of the `db` dataset:
 
 **Target Image**
 <br>
-<img src="images/examples/part5/target.png" width="300px"/>
+<img src="images/examples/part5/target.png" width="250px"/>
 
 **Results**
 <br>
@@ -111,11 +112,11 @@ The metric used to compute the distance between two feature vectors was the same
 
 **Results**
 
-For the `test` dataset, the results were very good compared to the original architecture. Only two images were not of a brick wall (that damn fruit box again!). I'm actually quite stumped by the anomalies in the results: the two images of the fruit box look nothing like the other results. Still, 8/10 is not bad.
+For the `test` dataset, the results were very good compared to the original architecture. Only two images were not of a brick wall. I'm actually quite stumped by the anomalies in the results: the two images of the fruit box look nothing like the other results. Still, 8/10 is not bad.
 
 **Target Image**
 <br>
-<img src="images/examples/part5/target.png" width="300px"/>
+<img src="images/examples/part5/target.png" width="250px"/>
 
 **Results**
 <br>

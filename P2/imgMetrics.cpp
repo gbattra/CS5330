@@ -82,7 +82,7 @@ namespace metrics
 
         std::vector<float> gms_histo_one = std::vector<float>(one.begin() + rg_range, one.end());
         std::vector<float> gms_histo_two = std::vector<float>(two.begin() + rg_range, two.end());
-        float gms_intersection = intersection(gms_histo_one, gms_histo_two);
+        float gms_intersection = sumSquaredDistance(gms_histo_one, gms_histo_two);
 
         return rg_intersection + gms_intersection;
     }
