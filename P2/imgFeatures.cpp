@@ -155,7 +155,7 @@ namespace features
 
     std::vector<float> colorAndTexture(cv::Mat *img)
     {
-        std::vector<float> color_histogram = redGreenHistogram(img);
+        std::vector<float> color_histogram = redGreenBlueHistogram(img);
         std::vector<float> texture_histogram = gradientMagnitudeSum(img);
         std::vector<float> histogram = color_histogram;
         histogram.insert(histogram.end(), texture_histogram.begin(), texture_histogram.end());

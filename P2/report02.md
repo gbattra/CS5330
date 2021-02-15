@@ -1,4 +1,81 @@
 
+## Part 1: 9x9 Square
+
+**Features**
+
+The feature vector is a 9 * 9 * 3 vector of the pixel values for the 9x9 center of the original image.
+
+**Metric**
+
+The metric used to compare two feature vectors was Sum of Squared Distance.
+
+**Results**
+
+Here are the top matches from the `db` dataset:
+
+*Target Image*
+<br>
+<img src="images/db/pic.1016.jpg" width="250px"/>
+
+*Results*
+<br>
+<img src="images/examples/part1/1.png" width="200px"/>
+<img src="images/examples/part1/2.png" width="200px"/>
+<img src="images/examples/part1/3.png" width="200px"/>
+
+While the content is clearly not the same, there is a clear match between the red pixel values at the center of the target image and the resulting matches.
+
+## Part 2: Color Histogram
+
+**Features**
+
+The feature vector is a histogram of R/G/B values bucketed into 15 buckets for each channel producing a vector size of 15 ^ 3. The vector is then normalized by the total number of pixels in the image.
+
+**Metric**
+
+The metric used for comparing two feature vectors is Intersection.
+
+**Results**
+
+Here are the top matches from the `db` dataset:
+
+*Target Image*
+<br>
+<img src="images/db/pic.0164.jpg" width="250px"/>
+
+*Results*
+<br>
+<img src="images/examples/part2/1.png" width="200px"/>
+<img src="images/examples/part2/2.png" width="200px"/>
+<img src="images/examples/part2/3.png" width="200px"/>
+
+Using only color as the feature vector produced surprisingly good results. We have clear blue skies covering about half of the image in all matches and a gray building covering the other half. This is likely due to the optimal nature of the target image: a flat smooth blue skie is going to have consistent pixel values from image to image, and since the sky covers such a large portion of the image, those values will dominate the matching algorithm regardless of whatever content outside of the sky is present in the image (i.e. the buildings in this case).
+
+## Part 3: Multiple Color Histograms
+
+**Features**
+
+The feature vector consists of two color histograms covering different spatial areas of the image. The first vector is a Red/Green histogram over the entire image. The second is an R/G/B histogram covering the center 100x100 pixel section of the image. Both histograms are normalized to sum to 1.0.
+
+**Metrics**
+
+The metric for comparing the two sub-feature vectors is the same for both--Intersection--and each are weighted equally.
+
+**Results**
+
+Here are the results for the images from the `db` dataset:
+
+*Target Image*
+<br>
+<img src="images/db/pic.0135.jpg" width="250px"/>
+
+*Results*
+<br>
+<img src="images/examples/part3/1.png" width="200px"/>
+<img src="images/examples/part3/2.png" width="200px"/>
+<img src="images/examples/part3/3.png" width="200px"/>
+
+The matches here aren't that great. While the top match does contain a solid yellow color in the center, the rest of the image is not similar. The rest are even worse, though we see a strong green presence which may indicate their high rank.
 
 ## Part 4: Color & Texture
 **Features**
@@ -19,7 +96,7 @@ This image has a smooth texture covering most of the image, with complex texture
 
 Using the `db` dataset, here are the top results:
 
-**Results**
+*Results*
 <br>
 <img src="images/examples/part4/test/1.png" width="200px"/>
 <img src="images/examples/part4/test/2.png" width="200px"/>
@@ -35,6 +112,18 @@ Using the `db` dataset, here are the top results:
 While the content of the images is not consistent, the texture is clearly consistent with the target image. We have a complex texture in the center and smooth texture everywhere else.
 
 Now with the target image requested in the assignment:
+
+*Target Image*
+<br>
+<img src="images/db/pic.0535.jpg" width="250px"/>
+
+*Results*
+<br>
+<img src="images/examples/part4/prod/1.png" width="200px"/>
+<img src="images/examples/part4/prod/2.png" width="200px"/>
+<img src="images/examples/part4/prod/3.png" width="200px"/>
+
+The first image is a pretty good match. It almost looks to be from the same location. We have the white chimney(?) against a stone wall and the shape of the chimney seems to match the taret image even. The 2nd and 3rd match are not so good, though we see a stone wall on the right side of the 2nd match. Color-wise, however, we can see that even the 3rd match bears resemblance to the target image with a lot of browns, grays, and a solid white object near the center.
 
 ## Part 5: Custom Feature Vector
 **Features**
@@ -58,11 +147,11 @@ I tested this architecture using the same target image over two sets of data: `t
 
 Below are the results for the `test` dataset, in order of best match to worst match:
 
-**Target Image**
+*Target Image*
 <br>
 <img src="images/examples/part5/target.png" width="250px"/>
 
-**Results**
+*Results*
 <br>
 <img src="images/examples/part5/test/1.png" width="200px"/>
 <img src="images/examples/part5/test/2.png" width="200px"/>
@@ -79,11 +168,11 @@ The results here are pretty good. We have images with matching content, and besi
 
 Here are the results of the `db` dataset:
 
-**Target Image**
+*Target Image*
 <br>
 <img src="images/examples/part5/target.png" width="250px"/>
 
-**Results**
+*Results*
 <br>
 <img src="images/examples/part5/db/1.png" width="200px"/>
 <img src="images/examples/part5/db/2.png" width="200px"/>
@@ -114,11 +203,11 @@ The metric used to compute the distance between two feature vectors was the same
 
 For the `test` dataset, the results were very good compared to the original architecture. Only two images were not of a brick wall. I'm actually quite stumped by the anomalies in the results: the two images of the fruit box look nothing like the other results. Still, 8/10 is not bad.
 
-**Target Image**
+*Target Image*
 <br>
 <img src="images/examples/part5/target.png" width="250px"/>
 
-**Results**
+*Results*
 <br>
 <img src="images/examples/extensions/sliding/test/1.png" width="200px"/>
 <img src="images/examples/extensions/sliding/test/2.png" width="200px"/>
@@ -133,11 +222,11 @@ For the `test` dataset, the results were very good compared to the original arch
 
 For the `db` dataset, the results are also relatively good compared to the corresponding results for the original architecture. We still have a few anomalies, but most of the images contain a brick-pattern / wall. Overall, I think this updated architecture is a noticable improvement on the original.
 
-**Target Image**
+*Target Image*
 <br>
 <img src="images/examples/part5/target.png" width="300px"/>
 
-**Results**
+*Results*
 <br>
 <img src="images/examples/extensions/sliding/db/1.png" width="200px"/>
 <img src="images/examples/extensions/sliding/db/2.png" width="200px"/>

@@ -68,20 +68,20 @@ namespace metrics
         float rg_histo_intersection = intersection(rg_histo_one, rg_histo_two);
         float rgb_histo_intersection = intersection(rgb_histo_one, rgb_histo_two);
 
-        float distance = (0.75 * rg_histo_intersection) + (0.25 * rgb_histo_intersection);
+        float distance = rg_histo_intersection + rgb_histo_intersection;
 
         return distance;
     }
 
     float colorTextureHistogramMetric(std::vector<float> one, std::vector<float> two)
     {
-        int rg_range = 10 * 10;
-        std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rg_range);
-        std::vector<float> rg_histo_two = std::vector<float>(two.begin(), two.begin() + rg_range);
+        int rgb_range = pow(RGB_BUCKET_SIZE, 3);
+        std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rgb_range);
+        std::vector<float> rg_histo_two = std::vector<float>(two.begin(), two.begin() + rgb_range);
         float rg_intersection = intersection(rg_histo_one, rg_histo_two);
 
-        std::vector<float> gms_histo_one = std::vector<float>(one.begin() + rg_range, one.end());
-        std::vector<float> gms_histo_two = std::vector<float>(two.begin() + rg_range, two.end());
+        std::vector<float> gms_histo_one = std::vector<float>(one.begin() + rgb_range, one.end());
+        std::vector<float> gms_histo_two = std::vector<float>(two.begin() + rgb_range, two.end());
         float gms_intersection = sumSquaredDistance(gms_histo_one, gms_histo_two);
 
         return rg_intersection + gms_intersection;
