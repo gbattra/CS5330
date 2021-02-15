@@ -213,7 +213,7 @@ namespace features
     }
 
     std::vector<float> lawsRgHistogram(cv::Mat *img)
-{
+    {
         cv::Mat img_slice = imageOps::sliceImg(img, LAWS_SLICE_SIZE);
         std::vector<float> laws_histo = lawsHistogram(&img_slice);
         std::vector<float> rg_histo = redGreenHistogram(img);
@@ -221,7 +221,7 @@ namespace features
         std::vector<float> histogram = laws_histo;
         histogram.insert(histogram.end(), rg_histo.begin(), rg_histo.end());
         
-        return laws_histo;
+        return histogram;
     }
     
     std::vector<float> slidingLawsRgHistogram(cv::Mat *img)

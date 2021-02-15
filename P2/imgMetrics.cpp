@@ -18,7 +18,26 @@ namespace metrics
             intersection += std::min(one[i], two[i]);
         }
 
-        return -intersection;
+        return 1 - intersection;
+    }
+
+    float normalizedDistance(std::vector<float> one, std::vector<float> two)
+    {
+        if (one.size() != two.size())
+        {
+            printf("Cannot compute sum of squared distance. Vectors are not of equal size.\n");
+            return 0.0;
+        }
+
+        float sum_max = 0.0;
+        float sum_min = 0.0;
+        for (int i = 0; i < one.size(); i++)
+        {
+            sum_max += std::max(pow(one[i], 2), pow(two[i], 2));
+            sum_min += std::min(pow(one[i], 2), pow(two[i], 2));
+        }
+
+        return 1 - (sum_min / sum_max);
     }
 
     float sumSquaredDistance(std::vector<float> one, std::vector<float> two)
