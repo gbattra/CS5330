@@ -77,6 +77,16 @@ Here are the results for the images from the `db` dataset:
 
 The matches here aren't that great. While the top match does contain a solid yellow color in the center, the rest of the image is not similar. The rest are even worse, though we see a strong green presence which may indicate their high rank.
 
+So I decided to switch the feature vectors so that the R/G/B feature vector covered the entire image, while the Red/Green histogram covered the center 100x100 pixels:
+
+*Results*
+<br>
+<img src="images/examples/part3/b1.png" width="200px"/>
+<img src="images/examples/part3/b2.png" width="200px"/>
+<img src="images/examples/part3/b3.png" width="200px"/>
+
+The top match is pretty much perfect: a yellow firehydrant with a grassy background. The rest are failures. But considering the accuracy of the top match, I think this architecture is better than the original.
+
 ## Part 4: Color & Texture
 **Features**
 
@@ -124,6 +134,30 @@ Now with the target image requested in the assignment:
 <img src="images/examples/part4/prod/3.png" width="200px"/>
 
 The first image is a pretty good match. It almost looks to be from the same location. We have the white chimney(?) against a stone wall and the shape of the chimney seems to match the taret image even. The 2nd and 3rd match are not so good, though we see a stone wall on the right side of the 2nd match. Color-wise, however, we can see that even the 3rd match bears resemblance to the target image with a lot of browns, grays, and a solid white object near the center.
+
+Compared to part 3, we see mostly different matches:
+
+*Results*
+<br>
+<img src="images/examples/part4/multi/1.png" width="200px"/>
+<img src="images/examples/part4/multi/2.png" width="200px"/>
+<img src="images/examples/part4/multi/3.png" width="200px"/>
+
+Compared to part 2, however, we get back the same matches:
+
+*Results*
+<br>
+<img src="images/examples/part4/rgb/1.png" width="200px"/>
+<img src="images/examples/part4/rgb/2.png" width="200px"/>
+<img src="images/examples/part4/rgb/3.png" width="200px"/>
+
+Which suggests the texture metrix was not a factor in finding the top matches. I went through the dataset for the target image here and found a few images which seemed to match the target:
+
+<img src="images/db/pic.0533.jpg" width="200px"/>
+<img src="images/db/pic.0534.jpg" width="200px"/>
+<img src="images/db/pic.0538.jpg" width="200px"/>
+
+In my assessment, these images would be fairly challenging for a simple feature vector / metric model like this one to match with the target.
 
 ## Part 5: Custom Feature Vector
 **Features**

@@ -101,9 +101,9 @@ namespace features
 
     std::vector<float> multiHistogram(cv::Mat *img)
     {
-        std::vector<float> rg_histo = redGreenHistogram(img);
         cv::Mat slice = imageOps::sliceImg(img, 9);
-        std::vector<float> rgb_histo = redGreenBlueHistogram(&slice);
+        std::vector<float> rg_histo = redGreenHistogram(&slice);
+        std::vector<float> rgb_histo = redGreenBlueHistogram(img);
 
         std::vector<float> histogram = rg_histo;
         histogram.insert(histogram.end(), rgb_histo.begin(), rgb_histo.end());
