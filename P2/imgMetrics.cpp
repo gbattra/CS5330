@@ -204,7 +204,7 @@ namespace metrics
         {
             img_metric.value = rgGmsDistance(target.features, sample.features);
         }
-        else if (metric_type == METRIC::LAWS_RG_HISTOGRAM)
+        else if (metric_type == METRIC::LAWS_RG_DISTANCE)
         {
             img_metric.value = lawsRgDistance(target.features, sample.features);
         }
@@ -240,7 +240,7 @@ namespace metrics
         }
         else if (metric_type == "lawsRg")
         {
-            return METRIC::LAWS_RG_HISTOGRAM;
+            return METRIC::LAWS_RG_DISTANCE;
         }
 
         return METRIC::INVALID;

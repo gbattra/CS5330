@@ -20,7 +20,7 @@ namespace metrics
         INTERSECTION,
         RG_RGB_DISTANCE,
         RG_GMS_DISTANCE,
-        LAWS_RG_HISTOGRAM,
+        LAWS_RG_DISTANCE,
         INVALID
     };
 
