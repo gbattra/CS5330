@@ -17,6 +17,7 @@ namespace features
     enum FEATURE {
         SQUARE_9x9,
         RG_HISTOGRAM,
+        RGB_HISTOGRAM,
         MULTI_HISTOGRAM,
         COLOR_TEXTURE_HISTOGRAM,
         LAWS_RG_HISTOGRAM,

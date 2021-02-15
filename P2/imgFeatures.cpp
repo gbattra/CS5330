@@ -7,14 +7,14 @@
 
 namespace features
 {
-    std::vector<float> redGreenBlueHistogram(cv::Mat *img, int range)
+    std::vector<float> redGreenBlueHistogram(cv::Mat *img)
     {
         std::vector<float> histogram(pow(RGB_BUCKET_SIZE, 3), 0.0);
         float distance = 256.0 / RGB_BUCKET_SIZE;
-        for (int i = (img->rows / range) - (range / 2); i < (img->rows / 2) + (range / 2); i++)
+        for (int i = 0; i < img->rows; i++)
         {
             uchar *row = img->ptr<uchar>(i);
-            for (int j = (img->cols / 2) - (range / 2); j < (img->cols / 2) + (range / 2); j++)
+            for (int j = 0; j < img->cols; j++)
             {
                 uchar *pixel = &row[j * 3];
                 int red_bucket = pixel[0] / distance;
@@ -102,7 +102,8 @@ namespace features
     std::vector<float> multiHistogram(cv::Mat *img)
     {
         std::vector<float> rg_histo = redGreenHistogram(img);
-        std::vector<float> rgb_histo = redGreenBlueHistogram(img, 9);
+        cv::Mat slice = imageOps::sliceImg(img, 9);
+        std::vector<float> rgb_histo = redGreenBlueHistogram(&slice);
 
         std::vector<float> histogram = rg_histo;
         histogram.insert(histogram.end(), rgb_histo.begin(), rgb_histo.end());
@@ -265,6 +266,10 @@ namespace features
         {
             img_feature.features = redGreenHistogram(&img);
         }
+        else if (feature_type == FEATURE::RGB_HISTOGRAM)
+        {
+            img_feature.features = redGreenBlueHistogram(&img);
+        }
         else if (feature_type == FEATURE::MULTI_HISTOGRAM)
         {
             img_feature.features = multiHistogram(&img);
@@ -307,6 +312,10 @@ namespace features
         else if (feature_type == "redGreen")
         {
             return FEATURE::RG_HISTOGRAM;
+        }
+        else if (feature_type == "redGreenBlue")
+        {
+            return FEATURE::RGB_HISTOGRAM;
         }
         else if (feature_type == "multi")
         {
