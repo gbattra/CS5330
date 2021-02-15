@@ -78,13 +78,13 @@ namespace metrics
         int rgb_range = pow(RGB_BUCKET_SIZE, 3);
         std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rgb_range);
         std::vector<float> rg_histo_two = std::vector<float>(two.begin(), two.begin() + rgb_range);
-        float rg_intersection = intersection(rg_histo_one, rg_histo_two);
+        float rg_metric = intersection(rg_histo_one, rg_histo_two);
 
         std::vector<float> gms_histo_one = std::vector<float>(one.begin() + rgb_range, one.end());
         std::vector<float> gms_histo_two = std::vector<float>(two.begin() + rgb_range, two.end());
-        float gms_intersection = sumSquaredDistance(gms_histo_one, gms_histo_two);
+        float gms_metric = sumSquaredDistance(gms_histo_one, gms_histo_two);
 
-        return rg_intersection + gms_intersection;
+        return rg_metric + gms_metric;
     }
 
     float lawsRgHistogramMetric(std::vector<float> one, std::vector<float> two)
@@ -98,6 +98,7 @@ namespace metrics
         std::vector<float> rg_histo_two = std::vector<float>(two.end() - rg_range, two.end());
         float rg_distance = intersection(rg_histo_one, rg_histo_two);
 
+        std::cout << laws_distance << " --- " << rg_distance << "\n";
         return 0.75 * laws_distance + 0.25 * rg_distance;
     }
 

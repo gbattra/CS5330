@@ -1,3 +1,6 @@
+// Greg Attra
+// 02/13/2021
+
 #ifndef IMAGEOPS
 #define IMAGEOPS
 

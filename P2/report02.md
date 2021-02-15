@@ -1,4 +1,14 @@
 
+# Project 2
+### Greg Attra
+### CS 5330 Prof. Maxwell
+
+# Overview
+
+Project 2 involved implementing various algorithms and architectures for extracting features of an image--from color to texture--and measuring the distances between those features for two images. Using these metrics we could search a dataset of images for images that matched a target. Images that had a small distance were considered good matches, while those with large distances bad matches.
+
+# Implementation
+
 ## Part 1: 9x9 Square
 
 **Features**
@@ -272,3 +282,26 @@ For the `db` dataset, the results are also relatively good compared to the corre
 <img src="images/examples/extensions/sliding/db/8.png" width="200px"/>
 <img src="images/examples/extensions/sliding/db/9.png" width="200px"/>
 <img src="images/examples/extensions/sliding/db/10.png" width="200px"/>
+
+
+# Reflection
+
+### The Art of CBIR
+
+What differentiated this project the most from Project 1 was that, while Project 1 had us implement filtering algorithms, which are fairly straightforward and lacking any hyper parameters besides the filter values themselves, this project was much more open ended--both in terms of which algorithms we could use to solve a task, as well as the actual implementation of those algorithms.
+
+There were a lot of hyperparameters to tweak and various distance metrics from which to choose. To tune an architecture to be optimal requires understanding the consequences of using one metric over another, using feature vectors of various sizes, choosing between building a vector from the whole image or from a slice of the image, how much to weigh various parts of the feature vector against other parts, and a lot more.
+
+In this way, CBIR is very much an art. There is no strict algorithm to solve every challenge, and one algorithm which may work well for certain content will not work well for other content. I found myself constantly testing architectures through trial-and-error,  and through this process understanding the impact of different feature vectors and metrics on the overall performance.
+
+### The Speed of Death
+
+I found my code ran very slow for the more complex CBIR architectures, especially the Laws filters. This was because I would compute each filter combination separately, requiring multiple passes through the same image for each filter set. Then I would have to normalize the values by dividing by the output of the Gaussian filter. And finally iterate once more through the output to bucket the values into a feature vector.
+
+With more time I would go back and optimize the code so that, to start, each filter set would be computed in tandem while iterating through the image only once.
+
+# Acknowledgements
+
+- [Code for reading images from directory](https://northeastern.instructure.com/courses/76659/files/7911128?wrap=1)
+- [Textbook on CBIR](https://courses.cs.washington.edu/courses/cse576/book/)
+- [Olympus image dataset](https://northeastern.instructure.com/courses/76659/files/7800323?wrap=1)

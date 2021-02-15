@@ -1,3 +1,6 @@
+// Greg Attra
+// 02/09/2021
+
 #include <stdio.h>
 #include <cstdlib>
 #include <opencv2/opencv.hpp>
