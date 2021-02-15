@@ -7,6 +7,16 @@
 
 namespace metrics
 {
+    /**
+     * Computes the intersection of two feature vectors. Assumes the provided feature vectors
+     * are normalized to sum to 1.0.
+     * 
+     * @param one the first feature vector
+     * @param two the second feature vector
+     * 
+     * @return 1 minus the computed intersection, as we want the distance to be small
+     *         for two similar feature vectors.
+     */
     float intersection(std::vector<float> one, std::vector<float> two)
     {
         if (one.size() != two.size())
@@ -24,6 +34,16 @@ namespace metrics
         return 1 - intersection;
     }
 
+    /**
+     * Computes a normalized distance of two feature vectors. Assumes the provided feature vectors
+     * are normalized to sum to 1.0.
+     * 
+     * @param one the first feature vector
+     * @param two the second feature vector
+     * 
+     * @return 1 minus the computed intersection, as we want the distance to be small
+     *         for two similar feature vectors.
+     */
     float normalizedDistance(std::vector<float> one, std::vector<float> two)
     {
         if (one.size() != two.size())
@@ -43,6 +63,14 @@ namespace metrics
         return 1 - (sum_min / sum_max);
     }
 
+    /**
+     * Computes the sum of squared distance between two feature vectors.
+     * 
+     * @param one the first feature vector
+     * @param two the second feature vector
+     * 
+     * @return the total distance between the two vectors
+     */
     float sumSquaredDistance(std::vector<float> one, std::vector<float> two)
     {
         if (one.size() != two.size())
@@ -60,7 +88,17 @@ namespace metrics
         return distance;
     }
 
-    float multiHistogramMetric(std::vector<float> one, std::vector<float> two)
+    /**
+     * Computes the distance between two features vectors, where each vector is the concatenation
+     * of a Red/Green space histogram and an R/G/B histogram. Uses intersection for the corresponding
+     * sub-histograms.
+     * 
+     * @param one the first feature vector
+     * @param two the second feature vector
+     * 
+     * @return the intersection between the two vectors
+     */
+    float rgRgbDistance(std::vector<float> one, std::vector<float> two)
     {
         int rg_range = 10 * 10;
         std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rg_range);
@@ -76,7 +114,18 @@ namespace metrics
         return distance;
     }
 
-    float colorTextureHistogramMetric(std::vector<float> one, std::vector<float> two)
+    /**
+     * Computes the distance between two features vectors, where each vector is the concatenation
+     * of a Red/Green space histogram and a gradient magnitude sum feature vecotr. Uses intersection
+     * for the Red/Green histogram, and sum of squared distance for the gradient magnitude sum
+     * feature vector.
+     * 
+     * @param one the first feature vector
+     * @param two the second feature vector
+     * 
+     * @return the combined intersection and sum of squared distance between the two vectors
+     */
+    float rgGmsDistance(std::vector<float> one, std::vector<float> two)
     {
         int rgb_range = pow(RGB_BUCKET_SIZE, 3);
         std::vector<float> rg_histo_one = std::vector<float>(one.begin(), one.begin() + rgb_range);
@@ -90,7 +139,17 @@ namespace metrics
         return rg_metric + gms_metric;
     }
 
-    float lawsRgHistogramMetric(std::vector<float> one, std::vector<float> two)
+    /**
+     * Computes the distance between two features vectors, where each vector is the concatenation
+     * of a complete Laws filters feature vector. Uses intersection for the Red/Green
+     * histogram, and sum of squared distance for the Laws filters feature vector.
+     * 
+     * @param one the first feature vector
+     * @param two the second feature vector
+     * 
+     * @return the combined intersection and sum of squared distance between the two vectors
+     */
+    float lawsRgDistance(std::vector<float> one, std::vector<float> two)
     {
         int rg_range = 10 * 10;
         std::vector<float> laws_histo_one = std::vector<float>(one.begin(), one.end() - rg_range);
@@ -105,6 +164,15 @@ namespace metrics
         return 0.75 * laws_distance + 0.25 * rg_distance;
     }
 
+    /**
+     * Computes a distance metric between two feature vectors given a specified metric type.
+     * 
+     * @param target the features of the target image
+     * @param sample the features of the sample image
+     * @param metric_type the type of metric to use to compute the distance
+     * 
+     * @return an ImgMetric object linking a sample image to its distance from the target
+     */
     ImgMetric compute(features::ImgFeature target, features::ImgFeature sample, METRIC metric_type)
     {
         ImgMetric img_metric;
@@ -122,22 +190,30 @@ namespace metrics
         {
             img_metric.value = intersection(target.features, sample.features);
         }
-        else if (metric_type == METRIC::MULTI_HISTOGRAM)
+        else if (metric_type == METRIC::RG_RGB_DISTANCE)
         {
-            img_metric.value = multiHistogramMetric(target.features, sample.features);
+            img_metric.value = rgRgbDistance(target.features, sample.features);
         }
-        else if (metric_type == METRIC::COLOR_TEXTURE_HISTOGRAM)
+        else if (metric_type == METRIC::RG_GMS_DISTANCE)
         {
-            img_metric.value = colorTextureHistogramMetric(target.features, sample.features);
+            img_metric.value = rgGmsDistance(target.features, sample.features);
         }
         else if (metric_type == METRIC::LAWS_RG_HISTOGRAM)
         {
-            img_metric.value = lawsRgHistogramMetric(target.features, sample.features);
+            img_metric.value = lawsRgDistance(target.features, sample.features);
         }
 
         return img_metric;
     }
 
+    /**
+     * Converts a string name of a metric to the corresponding METRIC enum type.
+     * Returns METRIC::INVALID if an invalid string is provided.
+     * 
+     * @param metric_type the string name of the metric type
+     * 
+     * @return the corresponding METRIC enum type
+     */
     METRIC stringToMetricType(std::string metric_type)
     {
         if (metric_type == "sumSquaredDistance")
@@ -148,13 +224,13 @@ namespace metrics
         {
             return METRIC::INTERSECTION;
         }
-        else if (metric_type == "multi")
+        else if (metric_type == "rgRgb")
         {
-            return METRIC::MULTI_HISTOGRAM;
+            return METRIC::RG_RGB_DISTANCE;
         }
-        else if (metric_type == "colorTexture")
+        else if (metric_type == "rgGms")
         {
-            return METRIC::COLOR_TEXTURE_HISTOGRAM;
+            return METRIC::RG_GMS_DISTANCE;
         }
         else if (metric_type == "lawsRg")
         {
