@@ -1,3 +1,6 @@
+// Greg Attra
+// 02/09/2021
+
 #include "imgFeatures.h"
 #include "dbReader.h"
 #include "filters.h"
@@ -233,7 +236,7 @@ namespace features
         {
             for (int c = 0; c < sqrt(N_LAWS_SLICES); c++)
             {
-                cv::Mat img_slice = imageOps::sliceImg(img, size, r, c);
+                cv::Mat img_slice = imageOps::sliceImg(img, size, r * size, c * size);
                 std::vector<float> laws_response = lawsHistogram(&img_slice);
 
                 laws_histo.insert(laws_histo.end(), laws_response.begin(), laws_response.end());

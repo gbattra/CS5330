@@ -1,22 +1,34 @@
+// Greg Attra
+// 02/13/2021
+
 #include <opencv2/opencv.hpp>
 #include "imageOps.h"
 
 namespace imageOps
 {
+    /**
+     * Returns the NxN pixels starting at a specified offset within the image, where N is specified by
+     * the `size` param. Helpful for window operations.
+     * 
+     * @param img pointer to the source image to slice
+     * @param size the size of one dimension of the slice
+     * @param row_offset the row of the source image at which to start
+     * @param col_offset the col of the source image at which to start
+     * 
+     * @return an image of the NxN pixel subset of the source image
+     */
     cv::Mat sliceImg(cv::Mat *img, int size, int row_offset, int col_offset)
     {
         cv::Mat slice = cv::Mat(size, size, img->type());
         int row = 0;
-        int start_row = row_offset * size;
-        int end_row = std::min(start_row + size, img->rows);
-        int start_col = col_offset * size;
-        int end_col = std::min(start_col + size, img->cols);
-        for (int r = start_row; r < end_row; r++)
+        int end_row = std::min(row_offset + size, img->rows);
+        int end_col = std::min(col_offset + size, img->cols);
+        for (int r = row_offset; r < end_row; r++)
         {
             uchar *irow = img->ptr<uchar>(r);
             uchar *srow = slice.ptr<uchar>(row);
             int col = 0;
-            for (int c = start_col; c < end_col; c++)
+            for (int c = col_offset; c < end_col; c++)
             {
                 srow[col * 3 + 0] = irow[c * 3 + 0];
                 srow[col * 3 + 1] = irow[c * 3 + 1];
@@ -29,6 +41,14 @@ namespace imageOps
         return slice;
     }
 
+    /**
+     * Returns the center NxN pixels of the image where N is specified by the `size` param.
+     * 
+     * @param img pointer to the source image to slice
+     * @param size the size of one dimension of the desired slice
+     * 
+     * @return an image of the NxN center pixels of the source
+     */
     cv::Mat sliceImg(cv::Mat *img, int size)
     {
         cv::Mat slice = cv::Mat(size, size, img->type());
@@ -51,7 +71,14 @@ namespace imageOps
         return slice;
     }
 
-
+    /**
+     * Merges two images using the sqrt of squared sum of each pixel value.
+     * 
+     * @param one pointer to the first image
+     * @param two pointer to the second image
+     * 
+     * @return the resulting combined image
+     */
     cv::Mat mergeImg(cv::Mat *one, cv::Mat *two)
     {
         cv::Mat dst = cv::Mat(one->rows, one->cols, one->type());
@@ -70,6 +97,15 @@ namespace imageOps
         return dst;
     }
 
+    /**
+     * Normalizes the source image by dividing each pixel by the corresponding
+     * pixel in the norm image.
+     * 
+     * @param src the image to normalize
+     * @param norm the normal image to divide the source by
+     * 
+     * @return the resulting normalized image
+     */
     cv::Mat normalize(cv::Mat *src, cv::Mat *norm)
     {
         cv::Mat dst = cv::Mat(src->rows, src->cols, CV_64F);
@@ -93,6 +129,16 @@ namespace imageOps
         return dst;
     }
 
+    /**
+     * Buckets the values of an image into the specified number of buckets
+     * and normalizes the resulting vector by the sum of all the buckets.
+     * 
+     * @param src pointer to the source image
+     * @param n_buckets the number of buckets in the final vector
+     * 
+     * @return a vector of floats where each value in the float represents the number
+     *         of pixels in that bucket
+     */
     std::vector<float> bucketize(cv::Mat *src, int n_buckets)
     {
         std::vector<float> buckets(n_buckets, 0.0);
