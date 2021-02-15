@@ -93,6 +93,8 @@ namespace metrics
      * of a Red/Green space histogram and an R/G/B histogram. Uses intersection for the corresponding
      * sub-histograms.
      * 
+     * Assumed feature vector structure: [  Red/Green histogram  |  R/G/B histogram  ]
+     * 
      * @param one the first feature vector
      * @param two the second feature vector
      * 
@@ -120,6 +122,8 @@ namespace metrics
      * for the Red/Green histogram, and sum of squared distance for the gradient magnitude sum
      * feature vector.
      * 
+     * Assumed feature vector structure: [  Red/Green histogram  |  GMS vector  ]
+     * 
      * @param one the first feature vector
      * @param two the second feature vector
      * 
@@ -143,6 +147,8 @@ namespace metrics
      * Computes the distance between two features vectors, where each vector is the concatenation
      * of a complete Laws filters feature vector. Uses intersection for the Red/Green
      * histogram, and sum of squared distance for the Laws filters feature vector.
+     * 
+     * Assumed feature vector structure: [  Laws filters feature vector  |  Red/Green histogram  ]
      * 
      * @param one the first feature vector
      * @param two the second feature vector

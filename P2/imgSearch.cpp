@@ -1,19 +1,39 @@
 // Greg Attra
 // 02/09/2021
 
+/**
+ * Driver for the ImgSearch program.
+ */
+
 #include <stdio.h>
 #include <cstdlib>
 #include <opencv2/opencv.hpp>
 #include "imgFeatures.h"
 #include "imgMetrics.h"
 
+// the expected number of arguments
 #define ARG_COUNT 5
 
+/**
+ * A function for sorting two ImgMetric objects.
+ * 
+ * @param first the first ImgMetric object
+ * @param second the second ImgMetric object
+ * 
+ * @return true if first metric value is less then the second metric value
+ */
 bool sort_metrics(metrics::ImgMetric first, metrics::ImgMetric second)
 {
     return first.value < second.value;
 }
 
+/**
+ * Saves the provided image.
+ * 
+ * @param a pointer to the image to save
+ * 
+ * @return a boolean indicating whether or not the save was successful
+ */
 bool save_img(cv::Mat *img)
 {
     return cv::imwrite(
@@ -21,6 +41,19 @@ bool save_img(cv::Mat *img)
         *img);
 }
 
+/**
+ * Given a target image and a path to a dataset of images, this function
+ * computes the features for each image and ranks them using the specified
+ * feature and metric types.
+ * 
+ * @param target_img the target image to match
+ * @param db_path a string path to the dataset to query
+ * @param feature_type the type of feature vector to compute on each image
+ * @param metric_type the type of distance metric to use on each feature vector pair
+ * @param count the top N results to return
+ * 
+ * @return a vector of top N images
+ */
 std::vector<cv::Mat> searchAndRank(
     cv::Mat target_img,
     std::string db_path,
@@ -47,6 +80,16 @@ std::vector<cv::Mat> searchAndRank(
     return results;
 }
 
+/**
+ * Entry point to the program.
+ * 
+ * @param argc the number of args provided (should = 6)
+ * @param argv array of values for each argument
+ * 
+ * Usage: ./ImgSearch <target image path> <database path> <feature type> <metric type> <count>
+ * 
+ * @return 0 for success, -1 for failure
+ */
 int main(int argc, char** argv)
 {
     if (argc < ARG_COUNT + 1)
