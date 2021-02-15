@@ -25,7 +25,7 @@ namespace features
     #define LAWS_SLICE_SIZE 100
 
     // The number of image slices to use when computing the sliding Laws filter feature vectors
-    #define N_LAWS_SLICES 16
+    #define N_LAWS_SLICES 9
 
     // The number of buckets for each slice of the image for a Laws filter feature vector
     #define N_LAWS_BUCKETS 9
@@ -46,6 +46,7 @@ namespace features
     class ImgFeature
     {
         public:
+            std::string filename;
             std::vector<float> features;
             cv::Mat img;
     };

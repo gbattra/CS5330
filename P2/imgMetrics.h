@@ -28,6 +28,7 @@ namespace metrics
     class ImgMetric
     {
         public:
+            std::string filename;
             float value;
             cv::Mat img;
     };

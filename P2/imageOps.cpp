@@ -19,7 +19,7 @@ namespace imageOps
      */
     cv::Mat sliceImg(cv::Mat *img, int size, int row_offset, int col_offset)
     {
-        cv::Mat slice = cv::Mat(size, size, img->type());
+        cv::Mat slice = cv::Mat(size, size, img->type(), 1.0);
         int row = 0;
         int end_row = std::min(row_offset + size, img->rows);
         int end_col = std::min(col_offset + size, img->cols);
@@ -108,7 +108,7 @@ namespace imageOps
      */
     cv::Mat normalize(cv::Mat *src, cv::Mat *norm)
     {
-        cv::Mat dst = cv::Mat(src->rows, src->cols, CV_64F);
+        cv::Mat dst = cv::Mat(src->rows, src->cols, CV_64F, 0.0);
         for (int r = 0; r < src->rows; r++)
         {
             short *src_row = src->ptr<short>(r);
@@ -169,6 +169,11 @@ namespace imageOps
 
         for (int i = 0; i < buckets.size(); i++)
         {
+            if (buckets[i] == 0 || total_sum == 0)
+            {
+                continue;
+            }
+            
             buckets[i] = buckets[i] / total_sum;
         }
 

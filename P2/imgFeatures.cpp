@@ -384,7 +384,9 @@ namespace features
         for (int i = 0; i < image_files.size(); i++)
         {
             cv::Mat sample = cv::imread(image_files[i]);
-            images_features[i] = compute(sample, feature_type);
+            ImgFeature feature = compute(sample, feature_type);
+            feature.filename = image_files[i];
+            images_features[i] = feature;
         }
         
         return images_features;
