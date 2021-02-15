@@ -10,6 +10,14 @@
 
 namespace features
 {
+    /**
+     * Computes a histogram of R/G/B values, bucketing them into N buckets
+     * specified by RGB_BUCKET_SIZE.
+     * 
+     * @param img a pointer the source image with which to compute the feature vector
+     * 
+     * @return a vector of floats where each value represents a bucket
+     */
     std::vector<float> redGreenBlueHistogram(cv::Mat *img)
     {
         std::vector<float> histogram(pow(RGB_BUCKET_SIZE, 3), 0.0);
@@ -37,6 +45,17 @@ namespace features
         return histogram;
     }
 
+    /**
+     * Computes a histogram in Red/Green space for a target image. The equation
+     * for computing the Red and Green buckets is i* = (I / R + G + B) where I is either
+     * R or G. Each bucket represents a 10% range for i* values resulting in a 1x(10*10)
+     * feature vector.
+     * 
+     * @param img a pointer the source image with which to compute the feature vector
+     * 
+     * @return a feature vector where each value represents the number of pixels with a given
+     *         Red/Green ratio
+     */
     std::vector<float> redGreenHistogram(cv::Mat *img)
     {
         std::vector<float> histogram(10 * 10, 0.0);
@@ -72,6 +91,14 @@ namespace features
         return histogram;
     }
 
+    /**
+     * Produces a feature vector where the features are the values of each pixel
+     * in the center 9x9 slice of the image.
+     * 
+     * @param img a pointer the source image with which to compute the feature vector
+     * 
+     * @return a 1x(9*9) feature vector of pixel values
+     */
     std::vector<float> square9x9(cv::Mat *img)
     {
         int rows = img->rows;
@@ -102,6 +129,14 @@ namespace features
         return features;
     }
 
+    /**
+     * Computes a feature vector of two color histograms: one of Red/Green space
+     * and the other of coinciding R/G/B pixel values.
+     * 
+     * @param img a pointer the source image with which to compute the feature vector
+     * 
+     * @return the feature vector of concatenated color histograms
+     */ 
     std::vector<float> multiHistogram(cv::Mat *img)
     {
         cv::Mat slice = imageOps::sliceImg(img, 9);
@@ -114,19 +149,28 @@ namespace features
         return histogram;
     }
 
+    /**
+     * Computes a feature vector where each value in the vector is the sum of
+     * gradient magnitudes for a given slice of the source image.
+     * 
+     * @param img a pointer the source image with which to compute the feature vector
+     * 
+     * @return a 1x(NxN) feature vector where N is the number of slices used (as
+     *         specified by N_GMS_BUCKETS)
+     */
     std::vector<float> gradientMagnitudeSum(cv::Mat *img)
     {
         cv::Mat grad_mag_img = cv::Mat(img->rows, img->cols, img->type(), 0.0);
         filters::magnitudeFilter(img, &grad_mag_img);
         
-        std::vector<float> histogram(N_GMS_STEPS * N_GMS_STEPS, 0.0);
-        int row_step_size = img->rows / N_GMS_STEPS;
-        int col_step_size = img->cols / N_GMS_STEPS;
+        std::vector<float> histogram(N_GMS_BUCKETS * N_GMS_BUCKETS, 0.0);
+        int row_step_size = img->rows / N_GMS_BUCKETS;
+        int col_step_size = img->cols / N_GMS_BUCKETS;
         float total_sum = 0.0;
         float threshold = 15.0;
-        for (int step_row = 0; step_row < N_GMS_STEPS; step_row++)
+        for (int step_row = 0; step_row < N_GMS_BUCKETS; step_row++)
         {
-            for (int step_col = 0; step_col < N_GMS_STEPS; step_col++)
+            for (int step_col = 0; step_col < N_GMS_BUCKETS; step_col++)
             {
                 float sum = 0.0;
                 int cell_row = step_row * row_step_size;
@@ -142,7 +186,7 @@ namespace features
                         }
                     }
                 }
-                histogram[(step_row * N_GMS_STEPS) + step_col] = sum;
+                histogram[(step_row * N_GMS_BUCKETS) + step_col] = sum;
                 total_sum += sum;
             }
         }
@@ -156,6 +200,14 @@ namespace features
         return histogram;
     }
 
+    /**
+     * Computes a feature vector which is the concatenation of one texture feature vector
+     * and one color feature vector.
+     * 
+     * @param img a pointer to the source image with which to compute the feature vector
+     * 
+     * @return the combined feature vector
+     */
     std::vector<float> colorAndTexture(cv::Mat *img)
     {
         std::vector<float> color_histogram = redGreenBlueHistogram(img);
@@ -165,33 +217,30 @@ namespace features
         return histogram;
     }
 
-    cv::Mat computeLawsHistogram(cv::Mat *src, filters::FILTER filter_one, filters::FILTER filter_two)
-    {
-        std::vector<float> filter_one_vec = filters::getFilter(filter_one);
-        std::vector<float> filter_two_vec = filters::getFilter(filter_two);
-
-        cv::Mat one = cv::Mat(src->rows, src->cols, CV_16SC1);
-        cv::Mat two = cv::Mat(src->rows, src->cols, CV_16SC1);
-        filters::applyLawsFilter(*src, one, filter_one_vec, filter_two_vec);
-        filters::applyLawsFilter(*src, two, filter_two_vec, filter_one_vec);
-        cv::Mat merged = imageOps::mergeImg(&one, &two);
-
-        return merged;
-    }
-
+    /**
+     * Computes a feature vector of multiple rotated Laws filters over the source image.
+     * Normalizes each filter response using the Gaussian filter response. And buckets the
+     * responses, normalizing the values within the final feature vector to sum to 1.0. Each
+     * filter's corresponding feature vector is concatenated into a single N dimensional vector
+     * where N is the number of filters applied * the number of buckets for each filter feature vector.
+     * 
+     * @param a pointer to the source image with which to compute the feature vector
+     * 
+     * @return the final concatenated feature vector of normalize and bucket filter responses
+     */
     std::vector<float> lawsHistogram(cv::Mat *img)
     {
         cv::Mat gs_image;
         cv::cvtColor(*img, gs_image, cv::COLOR_BGR2GRAY);
 
         // gauss + spot
-        cv::Mat gaus_spot = computeLawsHistogram(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::SPOT);
+        cv::Mat gaus_spot = filters::applyRotatedLawsFilters(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::SPOT);
 
         // gauss + derivative
-        cv::Mat gaus_deriv = computeLawsHistogram(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::DERIVATIVE);
+        cv::Mat gaus_deriv = filters::applyRotatedLawsFilters(&gs_image, filters::FILTER::GAUSSIAN, filters::FILTER::DERIVATIVE);
 
         // wave + ripple
-        cv::Mat wave_ripple = computeLawsHistogram(&gs_image, filters::FILTER::WAVE, filters::FILTER::RIPPLE);
+        cv::Mat wave_ripple = filters::applyRotatedLawsFilters(&gs_image, filters::FILTER::WAVE, filters::FILTER::RIPPLE);
 
         // gauss + gauss
         std::vector<float> gaus_filter = filters::getFilter(filters::FILTER::GAUSSIAN);
@@ -216,6 +265,13 @@ namespace features
         return histogram;
     }
 
+    /**
+     * Produces a combined feature vector of a Laws feature vector and a Red/Green histogram.
+     * 
+     * @param a pointer to the source image with which to compute the feature vector
+     * 
+     * @return the final, concatenated feature vector
+     */
     std::vector<float> lawsRgHistogram(cv::Mat *img)
     {
         cv::Mat img_slice = imageOps::sliceImg(img, LAWS_SLICE_SIZE);
@@ -227,7 +283,16 @@ namespace features
         
         return histogram;
     }
-    
+
+    /**
+     * Produces a combined feature vector of a Laws feature vector and a Red/Green histogram.
+     * This differs from lawsRgHistogram() in that it performs a sliding window operation over
+     * the source image and computes a complete Laws histogram at each step.
+     * 
+     * @param a pointer to the source image with which to compute the feature vector
+     * 
+     * @return the final, concatenated feature vector
+     */
     std::vector<float> slidingLawsRgHistogram(cv::Mat *img)
     {
         std::vector<float> laws_histo(1, 0.0);
@@ -250,6 +315,14 @@ namespace features
         return histogram;
     }
 
+    /**
+     * Computes the specified feature vector for the target image.
+     * 
+     * @param target_image the target image from which to compute the feature vector
+     * @param feature_type the type of feature vector to produce
+     * 
+     * @return an ImgFeature class linking the image with its feature vector
+     */
     ImgFeature compute(cv::Mat img, FEATURE feature_type)
     {
         ImgFeature img_feature;
@@ -293,6 +366,17 @@ namespace features
         return img_feature;
     }
 
+    /**
+     * Loads feature vectors for images at the specified path. Reads each image and computes the
+     * vectors on the fly.
+     * 
+     * TODO: save feature vectors into binary files to save on time
+     * 
+     * @param db_path the path to the images
+     * @param feature_type the type of feature to compute using the images
+     * 
+     * @return an vector of ImgFeatures linking each image to its corresponding feature vector
+     */
     std::vector<ImgFeature> load(std::string *db_path, FEATURE feature_type)
     {
         std::vector<std::string> image_files = db::list(db_path);
@@ -306,6 +390,13 @@ namespace features
         return images_features;
     }
 
+    /**
+     * Converts a string to a FEATURE enum type.
+     * 
+     * @param feature_type the string name of the feature type.
+     * 
+     * @return the FEATURE enum type (returns FEATURE::INVALID if invalid string is provided)
+     */
     FEATURE stringToFeatureType(std::string feature_type)
     {
         if (feature_type == "square9x9")

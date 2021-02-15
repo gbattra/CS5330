@@ -1,3 +1,6 @@
+// Greg Attra
+// 02/09/2021
+
 #ifndef IMG_METRICS
 #define IMG_METRICS
 

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include "filters.h"
+#include "imageOps.h"
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
@@ -112,6 +113,33 @@ namespace filters
         }
 
         return SUCCESS_CODE;
+    }
+
+    /**
+     * Applies the provided two Laws filters twice, rotating the filters in between each pass
+     * over the image (i.e. one the first pass Filter A is applied vertically and Filter B is
+     * applied horizontally, and on the second pass Filter A is applied horizontally, Filter B
+     * vertically).
+     * 
+     * @param src a pointer to the image on which to apply the filter
+     * @param filter_one the filter Laws filter to apply
+     * @param filter_two the second Laws filter to apply
+     * 
+     * @return an image of the combined responses of each pass
+     */
+    cv::Mat applyRotatedLawsFilters(cv::Mat *src, FILTER filter_one, FILTER filter_two)
+    {
+        std::vector<float> filter_one_vec = getFilter(filter_one);
+        std::vector<float> filter_two_vec = getFilter(filter_two);
+
+        cv::Mat one = cv::Mat(src->rows, src->cols, CV_16SC1);
+        cv::Mat two = cv::Mat(src->rows, src->cols, CV_16SC1);
+        applyLawsFilter(*src, one, filter_one_vec, filter_two_vec);
+        applyLawsFilter(*src, two, filter_two_vec, filter_one_vec);
+
+        cv::Mat merged = imageOps::mergeImg(&one, &two);
+
+        return merged;
     }
 
     /**

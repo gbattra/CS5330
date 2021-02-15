@@ -1,3 +1,6 @@
+// Greg Attra
+// 02/09/2021
+
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
 #include "imgMetrics.h"

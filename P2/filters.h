@@ -45,6 +45,20 @@ namespace filters
     int applyLawsFilter(cv::Mat &src, cv::Mat &dst, std::vector<float> v_filter, std::vector<float> h_filter);
 
     /**
+     * Applies the provided two Laws filters twice, rotating the filters in between each pass
+     * over the image (i.e. one the first pass Filter A is applied vertically and Filter B is
+     * applied horizontally, and on the second pass Filter A is applied horizontally, Filter B
+     * vertically).
+     * 
+     * @param src a pointer to the image on which to apply the filter
+     * @param filter_one the filter Laws filter to apply
+     * @param filter_two the second Laws filter to apply
+     * 
+     * @return an image of the combined responses of each pass
+     */
+    cv::Mat applyRotatedLawsFilters(cv::Mat *src, FILTER filter_one, FILTER filter_two);
+
+    /**
      * Applies a Sobel filter to an image.
      * 
      * @param src reference to the source image on which to apply the filter
