@@ -1,11 +1,26 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
+#include "or2dEngine.h"
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
 
+or2d::OR2DEngine *engine;
+
+bool processKeystroke(int key)
+{
+    if (key == 't')
+    {
+        engine->mode = or2d::ENGINE_MODE::THRESHOLD;
+    }
+
+    return true;
+}
+
 int main(int argc, char** argv)
 {
+    engine = new or2d::OR2DEngine();
+
     cv::VideoCapture *cam = new cv::VideoCapture(0);
     if (!cam->isOpened())
     {
@@ -31,9 +46,21 @@ int main(int argc, char** argv)
         }
 
         cv::imshow("OR2D", frame);
-        cv::waitKey(10);
+        int key = cv::waitKey(10);
+        if (key == 'q')
+        {
+            break;
+        }
+
+        bool success = processKeystroke(key);
+        if (!success)
+        {
+            printf("Unable to process keystroke %c\n", (char) key);
+        }
+
     }
 
     delete cam;
+    delete engine;
     return SUCCESS_CODE;
 }
