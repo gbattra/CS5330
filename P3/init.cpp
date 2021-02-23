@@ -10,6 +10,7 @@ or2d::Init or2d::Init::build(cv::Mat *img)
 bool or2d::Init::execute()
 {
     // do nothing
+    return true;
 }
 
 cv::Mat* or2d::Init::getImg()

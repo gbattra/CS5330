@@ -6,3 +6,8 @@ or2d::Threshold or2d::Threshold::build(cv::Mat *i)
 {
     return Threshold(Init(i));
 }
+
+bool or2d::Threshold::execute()
+{
+    return true;
+}

@@ -1,6 +1,6 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
-#include "or2dEngine.h"
+#include "or2d.h"
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
