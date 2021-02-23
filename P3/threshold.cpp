@@ -2,9 +2,9 @@
 #include "or2d.h"
 
 
-or2d::Pipeline or2d::Threshold::build(cv::Mat *i)
+or2d::Pipeline* or2d::Threshold::build(cv::Mat *i)
 {
-    return Threshold(Init(i));
+    return new Threshold(Init(i));
 }
 
 bool or2d::Threshold::execute()

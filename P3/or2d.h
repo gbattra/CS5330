@@ -15,7 +15,7 @@ namespace or2d
     {
         public:
             virtual bool execute() { throw; }
-            virtual Pipeline build(cv::Mat *img) { throw; }
+            virtual Pipeline* build(cv::Mat *img) { throw;}
 
             virtual std::vector<PipelineStepResult> results(){
                 return std::vector<PipelineStepResult>(0);
@@ -36,7 +36,7 @@ namespace or2d
             Init(): img(NULL) {}
             Init(cv::Mat *i): img(i) {}
 
-            Pipeline build(cv::Mat *img);
+            Pipeline* build(cv::Mat *img);
             bool execute();
             std::vector<PipelineStepResult> results();
             std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
@@ -51,7 +51,7 @@ namespace or2d
         public:
             Threshold(Init p): parent(p) {}
 
-            Pipeline build(cv::Mat *img);
+            Pipeline* build(cv::Mat *img);
             bool execute();
     };
 

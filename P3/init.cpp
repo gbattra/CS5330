@@ -2,9 +2,9 @@
 #include "or2d.h"
 
 
-or2d::Pipeline or2d::Init::build(cv::Mat *img)
+or2d::Pipeline* or2d::Init::build(cv::Mat *img)
 {
-    return Init(img);
+    return new Init(img);
 }
 
 bool or2d::Init::execute()

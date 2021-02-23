@@ -5,13 +5,17 @@
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
 
-or2d::Pipeline pipeline;
+or2d::Pipeline *pipeline;
 
 bool processKeystroke(int key)
 {
+    if (key == 'i')
+    {
+        pipeline = new or2d::Init();
+    }
     if (key == 't')
     {
-        pipeline = or2d::Threshold(or2d::Init());
+        pipeline = new or2d::Threshold(or2d::Init());
     }
 
     return true;
@@ -19,7 +23,7 @@ bool processKeystroke(int key)
 
 int main(int argc, char** argv)
 {
-    pipeline = or2d::Init();
+    pipeline = new or2d::Init();
 
     cv::VideoCapture *cam = new cv::VideoCapture(0);
     if (!cam->isOpened())
@@ -33,7 +37,6 @@ int main(int argc, char** argv)
         (int) cam->get(cv::CAP_PROP_FRAME_HEIGHT));
     printf("Image Size: %d %d\n", bounds.width, bounds.height);
 
-    cv::namedWindow("OR2D", 1);
     cv::Mat frame;
 
     for (;;)
@@ -45,10 +48,17 @@ int main(int argc, char** argv)
             break;
         }
 
-        or2d::Pipeline p = pipeline.build(&frame);
-        p.execute();
-
+        or2d::Pipeline *p = pipeline->build(&frame);
+        p->execute();
         
+        std::vector<or2d::PipelineStepResult> results = p->results();
+        for (int r = 0; r < results.size(); r++)
+        {
+            struct or2d::PipelineStepResult result = results[r];
+            cv::namedWindow(result.label);
+            cv::imshow(result.label, *result.img);
+        }
+
         int key = cv::waitKey(10);
         if (key == 'q')
         {
@@ -61,8 +71,11 @@ int main(int argc, char** argv)
             printf("Unable to process keystroke %c\n", (char) key);
         }
 
+        delete p;
+
     }
 
     delete cam;
+    delete pipeline;
     return SUCCESS_CODE;
 }
