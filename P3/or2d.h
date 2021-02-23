@@ -5,26 +5,28 @@
 
 namespace or2d
 {
-    class PipelineStep
+    class Pipeline
     {
         public:
-            virtual bool execute() { return true; };
+            virtual bool execute() { throw; };
+            virtual Pipeline build(cv::Mat *img) { throw; };
     };
 
-    class Init: public PipelineStep
+    class Init: public Pipeline
     {
         private:
             cv::Mat *img;
             
         public:
+            Init(): img(NULL) {}
             Init(cv::Mat *i): img(i) {}
 
-            Init build(cv::Mat *img);
+            Pipeline build(cv::Mat *img);
             bool execute();
             cv::Mat *getImg();
     };
 
-    class Threshold: public PipelineStep
+    class Threshold: public Pipeline
     {
         private:
             Init parent;
@@ -32,7 +34,7 @@ namespace or2d
         public:
             Threshold(Init p): parent(p) {}
 
-            Threshold build(cv::Mat *img);
+            Pipeline build(cv::Mat *img);
             bool execute();
     };
 

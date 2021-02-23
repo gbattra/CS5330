@@ -2,7 +2,7 @@
 #include "or2d.h"
 
 
-or2d::Threshold or2d::Threshold::build(cv::Mat *i)
+or2d::Pipeline or2d::Threshold::build(cv::Mat *i)
 {
     return Threshold(Init(i));
 }

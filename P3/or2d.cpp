@@ -5,11 +5,13 @@
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
 
+or2d::Pipeline pipeline;
+
 bool processKeystroke(int key)
 {
     if (key == 't')
     {
-        
+        pipeline = or2d::Threshold(or2d::Init());
     }
 
     return true;
@@ -17,6 +19,8 @@ bool processKeystroke(int key)
 
 int main(int argc, char** argv)
 {
+    pipeline = or2d::Init();
+
     cv::VideoCapture *cam = new cv::VideoCapture(0);
     if (!cam->isOpened())
     {
@@ -41,7 +45,10 @@ int main(int argc, char** argv)
             break;
         }
 
-        cv::imshow("OR2D", frame);
+        or2d::Pipeline p = pipeline.build(&frame);
+        p.execute();
+
+        
         int key = cv::waitKey(10);
         if (key == 'q')
         {

@@ -2,7 +2,7 @@
 #include "or2d.h"
 
 
-or2d::Init or2d::Init::build(cv::Mat *img)
+or2d::Pipeline or2d::Init::build(cv::Mat *img)
 {
     return Init(img);
 }
