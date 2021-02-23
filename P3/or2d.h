@@ -81,6 +81,10 @@ namespace or2d
             
         public:
             /**
+             * Default constructor for Init.
+             */
+            Init(): img(NULL) {};
+            /**
              * Primary constructor for Init. Takes the
              * target image in constructor.
              * 
