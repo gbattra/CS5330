@@ -3,5 +3,5 @@ project( Project3 )
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
-add_executable( OR2D or2d.cpp or2dEngine.h )
+add_executable( OR2D or2d.cpp or2d.h init.cpp threshold.cpp )
 target_link_libraries( OR2D ${OpenCV_LIBS} )

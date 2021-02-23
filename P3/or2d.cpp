@@ -5,13 +5,11 @@
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
 
-or2d::OR2DEngine *engine;
-
 bool processKeystroke(int key)
 {
     if (key == 't')
     {
-        engine->mode = or2d::ENGINE_MODE::THRESHOLD;
+        
     }
 
     return true;
@@ -19,8 +17,6 @@ bool processKeystroke(int key)
 
 int main(int argc, char** argv)
 {
-    engine = new or2d::OR2DEngine();
-
     cv::VideoCapture *cam = new cv::VideoCapture(0);
     if (!cam->isOpened())
     {
@@ -61,6 +57,5 @@ int main(int argc, char** argv)
     }
 
     delete cam;
-    delete engine;
     return SUCCESS_CODE;
 }
