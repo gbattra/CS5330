@@ -44,6 +44,7 @@ int ctrl::VideoController::spin()
             break;
         }
 
+
         bool success = processKeystroke(key);
         if (!success)
         {

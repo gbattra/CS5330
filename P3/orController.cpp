@@ -42,6 +42,11 @@ bool ctrl::ORController::saveImage(cv::Mat *img, int id)
  */
 bool ctrl::ORController::processKeystroke(int key)
 {
+    if (key < 0)
+    {
+        return true;
+    }
+    
     if (key == 's')
     {
         save_img = true;
