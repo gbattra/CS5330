@@ -67,6 +67,9 @@ namespace ctrl
             virtual int spin() { throw; }
     };
 
+    /**
+     * Controller for running real-time OR using a video stream.
+     */
     class VideoController: public ORController
     {
         public:
@@ -83,6 +86,9 @@ namespace ctrl
             int spin();
     };
 
+    /**
+     * Controller for running OR on an image file.
+     */
     class ImgController: public ORController
     {
         private:

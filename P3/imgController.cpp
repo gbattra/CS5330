@@ -19,6 +19,11 @@ int ctrl::ImgController::spin()
         return ERROR_CODE;
     }
 
+    if (!run_pipeline(&frame))
+    {
+        printf("Failed to process image\n");
+    }
+
     for (;;)
     {
         // register user input
