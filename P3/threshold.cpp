@@ -6,7 +6,7 @@
  */
 
 #include <opencv2/opencv.hpp>
-#include "or2d.h"
+#include "pipeline.h"
 
 /**
  * Implementation of the base class build() method. Instantiates
@@ -16,12 +16,12 @@
  * 
  * @return a pointer to the new pipeline
  */
-or2d::Pipeline* or2d::Threshold::build(cv::Mat *i)
+pl::Pipeline* pl::Threshold::build(cv::Mat *i)
 {
     return new Threshold(Init(i->clone()), threshold);
 }
 
-cv::Mat or2d::Threshold::compute_threshold_img(cv::Mat *src)
+cv::Mat pl::Threshold::compute_threshold_img(cv::Mat *src)
 {
     cv::Mat timg = cv::Mat(src->size(), CV_8UC1);
     for (int r = 0; r < src->rows; r++)
@@ -39,7 +39,7 @@ cv::Mat or2d::Threshold::compute_threshold_img(cv::Mat *src)
     return timg;
 }
 
-cv::Mat or2d::Threshold::clean_threshold_img(cv::Mat *timg)
+cv::Mat pl::Threshold::clean_threshold_img(cv::Mat *timg)
 {
     cv::Mat clean_img;
     cv::Mat M = cv::Mat::ones(5, 5, CV_8U);
@@ -57,7 +57,7 @@ cv::Mat or2d::Threshold::clean_threshold_img(cv::Mat *timg)
  * 
  * @return bool if execution was successful
  */
-bool or2d::Threshold::execute()
+bool pl::Threshold::execute()
 {
     if (init.execute())
     {
@@ -78,9 +78,9 @@ bool or2d::Threshold::execute()
  * 
  * @return a vector of PipelineStepResult structs which have an image and label
  */
-std::vector<or2d::PipelineStepResult> or2d::Threshold::results()
+std::vector<pl::PipelineStepResult> pl::Threshold::results()
 {
-    return this->results(std::vector<or2d::PipelineStepResult>(0));
+    return this->results(std::vector<pl::PipelineStepResult>(0));
 }
 
 /**
@@ -91,13 +91,13 @@ std::vector<or2d::PipelineStepResult> or2d::Threshold::results()
  * 
  * @return a vector of pipeline results
  */
-std::vector<or2d::PipelineStepResult> or2d::Threshold::results(std::vector<or2d::PipelineStepResult> r)
+std::vector<pl::PipelineStepResult> pl::Threshold::results(std::vector<pl::PipelineStepResult> r)
 {
     r = init.results(r);
 
     if (step_complete && &threshold_img != NULL)
     {
-        struct or2d::PipelineStepResult result = {&threshold_img, "Threshold Image"};
+        struct pl::PipelineStepResult result = {&threshold_img, "Threshold Image"};
         r.push_back(result);
     }
 

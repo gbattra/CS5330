@@ -6,7 +6,7 @@
  */
 
 #include <opencv2/opencv.hpp>
-#include "or2d.h"
+#include "pipeline.h"
 
 /**
  * Implementation of the base class build() method. Instantiates
@@ -16,7 +16,7 @@
  * 
  * @return a pointer to the new pipeline
  */
-or2d::Pipeline* or2d::Init::build(cv::Mat *img)
+pl::Pipeline* pl::Init::build(cv::Mat *img)
 {
     return new Init(img->clone());
 }
@@ -27,7 +27,7 @@ or2d::Pipeline* or2d::Init::build(cv::Mat *img)
  * 
  * @return bool if execution was successful
  */
-bool or2d::Init::execute()
+bool pl::Init::execute()
 {
     // do nothing
     return &img != NULL;
@@ -38,9 +38,9 @@ bool or2d::Init::execute()
  * 
  * @return a vector of PipelineStepResult structs which have an image and label
  */
-std::vector<or2d::PipelineStepResult> or2d::Init::results()
+std::vector<pl::PipelineStepResult> pl::Init::results()
 {
-    return this->results(std::vector<or2d::PipelineStepResult>(0));
+    return this->results(std::vector<pl::PipelineStepResult>(0));
 }
 
 /**
@@ -51,9 +51,9 @@ std::vector<or2d::PipelineStepResult> or2d::Init::results()
  * 
  * @return a vector of pipeline results
  */
-std::vector<or2d::PipelineStepResult> or2d::Init::results(std::vector<or2d::PipelineStepResult> r)
+std::vector<pl::PipelineStepResult> pl::Init::results(std::vector<pl::PipelineStepResult> r)
 {
-    struct or2d::PipelineStepResult result = {&img, "Initial Image"};
+    struct pl::PipelineStepResult result = {&img, "Initial Image"};
     r.push_back(result);
     return r;
 }
@@ -63,7 +63,7 @@ std::vector<or2d::PipelineStepResult> or2d::Init::results(std::vector<or2d::Pipe
  * 
  * @return the start image for the pipeline
  */
-cv::Mat* or2d::Init::getImg()
+cv::Mat* pl::Init::getImg()
 {
     return &img;
 }

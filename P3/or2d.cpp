@@ -15,7 +15,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
-#include "or2d.h"
+#include "pipeline.h"
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
@@ -24,7 +24,7 @@
 bool save_img = false;
 
 // the pipeline to process the image
-or2d::Pipeline *pipeline;
+pl::Pipeline *pipeline;
 
 /**
  * Saves the provided image.
@@ -57,12 +57,12 @@ bool processKeystroke(int key)
     
     if (key == 'i')
     {
-        pipeline = new or2d::Init();
+        pipeline = new pl::Init();
         return true;
     }
     if (key == 't')
     {
-        pipeline = new or2d::Threshold(or2d::Init(), DEFAULT_THRESHOLD);
+        pipeline = new pl::Threshold(pl::Init(), DEFAULT_THRESHOLD);
         return true;
     }
     if (key == 's')
@@ -77,15 +77,29 @@ bool processKeystroke(int key)
 /**
  * Entrypoint for the OR2D application. Takes no args but allows real-time
  * user input. See top comment for a description of each valid input.
+ * 
+ * usage:
+ * 
+ * $ ./OR2D -v
+ * $ ./OR2D -i <image path>
+ * i.e.: $ ./OR2D -i images/examples/headphone_original.png
  *
- * @param arc number of args (ignored)
- * @param argv pointer to args (ignored)
+ *
+ * @param arc number of args
+ * @param argv pointer to args
  * 
  * @return 0 for success, -1 for error
  */
 int main(int argc, char** argv)
 {
-    pipeline = new or2d::Init();
+    if (argc < 2)
+    {
+        printf("Usage:\n$ ./OR2D -v\n$ ./OR2D -i <image path>\n");
+        return ERROR_CODE;
+    }
+
+
+    pipeline = new pl::Init();
 
     cv::VideoCapture *cam = new cv::VideoCapture(0);
     if (!cam->isOpened())
@@ -124,7 +138,7 @@ int main(int argc, char** argv)
             break;
         }
 
-        or2d::Pipeline *p = pipeline->build(&frame);
+        pl::Pipeline *p = pipeline->build(&frame);
         p->execute();
         if (!p)
         {
@@ -132,10 +146,10 @@ int main(int argc, char** argv)
             continue;
         }
         
-        std::vector<or2d::PipelineStepResult> results = p->results();
+        std::vector<pl::PipelineStepResult> results = p->results();
         for (int r = 0; r < results.size(); r++)
         {
-            struct or2d::PipelineStepResult result = results[r];
+            struct pl::PipelineStepResult result = results[r];
             cv::namedWindow(result.step_name);
             cv::imshow(result.step_name, *result.img);
 

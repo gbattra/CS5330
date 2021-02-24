@@ -2,15 +2,16 @@
 // 02/22/2020
 
 /**
- * Header defining objects used by the OR2D application.
+ * Header defining pipeline objects. The pipeline is responsible for
+ * taking the raw input image and processing it for object recognition.
  */
 
-#ifndef PIPELINE
-#define PIPELINE
+#ifndef OR_PIPELINE
+#define OR_PIPELINE
 
 #include <opencv2/opencv.hpp>
 
-namespace or2d
+namespace pl
 {
     /**
      * A simple struct to hold an image and the name of the pipeline step
