@@ -61,6 +61,7 @@ int ctrl::VideoController::spin()
         if (!run_pipeline(&frame))
         {
             printf("Failed to process image\n");
+            continue;
         }
         
     }

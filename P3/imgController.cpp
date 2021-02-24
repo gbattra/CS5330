@@ -42,11 +42,13 @@ int ctrl::ImgController::spin()
         if (!success)
         {
             printf("Unable to process keystroke %c\n", (char) key);
+            continue;
         }
 
         if (!run_pipeline(&frame))
         {
             printf("Failed to process image\n");
+            continue;
         }
     }
 
