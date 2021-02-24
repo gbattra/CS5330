@@ -8,6 +8,16 @@
 #include <opencv2/opencv.hpp>
 #include "orController.h"
 
+template <typename T>
+T getInput(std::string prompt)
+{
+    T x;
+    std::cout << prompt;
+    std::cin >> x;
+    std::cout << std::endl;
+    return x;
+}
+
 /**
  * Saves the provided image.
  * 
@@ -36,7 +46,12 @@ bool ctrl::ORController::processKeystroke(int key)
     {
         return true;
     }
-    
+
+    if (key == 's')
+    {
+        save_img = true;
+        return true;
+    }
     if (key == 'i')
     {
         pipeline = new pl::Init();
@@ -44,13 +59,18 @@ bool ctrl::ORController::processKeystroke(int key)
     }
     if (key == 't')
     {
-        pipeline = new pl::Threshold(pl::Init(), DEFAULT_THRESHOLD);
+        threshold = getInput<float>("Threshold value (float): ");
+        pipeline = new pl::Threshold(
+            pl::Init(),
+            threshold > 0 ? threshold : DEFAULT_THRESHOLD);
         return true;
     }
-    if (key == 's')
+    if (key == 'd')
     {
-        save_img = true;
-        return true;
+        pipeline = new pl::Segment(
+            pl::Threshold(
+                pl::Init(),
+                threshold), 1);
     }
 
     return false;

@@ -27,6 +27,7 @@ namespace ctrl
         protected:
             pl::Pipeline *pipeline;
             bool save_img = false;
+            float threshold = DEFAULT_THRESHOLD;
 
             /**
              * Saves the provided image.

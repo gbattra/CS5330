@@ -57,17 +57,6 @@ namespace pl
             virtual Pipeline* build(cv::Mat *img) { throw;}
 
             /**
-             * Returns a fresh instance of the pipeline using the provided image. Differs
-             * from build in that it returns the instance itself and not a pointer.
-             * 
-             * @param img the image to use for the new pipeline
-             * 
-             * @return T the type of pipeline object to make
-             */
-            template<typename T, typename std::enable_if<std::is_base_of<Pipeline, T>::value>::type* = nullptr>
-            T reinitialize(cv::Mat *img) { throw; };
-
-            /**
              * Returns a vector of image results from this step in the pipeline.
              * 
              * @return a vector of PipelineStepResult structs which have an image and label
@@ -75,7 +64,6 @@ namespace pl
             virtual std::vector<PipelineStepResult> results(){
                 return std::vector<PipelineStepResult>(0);
             }
-
 
             /**
              * Override for the results() method so that parent pipeline steps may capture the results of
@@ -89,6 +77,16 @@ namespace pl
             {
                 return std::vector<PipelineStepResult>(0);
             }
+
+            /**
+             * Returns a fresh instance of the pipeline using the provided image. Differs
+             * from build in that it returns the instance itself and not a pointer.
+             * 
+             * @param img the image to use for the new pipeline
+             * 
+             * @return a new instance of the pipeline object
+             */
+            Pipeline reinitialize(cv::Mat *img) { throw; };
     };
 
     class Init: public Pipeline
@@ -186,7 +184,7 @@ namespace pl
              * @param i Init pipeline step instance
              * @param t threshold value to use when processing image
              */
-            Threshold(Init i, uchar t): init(i), threshold(t) {}
+            Threshold(Init i, float t): init(i), threshold(t) {}
 
             /**
              * Instantiates a new pipeline with a fresh state.
@@ -249,6 +247,11 @@ namespace pl
              */
             int n_regions = 1;
 
+            /**
+             * Resulting segmented image produced by this step.
+             */
+            cv::Mat segment_img;
+
         public:
             /**
              * Primary constructor for the Segment step.
@@ -283,6 +286,23 @@ namespace pl
              * @return true if execution succeeded.
              */
             bool execute();
+
+            /**
+             * Returns a vector of image results from this step in the pipeline.
+             * 
+             * @return a vector of PipelineStepResult structs which have an image and label
+             */
+            std::vector<PipelineStepResult> results();
+
+            /**
+             * Override for the results() method so that parent pipeline steps may capture the results of
+             * child pipeline steps and aggregate them into a single vector.
+             * 
+             * @param r the current vector of results to add to
+             * 
+             * @return a vector of pipeline results
+             */
+            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
     };
 }
 
