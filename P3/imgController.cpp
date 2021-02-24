@@ -38,7 +38,11 @@ int ctrl::ImgController::spin()
             break;
         }
 
-        processKeystroke(key);
+        bool success = processKeystroke(key);
+        if (!success)
+        {
+            continue;
+        }
 
         if (!run_pipeline(&frame))
         {

@@ -44,7 +44,11 @@ int ctrl::VideoController::spin()
             break;
         }
 
-        processKeystroke(key);
+        bool success = processKeystroke(key);
+        if (!success)
+        {
+            continue;
+        }
 
         // capture frame, process and display
         *cam >> frame;

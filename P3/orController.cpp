@@ -40,15 +40,17 @@ bool ctrl::ORController::saveImage(cv::Mat *img, int id)
  * 
  * @return true if valid key entered
  */
-void ctrl::ORController::processKeystroke(int key)
+bool ctrl::ORController::processKeystroke(int key)
 {
     if (key == 's')
     {
         save_img = true;
+        return true;
     }
     if (key == 'i')
     {
         pipeline = new pl::Init();
+        return true;
     }
     if (key == 't')
     {
@@ -56,6 +58,7 @@ void ctrl::ORController::processKeystroke(int key)
         pipeline = new pl::Threshold(
             pl::Init(),
             threshold);
+            return true;
     }
     if (key == 'd')
     {
@@ -65,7 +68,10 @@ void ctrl::ORController::processKeystroke(int key)
                 pl::Init(),
                 threshold),
             n_regions);
+            return true;
     }
+
+    return false;
 }
 
 /**
