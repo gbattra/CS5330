@@ -8,14 +8,29 @@
 #include <opencv2/opencv.hpp>
 #include "orController.h"
 
-bool ctrl::ORController::save_image(cv::Mat *img, int id)
+/**
+ * Saves the provided image.
+ * 
+ * @param a pointer to the image to save
+ * 
+ * @return a boolean indicating whether or not the save was successful
+ */
+bool ctrl::ORController::saveImage(cv::Mat *img, int id)
 {
     return cv::imwrite(
         "images/saved/" + std::to_string(std::time(0)) + std::to_string(id) + ".png",
         *img);
 }
 
-bool ctrl::ORController::process_keystroke(int key)
+/**
+ * Sets the pipeline based on the keystroke. See the above comment
+ * for a description of each valid key.
+ * 
+ * @param key the keystroke made by the user
+ * 
+ * @return true if valid key entered
+ */
+bool ctrl::ORController::processKeystroke(int key)
 {
     if (key < 0)
     {

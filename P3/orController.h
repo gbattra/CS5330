@@ -13,6 +13,8 @@
 
 namespace ctrl
 {
+    #define ERROR_CODE -1
+    #define SUCCESS_CODE 0
     #define DEFAULT_THRESHOLD 100
 
     class ORController
@@ -20,15 +22,19 @@ namespace ctrl
         protected:
             pl::Pipeline *pipeline;
             bool save_img = false;
+
+            bool saveImage(cv::Mat *img, int id);
+            bool processKeystroke(int key);
             
-            bool save_image(cv::Mat *img, int id);
-            bool process_keystroke(int key);
-            int spin();
+        public:
+            virtual int spin() { throw; }
     };
 
     class VideoController: public ORController
     {
-
+        public:
+            VideoController() {}
+            int spin();
     };
 
     class ImgController: public ORController

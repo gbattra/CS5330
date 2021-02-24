@@ -90,7 +90,7 @@ namespace pl
             /**
              * Default constructor for Init.
              */
-            Init() {};
+            Init() {}
 
             /**
              * Primary constructor for Init. Takes the
