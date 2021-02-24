@@ -6,7 +6,7 @@
  */
 
 #include <opencv2/opencv.hpp>
-#include "orController.h"
+#include "controller.h"
 
 template <typename T>
 T getInput(std::string prompt)
@@ -25,7 +25,7 @@ T getInput(std::string prompt)
  * 
  * @return a boolean indicating whether or not the save was successful
  */
-bool ctrl::ORController::saveImage(cv::Mat *img, int id)
+bool ctrl::Controller::saveImage(cv::Mat *img, int id)
 {
     return cv::imwrite(
         "images/saved/" + std::to_string(std::time(0)) + std::to_string(id) + ".png",
@@ -40,7 +40,7 @@ bool ctrl::ORController::saveImage(cv::Mat *img, int id)
  * 
  * @return true if valid key entered
  */
-bool ctrl::ORController::processKeystroke(int key)
+bool ctrl::Controller::processKeystroke(int key)
 {
     if (key < 0)
     {
@@ -86,7 +86,7 @@ bool ctrl::ORController::processKeystroke(int key)
  * 
  * @return true / false indicating success / failure
  */
-bool ctrl::ORController::run_pipeline(cv::Mat *frame)
+bool ctrl::Controller::run_pipeline(cv::Mat *frame)
 {
     pl::Pipeline *p = pipeline->build(frame);
     p->execute();

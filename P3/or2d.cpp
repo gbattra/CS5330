@@ -16,7 +16,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
-#include "orController.h"
+#include "controller.h"
 
 // string to output if input args are incorrect or missing
 std::string usage_str = "Usage:\n$ ./OR2D -v\n$ ./OR2D -i <image path>\n";
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    ctrl::ORController *ctrl;
+    ctrl::Controller *ctrl;
     if (std::strcmp(argv[1], "-v") == 0)
     {
         ctrl = new ctrl::VideoController();

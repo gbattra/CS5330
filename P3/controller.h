@@ -22,7 +22,7 @@ namespace ctrl
      * methods to save images and process keystrokes to change the
      * pipeline.
      */
-    class ORController
+    class Controller
     {
         protected:
             pl::Pipeline *pipeline;
@@ -60,7 +60,7 @@ namespace ctrl
             bool run_pipeline(cv::Mat *frame);
             
         public:
-            ~ORController() { delete pipeline; }
+            ~Controller() { delete pipeline; }
             /**
              * Spin the controller to start the application and handle user inputs.
              * 
@@ -72,7 +72,7 @@ namespace ctrl
     /**
      * Controller for running real-time OR using a video stream.
      */
-    class VideoController: public ORController
+    class VideoController: public Controller
     {
         public:
             /**
@@ -92,7 +92,7 @@ namespace ctrl
     /**
      * Controller for running OR on an image file.
      */
-    class ImgController: public ORController
+    class ImgController: public Controller
     {
         private:
             // the path to the image to processes

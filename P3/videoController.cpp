@@ -8,7 +8,7 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
 #include "pipeline.h"
-#include "orController.h"
+#include "controller.h"
 
 /**
  * Spins the controller and waits for user input. At each loop, the frame
