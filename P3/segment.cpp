@@ -8,10 +8,17 @@
 #include <opencv2/opencv.hpp>
 #include "pipeline.h"
 
+/**
+ * Instantiates a new pipeline with a fresh state.
+ * 
+ * @param img pointer to the image that the pipeline will process
+ * 
+ * @return a pointer to the new pipeline
+ */
 pl::Segment* pl::Segment::build(cv::Mat *img)
 {
     return new pl::Segment(
-        *threshold.build(img),
+        threshold->build(img),
         n_regions);
 }
 
@@ -26,9 +33,9 @@ pl::Segment* pl::Segment::build(cv::Mat *img)
  */
 bool pl::Segment::execute()
 {
-    if (threshold.execute())
+    if (threshold->execute())
     {
-        cv::Mat *timg = threshold.getImg();
+        cv::Mat *timg = threshold->getImg();
         cv::Mat label_img = cv::Mat(timg->size(), CV_32S);
         int n_labels = cv::connectedComponents(*timg, label_img, 8);
 
@@ -76,7 +83,7 @@ std::vector<pl::PipelineStepResult> pl::Segment::results()
  */
 std::vector<pl::PipelineStepResult> pl::Segment::results(std::vector<pl::PipelineStepResult> r)
 {
-    r = threshold.results(r);
+    r = threshold->results(r);
 
     if (step_complete && &segment_img != NULL)
     {

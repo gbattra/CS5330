@@ -146,7 +146,7 @@ namespace pl
     {
         private:
             // the parent pipeline step for Threshold
-            Init init;
+            Init *init;
 
             // the threshold value with which to binarize the target image
             float threshold;
@@ -166,7 +166,8 @@ namespace pl
              * @param i Init pipeline step instance
              * @param t threshold value to use when processing image
              */
-            Threshold(Init i, float t): init(i), threshold(t) {}
+            Threshold(Init *i, float t): init(i), threshold(t) {}
+            ~Threshold() { delete &init; }
 
             /**
              * Instantiates a new pipeline with a fresh state.
@@ -219,7 +220,7 @@ namespace pl
              * The parent pipeline step for this step. Segmenting requires
              * a thresholded image.
              */
-            Threshold threshold;
+            Threshold *threshold;
 
             /**
              * The number of regions expected in the image.
@@ -238,7 +239,8 @@ namespace pl
              * @param t the threshold pipeline step which runs first
              * @param n the number of expected regions in the image
              */
-            Segment(Threshold t, int n): threshold(t), n_regions(n) {}
+            Segment(Threshold *t, int n): threshold(t), n_regions(n) {}
+            ~Segment() { delete &threshold; }
 
             /**
              * Instantiates a new pipeline with a fresh state.

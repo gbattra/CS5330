@@ -46,7 +46,7 @@ bool ctrl::ORController::processKeystroke(int key)
     {
         return true;
     }
-    
+
     if (key == 's')
     {
         save_img = true;
@@ -61,7 +61,7 @@ bool ctrl::ORController::processKeystroke(int key)
     {
         threshold = getInput<float>("Threshold value (float): ");
         pipeline = new pl::Threshold(
-            pl::Init(),
+            new pl::Init(),
             threshold);
             return true;
     }
@@ -69,8 +69,8 @@ bool ctrl::ORController::processKeystroke(int key)
     {
         int n_regions = getInput<int>("Number of regions (int): ");
         pipeline = new pl::Segment(
-            pl::Threshold(
-                pl::Init(),
+            new pl::Threshold(
+                new pl::Init(),
                 threshold),
             n_regions);
             return true;
