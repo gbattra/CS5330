@@ -54,14 +54,15 @@ namespace pl
              * 
              * @return a pointer to the new pipeline
              */
-            virtual Pipeline* build(cv::Mat *img) { throw;}
+            virtual Pipeline* build(cv::Mat *img) { throw; }
 
             /**
              * Returns a vector of image results from this step in the pipeline.
              * 
              * @return a vector of PipelineStepResult structs which have an image and label
              */
-            virtual std::vector<PipelineStepResult> results(){
+            virtual std::vector<PipelineStepResult> results()
+            {
                 return std::vector<PipelineStepResult>(0);
             }
 

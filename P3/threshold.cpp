@@ -21,6 +21,13 @@ pl::Threshold* pl::Threshold::build(cv::Mat *i)
     return new Threshold(*init.build(i), threshold);
 }
 
+/**
+ * Computes the threshold image from the provided image.
+ * 
+ * @param src the image to threshold
+ * 
+ * @return the resulting threshold image
+ */
 cv::Mat pl::Threshold::compute_threshold_img(cv::Mat *src)
 {
     cv::Mat timg = cv::Mat(src->size(), CV_8UC1);
@@ -39,6 +46,13 @@ cv::Mat pl::Threshold::compute_threshold_img(cv::Mat *src)
     return timg;
 }
 
+/**
+ * Cleans the threshold image. Fills holes and removes islands.
+ * 
+ * @param img the threshold image to clean
+ * 
+ * @return the cleaned threshold image
+ */
 cv::Mat pl::Threshold::clean_threshold_img(cv::Mat *timg)
 {
     cv::Mat clean_img;
