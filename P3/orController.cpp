@@ -67,10 +67,12 @@ bool ctrl::ORController::processKeystroke(int key)
     }
     if (key == 'd')
     {
+        int n_regions = getInput<float>("Number of regions (int): ");
         pipeline = new pl::Segment(
             pl::Threshold(
                 pl::Init(),
-                threshold), 1);
+                threshold),
+            n_regions);
     }
 
     return false;

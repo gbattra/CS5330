@@ -60,6 +60,7 @@ namespace ctrl
             bool run_pipeline(cv::Mat *frame);
             
         public:
+            ~ORController() { delete pipeline; }
             /**
              * Spin the controller to start the application and handle user inputs.
              * 
@@ -78,6 +79,7 @@ namespace ctrl
              * Default constructor for VideoController.
              */
             VideoController() {}
+            ~VideoController() {}
 
             /**
              * Spin the controller to start the application and handle user inputs.
@@ -101,6 +103,7 @@ namespace ctrl
              * Default constructor for ImgController.
              */
             ImgController() {}
+            ~ImgController() {}
 
             /**
              * Primary constructor for ImgController.

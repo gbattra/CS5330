@@ -77,16 +77,6 @@ namespace pl
             {
                 return std::vector<PipelineStepResult>(0);
             }
-
-            /**
-             * Returns a fresh instance of the pipeline using the provided image. Differs
-             * from build in that it returns the instance itself and not a pointer.
-             * 
-             * @param img the image to use for the new pipeline
-             * 
-             * @return a new instance of the pipeline object
-             */
-            Pipeline reinitialize(cv::Mat *img) { throw; };
     };
 
     class Init: public Pipeline
@@ -100,6 +90,7 @@ namespace pl
              * Default constructor for Init.
              */
             Init() {}
+            ~Init() {}
 
             /**
              * Primary constructor for Init. Takes the
@@ -116,17 +107,7 @@ namespace pl
              * 
              * @return a pointer to the new pipeline
              */
-            Pipeline* build(cv::Mat *img) override;
-
-            /**
-             * Returns a fresh instance of the pipeline using the provided image. Differs
-             * from build in that it returns the instance itself and not a pointer.
-             * 
-             * @param img the image to use for the new pipeline
-             * 
-             * @return a new instance of the called Init object
-             */
-            Init reinitialize(cv::Mat *img);
+            Init* build(cv::Mat *img) override;
 
             /**
              * Executes the pipeline and processes the target image.
@@ -185,6 +166,7 @@ namespace pl
              * @param t threshold value to use when processing image
              */
             Threshold(Init i, float t): init(i), threshold(t) {}
+            ~Threshold() { delete &init; }
 
             /**
              * Instantiates a new pipeline with a fresh state.
@@ -193,17 +175,7 @@ namespace pl
              * 
              * @return a pointer to the new pipeline
              */
-            Pipeline* build(cv::Mat *img) override;
-
-            /**
-             * Returns a fresh instance of the pipeline using the provided image. Differs
-             * from build() in that it returns the instance itself and not a pointer.
-             * 
-             * @param img the image to use for the new pipeline
-             * 
-             * @return a reset instance of the called pipeline object
-             */
-            Threshold reinitialize(cv::Mat *img);
+            Threshold* build(cv::Mat *img) override;
 
             /**
              * Executes the pipeline and processes the target image.
@@ -260,6 +232,7 @@ namespace pl
              * @param n the number of expected regions in the image
              */
             Segment(Threshold t, int n): threshold(t), n_regions(n) {}
+            ~Segment() { delete &threshold; }
 
             /**
              * Instantiates a new pipeline with a fresh state.
@@ -268,17 +241,7 @@ namespace pl
              * 
              * @return a pointer to the new pipeline
              */
-            Pipeline* build(cv::Mat *img) override;
-
-            /**
-             * Returns a fresh instance of the pipeline using the provided image. Differs
-             * from build() in that it returns the instance itself and not a pointer.
-             * 
-             * @param img the image to use for the new pipeline
-             * 
-             * @return a new instance of the called Init object
-             */
-            Segment reinitialize(cv::Mat *img);
+            Segment* build(cv::Mat *img) override;
 
             /**
              * Executes the pipeline and processes the target image.
