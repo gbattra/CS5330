@@ -154,6 +154,7 @@ namespace or2d
 
         protected:
             cv::Mat compute_threshold_img(cv::Mat *src);
+            cv::Mat clean_threshold_img(cv::Mat *timg);
 
         public:
             /**

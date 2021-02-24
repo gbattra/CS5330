@@ -39,6 +39,14 @@ cv::Mat or2d::Threshold::compute_threshold_img(cv::Mat *src)
     return timg;
 }
 
+cv::Mat or2d::Threshold::clean_threshold_img(cv::Mat *timg)
+{
+    cv::Mat clean_img;
+    cv::Mat M = cv::Mat::ones(5, 5, CV_8U);
+    cv::morphologyEx(*timg, clean_img, cv::MORPH_OPEN, M);
+    return clean_img;
+}
+
 /**
  * Executes the pipeline to process the image. Threshold is typically
  * the first step in the pipeline. Creates a binary image from the Init
@@ -56,6 +64,7 @@ bool or2d::Threshold::execute()
         threshold_img = compute_threshold_img(init.getImg());
 
         // clean image to remove holes / islands
+        threshold_img = clean_threshold_img(&threshold_img);
 
         step_complete = true;
     }

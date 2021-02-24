@@ -19,7 +19,7 @@
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
-#define DEFAULT_THRESHOLD 100
+#define DEFAULT_THRESHOLD 150
 
 // the pipeline to process the image
 or2d::Pipeline *pipeline;
