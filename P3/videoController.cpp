@@ -1,11 +1,22 @@
 // Greg Attra
 // 02/24/2020
 
+/**
+ * Implementation of the VideoController class from orController.h.
+ */
+
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
 #include "pipeline.h"
 #include "orController.h"
 
+/**
+ * Spins the controller and waits for user input. At each loop, the frame
+ * from the video stream is processed through the current OR pipeline
+ * and the results are displayed in respective windows.
+ * 
+ * @return 0 if success, -1 if failure
+ */
 int ctrl::VideoController::spin()
 {
     pipeline = new pl::Init();
@@ -47,29 +58,11 @@ int ctrl::VideoController::spin()
             break;
         }
 
-        pl::Pipeline *p = pipeline->build(&frame);
-        p->execute();
-        if (!p)
+        if (!run_pipeline(&frame))
         {
-            printf("Failed to process image.\n");
-            continue;
+            printf("Failed to process image\n");
         }
         
-        std::vector<pl::PipelineStepResult> results = p->results();
-        for (int r = 0; r < results.size(); r++)
-        {
-            struct pl::PipelineStepResult result = results[r];
-            cv::namedWindow(result.step_name);
-            cv::imshow(result.step_name, *result.img);
-
-            if (save_img)
-            {
-                saveImage(result.img, r);
-            }
-        }
-
-        save_img = false;
-        delete p;
     }
 
     delete cam;

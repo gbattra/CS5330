@@ -55,3 +55,38 @@ bool ctrl::ORController::processKeystroke(int key)
 
     return false;
 }
+
+/**
+ * Runs the pipeline set on the controller.
+ * 
+ * @param frame the image to process
+ * 
+ * @return true / false indicating success / failure
+ */
+bool ctrl::ORController::run_pipeline(cv::Mat *frame)
+{
+    pl::Pipeline *p = pipeline->build(frame);
+    p->execute();
+    if (!p)
+    {
+        return false;
+    }
+    
+    std::vector<pl::PipelineStepResult> results = p->results();
+    for (int r = 0; r < results.size(); r++)
+    {
+        struct pl::PipelineStepResult result = results[r];
+        cv::namedWindow(result.step_name);
+        cv::imshow(result.step_name, *result.img);
+
+        if (save_img)
+        {
+            saveImage(result.img, r);
+        }
+    }
+
+    save_img = false;
+    delete p;
+
+    return true;
+}
