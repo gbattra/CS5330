@@ -19,10 +19,26 @@
 
 #define ERROR_CODE -1
 #define SUCCESS_CODE 0
-#define DEFAULT_THRESHOLD 150
+#define DEFAULT_THRESHOLD 100
+
+bool save_img = false;
 
 // the pipeline to process the image
 or2d::Pipeline *pipeline;
+
+/**
+ * Saves the provided image.
+ * 
+ * @param a pointer to the image to save
+ * 
+ * @return a boolean indicating whether or not the save was successful
+ */
+bool save_image(cv::Mat *img, int i)
+{
+    return cv::imwrite(
+        "images/saved/" + std::to_string(std::time(0)) + std::to_string(i) + ".png",
+        *img);
+}
 
 /**
  * Sets the pipeline based on the keystroke. See the above comment
@@ -49,6 +65,11 @@ bool processKeystroke(int key)
         pipeline = new or2d::Threshold(or2d::Init(), DEFAULT_THRESHOLD);
         return true;
     }
+    if (key == 's')
+    {
+        save_img = true;
+        return true;
+    }
 
     return false;
 }
@@ -65,7 +86,6 @@ bool processKeystroke(int key)
 int main(int argc, char** argv)
 {
     pipeline = new or2d::Init();
-    processKeystroke('t');
 
     cv::VideoCapture *cam = new cv::VideoCapture(0);
     if (!cam->isOpened())
@@ -118,8 +138,14 @@ int main(int argc, char** argv)
             struct or2d::PipelineStepResult result = results[r];
             cv::namedWindow(result.step_name);
             cv::imshow(result.step_name, *result.img);
+
+            if (save_img)
+            {
+                save_image(result.img, r);
+            }
         }
 
+        save_img = false;
         delete p;
     }
 

@@ -43,7 +43,8 @@ cv::Mat or2d::Threshold::clean_threshold_img(cv::Mat *timg)
 {
     cv::Mat clean_img;
     cv::Mat M = cv::Mat::ones(5, 5, CV_8U);
-    cv::morphologyEx(*timg, clean_img, cv::MORPH_OPEN, M);
+    cv::erode(*timg, clean_img, M);
+    cv::dilate(clean_img, clean_img, M);
     return clean_img;
 }
 
