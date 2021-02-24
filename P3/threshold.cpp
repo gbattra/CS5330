@@ -23,7 +23,7 @@ or2d::Pipeline* or2d::Threshold::build(cv::Mat *i)
 
 cv::Mat or2d::Threshold::compute_threshold_img(cv::Mat *src)
 {
-    cv::Mat timg = cv::Mat(src->size(), CV_16F);
+    cv::Mat timg = cv::Mat(src->size(), CV_8UC1);
     for (int r = 0; r < src->rows; r++)
     {
         uchar *row = src->ptr<uchar>(r);
@@ -33,8 +33,6 @@ cv::Mat or2d::Threshold::compute_threshold_img(cv::Mat *src)
             uchar *pixel = &row[c * 3];
             float avg_intensity = (pixel[0] + pixel[1] + pixel[2]) / 3;
             timg_row[c] = avg_intensity > threshold ? 0 : 255;
-            timg_row[c * 3 + 1] = avg_intensity > threshold ? 0 : 255;
-            timg_row[c * 3 + 2] = avg_intensity > threshold ? 0 : 255;
         }
     }
 
