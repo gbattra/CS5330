@@ -57,6 +57,17 @@ namespace pl
             virtual Pipeline* build(cv::Mat *img) { throw;}
 
             /**
+             * Returns a fresh instance of the pipeline using the provided image. Differs
+             * from build in that it returns the instance itself and not a pointer.
+             * 
+             * @param img the image to use for the new pipeline
+             * 
+             * @return T the type of pipeline object to make
+             */
+            template<typename T, typename std::enable_if<std::is_base_of<Pipeline, T>::value>::type* = nullptr>
+            T reinitialize(cv::Mat *img) { throw; };
+
+            /**
              * Returns a vector of image results from this step in the pipeline.
              * 
              * @return a vector of PipelineStepResult structs which have an image and label
@@ -107,7 +118,17 @@ namespace pl
              * 
              * @return a pointer to the new pipeline
              */
-            Pipeline* build(cv::Mat *img);
+            Pipeline* build(cv::Mat *img) override;
+
+            /**
+             * Returns a fresh instance of the pipeline using the provided image. Differs
+             * from build in that it returns the instance itself and not a pointer.
+             * 
+             * @param img the image to use for the new pipeline
+             * 
+             * @return a new instance of the called Init object
+             */
+            Init reinitialize(cv::Mat *img);
 
             /**
              * Executes the pipeline and processes the target image.
@@ -174,7 +195,17 @@ namespace pl
              * 
              * @return a pointer to the new pipeline
              */
-            Pipeline* build(cv::Mat *img);
+            Pipeline* build(cv::Mat *img) override;
+
+            /**
+             * Returns a fresh instance of the pipeline using the provided image. Differs
+             * from build() in that it returns the instance itself and not a pointer.
+             * 
+             * @param img the image to use for the new pipeline
+             * 
+             * @return a reset instance of the called pipeline object
+             */
+            Threshold reinitialize(cv::Mat *img);
 
             /**
              * Executes the pipeline and processes the target image.
@@ -201,6 +232,58 @@ namespace pl
             std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
     };
 
+    /**
+     * Pipeline step for segmenting an image.
+     */
+    class Segment: public Pipeline
+    {
+        private:
+            /**
+             * The parent pipeline step for this step. Segmenting requires
+             * a thresholded image.
+             */
+            Threshold threshold;
+
+            /**
+             * The number of regions expected in the image.
+             */
+            int n_regions = 1;
+
+        public:
+            /**
+             * Primary constructor for the Segment step.
+             * 
+             * @param t the threshold pipeline step which runs first
+             * @param n the number of expected regions in the image
+             */
+            Segment(Threshold t, int n): threshold(t), n_regions(n) {}
+
+            /**
+             * Instantiates a new pipeline with a fresh state.
+             * 
+             * @param img pointer to the image that the pipeline will process
+             * 
+             * @return a pointer to the new pipeline
+             */
+            Pipeline* build(cv::Mat *img) override;
+
+            /**
+             * Returns a fresh instance of the pipeline using the provided image. Differs
+             * from build() in that it returns the instance itself and not a pointer.
+             * 
+             * @param img the image to use for the new pipeline
+             * 
+             * @return a new instance of the called Init object
+             */
+            Segment reinitialize(cv::Mat *img);
+
+            /**
+             * Executes the pipeline and processes the target image.
+             *
+             * @return true if execution succeeded.
+             */
+            bool execute();
+    };
 }
 
 #endif

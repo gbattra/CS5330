@@ -21,6 +21,21 @@ pl::Pipeline* pl::Threshold::build(cv::Mat *i)
     return new Threshold(Init(i->clone()), threshold);
 }
 
+/**
+ * Returns a fresh instance of the pipeline using the provided image. Differs
+ * from build() in that it returns the instance itself and not a pointer.
+ * 
+ * @param img the image to use for the new pipeline
+ * 
+ * @return a new instance of this pipeline step
+ */
+pl::Threshold pl::Threshold::reinitialize(cv::Mat *img)
+{
+    return Threshold(
+        init.reinitialize(img),
+        threshold);
+}
+
 cv::Mat pl::Threshold::compute_threshold_img(cv::Mat *src)
 {
     cv::Mat timg = cv::Mat(src->size(), CV_8UC1);

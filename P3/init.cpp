@@ -22,6 +22,19 @@ pl::Pipeline* pl::Init::build(cv::Mat *img)
 }
 
 /**
+ * Returns a fresh instance of the pipeline using the provided image. Differs
+ * from build() in that it returns the instance itself and not a pointer.
+ * 
+ * @param img the image to use for the new pipeline
+ * 
+ * @return a new instance of this pipeline step
+ */
+pl::Init pl::Init::reinitialize(cv::Mat *img)
+{
+    return Init(img->clone());
+}
+
+/**
  * Executes the pipeline to process the image. For Init, this does nothing
  * as this step is mainly a placeholder / starting point for subsequent pipelines.
  * 
