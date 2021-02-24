@@ -18,7 +18,10 @@ namespace or2d
      */
     struct PipelineStepResult
     {
+        // the image result of the pipeline step
         cv::Mat *img;
+
+        // the name of the pipeline step
         std::string step_name;
     };
 
@@ -32,6 +35,9 @@ namespace or2d
      */
     class Pipeline
     {
+        protected:
+            bool step_complete = false;
+
         public:
             /**
              * Executes the pipeline and processes the target image.
@@ -77,20 +83,21 @@ namespace or2d
     {
         private:
             // The raw target image to process.
-            cv::Mat *img;
+            cv::Mat img;
             
         public:
             /**
              * Default constructor for Init.
              */
-            Init(): img(NULL) {};
+            Init() {};
+
             /**
              * Primary constructor for Init. Takes the
              * target image in constructor.
              * 
              * @param the target image for the pipeline
              */
-            Init(cv::Mat *i): img(i) {}
+            Init(cv::Mat i): img(i) {}
 
             /**
              * Instantiates a new pipeline with a fresh state.
@@ -130,7 +137,7 @@ namespace or2d
              * 
              * @return the start image for the pipeline
              */
-            cv::Mat *getImg();
+            cv::Mat* getImg();
     };
 
     class Threshold: public Pipeline
@@ -140,10 +147,13 @@ namespace or2d
             Init init;
 
             // the threshold value with which to binarize the target image
-            uchar threshold;
+            float threshold;
 
             // the resulting thresholded image
-            cv::Mat *threshold_img;
+            cv::Mat threshold_img;
+
+        protected:
+            cv::Mat compute_threshold_img(cv::Mat *src);
 
         public:
             /**

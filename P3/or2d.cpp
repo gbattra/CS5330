@@ -34,6 +34,11 @@ or2d::Pipeline *pipeline;
  */
 bool processKeystroke(int key)
 {
+    if (key < 0)
+    {
+        return true;
+    }
+    
     if (key == 'i')
     {
         pipeline = new or2d::Init();
@@ -60,6 +65,7 @@ bool processKeystroke(int key)
 int main(int argc, char** argv)
 {
     pipeline = new or2d::Init();
+    processKeystroke('t');
 
     cv::VideoCapture *cam = new cv::VideoCapture(0);
     if (!cam->isOpened())

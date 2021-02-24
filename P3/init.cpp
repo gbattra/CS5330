@@ -18,7 +18,7 @@
  */
 or2d::Pipeline* or2d::Init::build(cv::Mat *img)
 {
-    return new Init(img);
+    return new Init(img->clone());
 }
 
 /**
@@ -30,7 +30,7 @@ or2d::Pipeline* or2d::Init::build(cv::Mat *img)
 bool or2d::Init::execute()
 {
     // do nothing
-    return true;
+    return &img != NULL;
 }
 
 /**
@@ -53,7 +53,7 @@ std::vector<or2d::PipelineStepResult> or2d::Init::results()
  */
 std::vector<or2d::PipelineStepResult> or2d::Init::results(std::vector<or2d::PipelineStepResult> r)
 {
-    struct or2d::PipelineStepResult result = {img, "Initial Image"};
+    struct or2d::PipelineStepResult result = {&img, "Initial Image"};
     r.push_back(result);
     return r;
 }
@@ -65,5 +65,5 @@ std::vector<or2d::PipelineStepResult> or2d::Init::results(std::vector<or2d::Pipe
  */
 cv::Mat* or2d::Init::getImg()
 {
-    return img;
+    return &img;
 }
