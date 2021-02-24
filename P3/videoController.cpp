@@ -44,11 +44,7 @@ int ctrl::VideoController::spin()
             break;
         }
 
-        bool success = processKeystroke(key);
-        if (!success)
-        {
-            printf("Unable to process keystroke %c\n", (char) key);
-        }
+        processKeystroke(key);
 
         // capture frame, process and display
         *cam >> frame;

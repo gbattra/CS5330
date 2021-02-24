@@ -28,6 +28,28 @@ bool pl::Segment::execute()
 {
     if (threshold.execute())
     {
+        cv::Mat *timg = threshold.getImg();
+        cv::Mat label_img = cv::Mat(timg->size(), CV_32S);
+        int n_labels = cv::connectedComponents(*timg, label_img, 8);
+
+        std::vector<cv::Vec3b> colors(n_labels);
+        colors[0] = cv::Vec3b(0, 0, 0); // bg
+        for (int i = 1; i < n_labels; i++)
+        {
+            colors[i] = cv::Vec3b((rand()&255), (rand()&255), (rand()&255));
+        }
+
+        segment_img = cv::Mat(timg->size(), CV_8UC3);
+        for (int r = 0; r < segment_img.rows; r++)
+        {
+            for (int c = 0; c < segment_img.cols; c++)
+            {
+                int l = label_img.at<int>(r, c);
+                cv::Vec3b &pixel = segment_img.at<cv::Vec3b>(r, c);
+                pixel = l > n_regions ? colors[0] : colors[l];
+            }
+        }
+
         step_complete = true;
     }
 

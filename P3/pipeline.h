@@ -167,7 +167,6 @@ namespace pl
              * @param t threshold value to use when processing image
              */
             Threshold(Init i, float t): init(i), threshold(t) {}
-            ~Threshold() { delete &init; }
 
             /**
              * Instantiates a new pipeline with a fresh state.
@@ -201,6 +200,13 @@ namespace pl
              * @return a vector of pipeline results
              */
             std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
+
+            /**
+             * Getter for the threshold img.
+             * 
+             * @return the threshold image produced by this step
+             */
+            cv::Mat* getImg();
     };
 
     /**
@@ -233,7 +239,6 @@ namespace pl
              * @param n the number of expected regions in the image
              */
             Segment(Threshold t, int n): threshold(t), n_regions(n) {}
-            ~Segment() { delete &threshold; }
 
             /**
              * Instantiates a new pipeline with a fresh state.

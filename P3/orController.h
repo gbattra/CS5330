@@ -46,7 +46,7 @@ namespace ctrl
              * 
              * @return true if valid key entered
              */
-            bool processKeystroke(int key);
+            void processKeystroke(int key);
 
 
 

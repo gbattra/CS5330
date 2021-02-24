@@ -38,12 +38,7 @@ int ctrl::ImgController::spin()
             break;
         }
 
-        bool success = processKeystroke(key);
-        if (!success)
-        {
-            printf("Unable to process keystroke %c\n", (char) key);
-            continue;
-        }
+        processKeystroke(key);
 
         if (!run_pipeline(&frame))
         {

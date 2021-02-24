@@ -40,42 +40,32 @@ bool ctrl::ORController::saveImage(cv::Mat *img, int id)
  * 
  * @return true if valid key entered
  */
-bool ctrl::ORController::processKeystroke(int key)
+void ctrl::ORController::processKeystroke(int key)
 {
-    if (key < 0)
-    {
-        return true;
-    }
-
     if (key == 's')
     {
         save_img = true;
-        return true;
     }
     if (key == 'i')
     {
         pipeline = new pl::Init();
-        return true;
     }
     if (key == 't')
     {
         threshold = getInput<float>("Threshold value (float): ");
         pipeline = new pl::Threshold(
             pl::Init(),
-            threshold > 0 ? threshold : DEFAULT_THRESHOLD);
-        return true;
+            threshold);
     }
     if (key == 'd')
     {
-        int n_regions = getInput<float>("Number of regions (int): ");
+        int n_regions = getInput<int>("Number of regions (int): ");
         pipeline = new pl::Segment(
             pl::Threshold(
                 pl::Init(),
                 threshold),
             n_regions);
     }
-
-    return false;
 }
 
 /**

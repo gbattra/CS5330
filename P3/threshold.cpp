@@ -55,10 +55,12 @@ cv::Mat pl::Threshold::compute_threshold_img(cv::Mat *src)
  */
 cv::Mat pl::Threshold::clean_threshold_img(cv::Mat *timg)
 {
+    cv::Mat temp_clean;
     cv::Mat clean_img;
     cv::Mat M = cv::Mat::ones(5, 5, CV_8U);
-    cv::erode(*timg, clean_img, M);
-    cv::dilate(clean_img, clean_img, M);
+    cv::dilate(*timg, temp_clean, M);
+    cv::erode(temp_clean, clean_img, M);
+
     return clean_img;
 }
 
@@ -111,9 +113,14 @@ std::vector<pl::PipelineStepResult> pl::Threshold::results(std::vector<pl::Pipel
 
     if (step_complete && &threshold_img != NULL)
     {
-        struct pl::PipelineStepResult result = {&threshold_img, "Threshold Image"};
+        struct pl::PipelineStepResult result = {&threshold_img, "Segment Image"};
         r.push_back(result);
     }
 
     return r;
+}
+
+cv::Mat* pl::Threshold::getImg()
+{
+    return &threshold_img;
 }
