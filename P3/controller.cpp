@@ -67,12 +67,12 @@ bool ctrl::Controller::processKeystroke(int key)
     }
     if (key == 'd')
     {
-        int n_regions = getInput<int>("Number of regions (int): ");
+        int max_regions = getInput<int>("Max number of regions (int): ");
         pipeline = new pl::Segment(
             new pl::Threshold(
                 new pl::Init(),
                 threshold),
-            n_regions);
+            max_regions);
             return true;
     }
 

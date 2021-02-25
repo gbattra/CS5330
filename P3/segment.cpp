@@ -36,12 +36,12 @@ bool pl::Segment::execute()
     if (threshold->execute())
     {
         cv::Mat *timg = threshold->getImg();
-        cv::Mat label_img = cv::Mat(timg->size(), CV_32S);
-        int n_labels = cv::connectedComponents(*timg, label_img, 8);
+        label_img = cv::Mat(timg->size(), CV_32S);
+        n_regions = cv::connectedComponents(*timg, label_img, 8);
 
-        std::vector<cv::Vec3b> colors(n_labels);
+        std::vector<cv::Vec3b> colors(n_regions);
         colors[0] = cv::Vec3b(0, 0, 0); // bg
-        for (int i = 1; i < n_labels; i++)
+        for (int i = 1; i < n_regions; i++)
         {
             colors[i] = cv::Vec3b((rand()&255), (rand()&255), (rand()&255));
         }
@@ -53,7 +53,7 @@ bool pl::Segment::execute()
             {
                 int l = label_img.at<int>(r, c);
                 cv::Vec3b &pixel = segment_img.at<cv::Vec3b>(r, c);
-                pixel = l > n_regions ? colors[0] : colors[l];
+                pixel = l > max_regions ? colors[0] : colors[l];
             }
         }
 
@@ -92,4 +92,34 @@ std::vector<pl::PipelineStepResult> pl::Segment::results(std::vector<pl::Pipelin
     }
 
     return r;
+}
+
+/**
+ * Returns a list of the x and y pixel locations for each region, where the region is dictated
+ * by the index within the returned vector. i.e. vec[0] is a vector of pixel locations for region 1,
+ * vec[1] is a vector of locations for region 2, etc.
+ * 
+ * @return lists of pixel locations for each region
+ */
+std::vector<std::vector<cv::Vec2b>> pl::Segment::region_pixel_locations()
+{
+    std::vector<std::vector<cv::Vec2b>> locations(n_regions);
+    for (int n = 0; n < n_regions; n++)
+    {
+        locations[n] = std::vector<cv::Vec2b>(0);
+    }
+
+    for (int r = 0; r < segment_img.rows; r++)
+    {
+        for (int c = 0; c < segment_img.cols; c++)
+        {
+            int region = label_img.at<int>(r, c);
+            if (region > 0)
+            {
+                locations[region].push_back(cv::Vec2b(r, c));
+            }
+        }
+    }
+
+    return locations;
 }

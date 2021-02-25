@@ -223,23 +223,33 @@ namespace pl
             Threshold *threshold;
 
             /**
-             * The number of regions expected in the image.
+             * The max number of regions to segment.
              */
-            int n_regions = 1;
+            int max_regions = 1;
 
             /**
              * Resulting segmented image produced by this step.
              */
             cv::Mat segment_img;
 
+            /**
+             * Img where each pixel value is its region id.
+             */
+            cv::Mat label_img;
+
         public:
+            /**
+             * The number of regions segmented in the image
+             */
+            int n_regions;
+
             /**
              * Primary constructor for the Segment step.
              * 
              * @param t the threshold pipeline step which runs first
-             * @param n the number of expected regions in the image
+             * @param n the max number of regions to segment
              */
-            Segment(Threshold *t, int n): threshold(t), n_regions(n) {}
+            Segment(Threshold *t, int n): threshold(t), max_regions(n) {}
             ~Segment() { delete &threshold; }
 
             /**
@@ -274,6 +284,26 @@ namespace pl
              * @return a vector of pipeline results
              */
             std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
+
+            /**
+             * Returns a list of the x and y pixel locations for each region, where the region is dictated
+             * by the index within the returned vector. i.e. vec[0] is a vector of pixel locations for region 1,
+             * vec[1] is a vector of locations for region 2, etc.
+             * 
+             * @return lists of pixel locations for each region
+             */
+            std::vector<std::vector<cv::Vec2b>> region_pixel_locations();
+    };
+
+    struct FeatureResult
+    {
+        std::string feature_name;
+        std::vector<float> feature_vector;
+    };
+
+    class Feature : public Pipeline
+    {
+
     };
 }
 
