@@ -303,7 +303,6 @@ namespace pl
 
     class Feature : public Pipeline
     {
-
     };
 }
 
