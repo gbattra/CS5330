@@ -27,7 +27,8 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            int compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations);
+            virtual int compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
+            { throw; }
 
         public:
             /**
@@ -45,9 +46,9 @@ namespace ftrs
              * Region moments for the segmented regions. each digit following m_ represents q and p
              * respectively from the moments equation
              */
-            int m_00;
-            int m_10;
-            int m_01;
+            float m_00;
+            float m_10;
+            float m_01;
 
             /**
              * The pixel locations for the region to calculate the moments for.
@@ -59,6 +60,17 @@ namespace ftrs
              * relevant region.
              */
             RegionMoments(std::vector<cv::Vec2b> pl): pixel_locations(pl) {}
+
+            /**
+             * Implements the generic moments equation.
+             * 
+             * @param p the p order param
+             * @param q the q order param
+             * @param pixel_locations the vector of pixel locations
+             * 
+             * @return the computed moment value
+             */
+            int compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
 
             /**
              * Computes the moment values.
@@ -78,18 +90,36 @@ namespace ftrs
              * Central moments for the segmented regions. Each digit following mu_ represents p and
              * q respectively from the moments equation.
              */
-            int mu_x;
-            int mu_y;
-            int m_mu;
-            int mu_11;
-            int mu_02;
-            int mu_20;
+            float mu_x;
+            float mu_y;
+            float m_mu;
+            float mu_11;
+            float mu_02;
+            float mu_20;
+            float mu_22_alpha;
+
+            // central axis value
+            float alpha;
+
+            // perpendicular axis value
+            float beta;
 
             /**
              * Constructor for the central moments class. Takes a region moments instance as it will
              * use its moments properties to compute the central moments.
              */
             CentralMoments(RegionMoments rm): region_moments(rm) {}
+
+            /**
+             * Implements the generic moments equation.
+             * 
+             * @param p the p order param
+             * @param q the q order param
+             * @param pixel_locations the vector of pixel locations
+             * 
+             * @return the computed moment value
+             */
+            int compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
 
             /**
              * Computes the moment values.
