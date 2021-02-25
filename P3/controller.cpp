@@ -8,6 +8,13 @@
 #include <opencv2/opencv.hpp>
 #include "controller.h"
 
+/**
+ * Helper function for getting user input from the console.
+ * 
+ * @param prompt the string to display as a prompt for the user
+ * 
+ * @return T the expected return type
+ */
 template <typename T>
 T getInput(std::string prompt)
 {
@@ -63,7 +70,7 @@ bool ctrl::Controller::processKeystroke(int key)
         pipeline = new pl::Threshold(
             new pl::Init(),
             threshold);
-            return true;
+        return true;
     }
     if (key == 'd')
     {
@@ -73,7 +80,17 @@ bool ctrl::Controller::processKeystroke(int key)
                 new pl::Init(),
                 threshold),
             max_regions);
-            return true;
+        return true;
+    }
+    if (key == 'f')
+    {
+        pipeline = new pl::Feature(
+            new pl::Segment(
+                new pl::Threshold(
+                    new pl::Init(),
+                    threshold),
+            max_regions));
+        return true;
     }
 
     return false;

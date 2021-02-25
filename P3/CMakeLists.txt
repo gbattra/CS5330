@@ -6,5 +6,6 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable(
     OR2D or2d.cpp
     controller.h controller.cpp videoController.cpp imgController.cpp
-    pipeline.h init.cpp threshold.cpp segment.cpp)
+    pipeline.h init.cpp threshold.cpp segment.cpp feature.cpp
+    features.h)
 target_link_libraries( OR2D ${OpenCV_LIBS} )

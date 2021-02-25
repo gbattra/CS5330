@@ -41,7 +41,7 @@ namespace ftrs
     class CentralMoments
     {
         private:
-            RegionMoments *region_moments;
+            RegionMoments region_moments;
 
         public:
             /**
@@ -59,7 +59,7 @@ namespace ftrs
              * Constructor for the central moments class. Takes a region moments instance as it will
              * use its moments properties to compute the central moments.
              */
-            CentralMoments(RegionMoments *rm): region_moments(rm) {}
+            CentralMoments(RegionMoments rm): region_moments(rm) {}
     };
 }
 

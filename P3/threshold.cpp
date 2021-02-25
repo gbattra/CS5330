@@ -113,7 +113,7 @@ std::vector<pl::PipelineStepResult> pl::Threshold::results(std::vector<pl::Pipel
 
     if (step_complete && &threshold_img != NULL)
     {
-        struct pl::PipelineStepResult result = {&threshold_img, "Segment Image"};
+        struct pl::PipelineStepResult result = {&threshold_img, "Threshold Image"};
         r.push_back(result);
     }
 

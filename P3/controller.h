@@ -16,6 +16,7 @@ namespace ctrl
     #define ERROR_CODE -1
     #define SUCCESS_CODE 0
     #define DEFAULT_THRESHOLD 100
+    #define DEFAULT_MAX_REGIONS 3
 
     /**
      * Base controller for the OR application. Implements common
@@ -28,6 +29,7 @@ namespace ctrl
             pl::Pipeline *pipeline;
             bool save_img = false;
             float threshold = DEFAULT_THRESHOLD;
+            float max_regions = DEFAULT_MAX_REGIONS;
 
             /**
              * Saves the provided image.

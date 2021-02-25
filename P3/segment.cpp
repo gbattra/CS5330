@@ -87,7 +87,7 @@ std::vector<pl::PipelineStepResult> pl::Segment::results(std::vector<pl::Pipelin
 
     if (step_complete && &segment_img != NULL)
     {
-        struct pl::PipelineStepResult result = {&segment_img, "Threshold Image"};
+        struct pl::PipelineStepResult result = {&segment_img, "Segment Image"};
         r.push_back(result);
     }
 

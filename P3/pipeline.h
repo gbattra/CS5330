@@ -10,6 +10,7 @@
 #define OR_PIPELINE
 
 #include <opencv2/opencv.hpp>
+#include "features.h"
 
 namespace pl
 {
@@ -295,14 +296,74 @@ namespace pl
             std::vector<std::vector<cv::Vec2b>> region_pixel_locations();
     };
 
+    /**
+     * Struct for holding features and their label.
+     */
     struct FeatureResult
     {
+        // the name of the feature
         std::string feature_name;
+
+        // the feature vector
         std::vector<float> feature_vector;
     };
 
+    /**
+     * Pipeline step for computing features for a segmented image.
+     */
     class Feature : public Pipeline
     {
+        private:
+            /**
+             * The segment pipeline step which will be called prior to computing features.
+             */
+            Segment *segment;
+
+            /**
+             * An image to display the feature results.
+             */
+            cv::Mat feature_img;
+
+        public:
+            /**
+             * Primary constructor for Feature. Takes a Segment pipeline step to call prior to
+             * computing features.
+             */
+            Feature(Segment *s) : segment(s) {}
+            ~Feature() { delete segment; }
+
+            /**
+             * Instantiates a new pipeline with a fresh state.
+             * 
+             * @param img pointer to the image that the pipeline will process
+             * 
+             * @return a pointer to the new pipeline
+             */
+            Feature* build(cv::Mat *img) override;
+
+            /**
+             * Executes the pipeline and processes the target image.
+             *
+             * @return true if execution succeeded.
+             */
+            bool execute();
+
+            /**
+             * Returns a vector of image results from this step in the pipeline.
+             * 
+             * @return a vector of PipelineStepResult structs which have an image and label
+             */
+            std::vector<PipelineStepResult> results();
+
+            /**
+             * Override for the results() method so that parent pipeline steps may capture the results of
+             * child pipeline steps and aggregate them into a single vector.
+             * 
+             * @param r the current vector of results to add to
+             * 
+             * @return a vector of pipeline results
+             */
+            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
     };
 }
 
