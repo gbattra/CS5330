@@ -74,7 +74,7 @@ bool ctrl::Controller::processKeystroke(int key)
     }
     if (key == 'd')
     {
-        int max_regions = getInput<int>("Max number of regions (int): ");
+        max_regions = getInput<int>("Max number of regions (int): ");
         pipeline = new pl::Segment(
             new pl::Threshold(
                 new pl::Init(),

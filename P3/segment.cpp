@@ -19,7 +19,7 @@ pl::Segment* pl::Segment::build(cv::Mat *img)
 {
     return new pl::Segment(
         threshold->build(img),
-        n_regions);
+        max_regions);
 }
 
 /**
@@ -35,6 +35,7 @@ bool pl::Segment::execute()
 {
     if (threshold->execute())
     {
+        std::cout << "exec\n";
         cv::Mat *timg = threshold->getImg();
         label_img = cv::Mat(timg->size(), CV_32S);
         n_regions = cv::connectedComponents(*timg, label_img, 8);

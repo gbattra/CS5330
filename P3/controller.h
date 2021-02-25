@@ -44,7 +44,7 @@ namespace ctrl
             /**
              * Max regions to specify when instantiating a segment pipeline.
              */
-            float max_regions = DEFAULT_MAX_REGIONS;
+            int max_regions = DEFAULT_MAX_REGIONS;
 
             /**
              * Saves the provided image.

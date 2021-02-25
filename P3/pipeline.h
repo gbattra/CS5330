@@ -168,7 +168,7 @@ namespace pl
              * @param t threshold value to use when processing image
              */
             Threshold(Init *i, float t): init(i), threshold(t) {}
-            ~Threshold() { delete &init; }
+            ~Threshold() { delete init; }
 
             /**
              * Instantiates a new pipeline with a fresh state.
@@ -251,7 +251,7 @@ namespace pl
              * @param n the max number of regions to segment
              */
             Segment(Threshold *t, int n): threshold(t), max_regions(n) {}
-            ~Segment() { delete &threshold; }
+            ~Segment() { delete threshold; }
 
             /**
              * Instantiates a new pipeline with a fresh state.
