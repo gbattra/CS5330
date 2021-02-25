@@ -26,9 +26,24 @@ namespace ctrl
     class Controller
     {
         protected:
+            /**
+             * The pipeline to run.
+             */
             pl::Pipeline *pipeline;
+
+            /**
+             * True if user requested current result images be saved.
+             */
             bool save_img = false;
+
+            /**
+             * Threshold value to use when instantiating a threshold pipeline.
+             */
             float threshold = DEFAULT_THRESHOLD;
+
+            /**
+             * Max regions to specify when instantiating a segment pipeline.
+             */
             float max_regions = DEFAULT_MAX_REGIONS;
 
             /**

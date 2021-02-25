@@ -12,7 +12,33 @@
 
 namespace ftrs
 {
-    class RegionMoments
+    /**
+     * Base class for computing moments.
+     */
+    class Moments
+    {
+        protected:
+            /**
+             * Implements the generic moments equation.
+             * 
+             * @param p the p order param
+             * @param q the q order param
+             * @param pixel_locations the vector of pixel locations
+             * 
+             * @return the computed moment value
+             */
+            int compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations);
+
+        public:
+            /**
+             * Call this to compute all moments defined by the class.
+             * 
+             * @return true if successful
+             */
+            virtual bool compute() { throw; }
+    };
+
+    class RegionMoments: public Moments
     {
         public:
             /**
@@ -22,9 +48,6 @@ namespace ftrs
             int m_00;
             int m_10;
             int m_01;
-            int m_20;
-            int m_02;
-            int m_22;
 
             /**
              * The pixel locations for the region to calculate the moments for.
@@ -36,9 +59,16 @@ namespace ftrs
              * relevant region.
              */
             RegionMoments(std::vector<cv::Vec2b> pl): pixel_locations(pl) {}
+
+            /**
+             * Computes the moment values.
+             * 
+             * @return true if successful
+             */
+            bool compute() override;
     };
 
-    class CentralMoments
+    class CentralMoments: public Moments
     {
         private:
             RegionMoments region_moments;
@@ -60,6 +90,13 @@ namespace ftrs
              * use its moments properties to compute the central moments.
              */
             CentralMoments(RegionMoments rm): region_moments(rm) {}
+
+            /**
+             * Computes the moment values.
+             * 
+             * @return true if successful
+             */
+            bool compute() override;
     };
 }
 

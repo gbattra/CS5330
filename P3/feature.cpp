@@ -22,7 +22,10 @@ bool pl::Feature::execute()
         for (int r = 0; r < region_locations.size(); r++)
         {
             ftrs::RegionMoments region_moments = ftrs::RegionMoments(region_locations[r]);
+            region_moments.compute();
+
             ftrs::CentralMoments central_moments = ftrs::CentralMoments(region_moments);
+            central_moments.compute();
         }
         step_complete = true;
     }
