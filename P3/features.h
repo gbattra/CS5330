@@ -27,7 +27,7 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            double computeMoments(int p, int q, std::vector<cv::Vec2i> pixel_locations);
+            int computeMoments(int p, int q, std::vector<cv::Vec2i> pixel_locations);
 
         public:
             /**
@@ -45,9 +45,9 @@ namespace ftrs
              * Region moments for the segmented regions. each digit following m_ represents q and p
              * respectively from the moments equation
              */
-            double m_00;
-            double m_10;
-            double m_01;
+            int m_00;
+            int m_10;
+            int m_01;
 
             /**
              * The pixel locations for the region to calculate the moments for.
@@ -95,11 +95,10 @@ namespace ftrs
              */
             int mu_x;
             int mu_y;
-            double m_mu;
-            double mu_11;
-            double mu_02;
-            double mu_20;
-            double mu_22_alpha;
+            int mu_11;
+            int mu_02;
+            int mu_20;
+            int mu_22_alpha;
 
             // central axis value
             double alpha;

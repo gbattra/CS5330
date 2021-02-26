@@ -15,7 +15,6 @@ double dotProduct(double pixel[], double axis[])
     {
         product += pixel[i] * axis[i];
     }
-    // std::cout << product << std::endl;
     return product;
 }
 
@@ -36,6 +35,8 @@ bool ftrs::BoundingBox::compute()
 {
     std::vector<double> alpha_projection = project(
         central_moments.centroid_locations, central_moments.alpha);
-    length = *std::max_element(alpha_projection.begin(), alpha_projection.end());
+    double min = *std::min_element(alpha_projection.begin(), alpha_projection.end());
+    double max = *std::max_element(alpha_projection.begin(), alpha_projection.end());
+    length = std::max(abs(min), max);
     // std::cout << length << std::endl;
 }

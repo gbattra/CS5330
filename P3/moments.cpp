@@ -9,9 +9,9 @@
 #include <math.h>
 #include "features.h"
 
-double ftrs::Moments::computeMoments(int p, int q, std::vector<cv::Vec2i> pixel_locations)
+int ftrs::Moments::computeMoments(int p, int q, std::vector<cv::Vec2i> pixel_locations)
 {
-    double moment = 0;
+    int moment = 0;
     for (int l = 0; l < pixel_locations.size(); l++)
     {
         cv::Vec2i pixel = pixel_locations[l];
@@ -33,11 +33,14 @@ bool ftrs::RegionMoments::compute()
 std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentroidLocations(
     std::vector<cv::Vec2i> region_locations)
 {
+    mu_x = region_moments.m_10 / region_moments.m_00;
+    mu_y = region_moments.m_01 / region_moments.m_00;
+
     std::vector<cv::Vec2i> c_locations(region_locations.size());
     for (int l = 0; l < region_locations.size(); l++)
     {
         cv::Vec2i pixel = region_locations[l];
-        c_locations[l] = cv::Vec2i(mu_y - pixel[0], pixel[1] - mu_x);
+        c_locations[l] = cv::Vec2i(pixel[0] - mu_y, pixel[1] - mu_x);
     }
 
     return c_locations;
@@ -45,24 +48,25 @@ std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentroidLocations(
 
 bool ftrs::CentralMoments::compute()
 {
-    mu_x = region_moments.m_10 / region_moments.m_00;
-    mu_y = region_moments.m_01 / region_moments.m_00;
     centroid_locations = computeCentroidLocations(region_moments.pixel_locations);
 
-    mu_11 = computeMoments(1, 1, centroid_locations);
-    mu_02 = (1 / region_moments.m_00) * computeMoments(0, 2, centroid_locations);
-    mu_20 = (1 / region_moments.m_00) * computeMoments(2, 0, centroid_locations);
-
-    alpha = 0.5 * atan((2 * mu_11) / (mu_20 - mu_02));
+    mu_11 = ((double) 1 / region_moments.m_00) * computeMoments(1, 1, centroid_locations);
+    mu_02 = ((double) 1 / region_moments.m_00) * computeMoments(0, 2, centroid_locations);
+    mu_20 = ((double) 1 / region_moments.m_00) * computeMoments(2, 0, centroid_locations);
+    alpha = 0.5 * atan2(2 * mu_11, mu_20 - mu_02);
     beta = alpha + (M_PI / 2);
 
-    mu_22_alpha = 0;
+    double sum = 0;
     for (int l = 0; l < centroid_locations.size(); l++)
     {
         cv::Vec2i pixel = centroid_locations[l];
-        mu_22_alpha += pow((pixel[0] * cos(beta)) + (pixel[1] * sin(beta)), 2);
+        sum += pow((pixel[0] * cos(beta)) + (pixel[1] * sin(beta)), 2);
     }
-    mu_22_alpha *= 1 / region_moments.m_00;
+    sum /= region_moments.m_00;
+
+    mu_22_alpha = sum;
+
+
 
     return true;
 }
