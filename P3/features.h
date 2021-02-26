@@ -27,7 +27,7 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            virtual float compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
+            virtual double compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
             { throw; }
 
         public:
@@ -46,9 +46,9 @@ namespace ftrs
              * Region moments for the segmented regions. each digit following m_ represents q and p
              * respectively from the moments equation
              */
-            float m_00;
-            float m_10;
-            float m_01;
+            double m_00;
+            double m_10;
+            double m_01;
 
             /**
              * The pixel locations for the region to calculate the moments for.
@@ -70,7 +70,7 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            float compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
+            double compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
 
             /**
              * Computes the moment values.
@@ -90,19 +90,19 @@ namespace ftrs
              * Central moments for the segmented regions. Each digit following mu_ represents p and
              * q respectively from the moments equation.
              */
-            float mu_x;
-            float mu_y;
-            float m_mu;
-            float mu_11;
-            float mu_02;
-            float mu_20;
-            float mu_22_alpha;
+            double mu_x;
+            double mu_y;
+            double m_mu;
+            double mu_11;
+            double mu_02;
+            double mu_20;
+            double mu_22_alpha;
 
             // central axis value
-            float alpha;
+            double alpha;
 
             // perpendicular axis value
-            float beta;
+            double beta;
 
             /**
              * Constructor for the central moments class. Takes a region moments instance as it will
@@ -119,7 +119,7 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            float compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
+            double compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
 
             /**
              * Computes the moment values.

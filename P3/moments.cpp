@@ -9,9 +9,9 @@
 #include <math.h>
 #include "features.h"
 
-float ftrs::RegionMoments::compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
+double ftrs::RegionMoments::compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
 {
-    float moment = 0;
+    double moment = 0;
     for (int l = 0; l < pixel_locations.size(); l++)
     {
         cv::Vec2b pixel = pixel_locations[l];
@@ -30,9 +30,9 @@ bool ftrs::RegionMoments::compute()
     return true;
 }
 
-float ftrs::CentralMoments::compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
+double ftrs::CentralMoments::compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
 {
-    float moment = 0;
+    double moment = 0;
     for (int l = 0; l < pixel_locations.size(); l++)
     {
         cv::Vec2b pixel = pixel_locations[l];

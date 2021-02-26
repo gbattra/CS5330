@@ -19,6 +19,7 @@ bool pl::Feature::execute()
     if (segment->execute())
     {
         std::vector<std::vector<cv::Vec2b>> regions = segment->regionPixelLocations();
+        // std::cout << regions.size() << std::endl;
         for (int r = 0; r < regions.size(); r++)
         {
             ftrs::RegionMoments region_moments = ftrs::RegionMoments(regions[r]);
@@ -63,8 +64,8 @@ std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::Pipelin
     {
         struct ftrs::RegionFeatures rf = region_features[f];
         cv::putText(img,
-                    "Central Axis Moment: " + std::to_string(rf.central_moments.mu_22_alpha),
-                    cv::Point(10, img.rows / 2),
+                    "Central Axis Moment: " + std::to_string((int) rf.region_moments.m_00),
+                    cv::Point(10, img.rows - 10),
                     cv::FONT_HERSHEY_DUPLEX,
                     1.0,
                     CV_RGB(0, 0, 0),
