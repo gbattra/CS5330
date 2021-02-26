@@ -50,13 +50,13 @@ bool ftrs::CentralMoments::compute()
 {
     centroid_locations = computeCentroidLocations(region_moments.pixel_locations);
 
-    mu_11 = ((double) 1 / region_moments.m_00) * computeMoments(1, 1, centroid_locations);
-    mu_02 = ((double) 1 / region_moments.m_00) * computeMoments(0, 2, centroid_locations);
-    mu_20 = ((double) 1 / region_moments.m_00) * computeMoments(2, 0, centroid_locations);
+    mu_11 = computeMoments(1, 1, centroid_locations) / region_moments.m_00;
+    mu_02 = computeMoments(0, 2, centroid_locations) / region_moments.m_00;
+    mu_20 = computeMoments(2, 0, centroid_locations) / region_moments.m_00;
     alpha = 0.5 * atan2(2 * mu_11, mu_20 - mu_02);
     beta = alpha + (M_PI / 2);
 
-    double sum = 0;
+    int sum = 0;
     for (int l = 0; l < centroid_locations.size(); l++)
     {
         cv::Vec2i pixel = centroid_locations[l];

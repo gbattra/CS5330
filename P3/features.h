@@ -101,10 +101,10 @@ namespace ftrs
             int mu_22_alpha;
 
             // central axis value
-            double alpha;
+            float alpha;
 
             // perpendicular axis value
-            double beta;
+            float beta;
 
             /**
              * The pixel locations relative to the region centroid.
@@ -172,7 +172,7 @@ namespace ftrs
     {
         int region_id;
         std::string name;
-        double value;
+        int value;
     };
 }
 
