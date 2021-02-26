@@ -23,11 +23,8 @@ pl::Segment* pl::Segment::build(cv::Mat *img)
 }
 
 /**
- * Executes the pipeline to process the image. Threshold is typically
- * the first step in the pipeline. Creates a binary image from the Init
- * image where: 0 = pixel > threshold; 1 = pixel < threshold. The resulting
- * image is set to the `threshold_img` property for access by other pipeline
- * steps.
+ * Executes the pipeline to process the image. Segment takes a threshold image and
+ * labels the regions of the image.
  * 
  * @return bool if execution was successful
  */
@@ -101,12 +98,12 @@ std::vector<pl::PipelineStepResult> pl::Segment::results(std::vector<pl::Pipelin
  * 
  * @return lists of pixel locations for each region
  */
-std::vector<std::vector<cv::Vec2b>> pl::Segment::regionPixelLocations()
+std::vector<std::vector<cv::Vec2i>> pl::Segment::regionPixelLocations()
 {
-    std::vector<std::vector<cv::Vec2b>> locations(n_regions);
+    std::vector<std::vector<cv::Vec2i>> locations(n_regions);
     for (int n = 0; n < n_regions; n++)
     {
-        locations[n] = std::vector<cv::Vec2b>(0);
+        locations[n] = std::vector<cv::Vec2i>(0);
     }
 
     for (int r = 0; r < segment_img.rows; r++)
@@ -114,9 +111,9 @@ std::vector<std::vector<cv::Vec2b>> pl::Segment::regionPixelLocations()
         for (int c = 0; c < segment_img.cols; c++)
         {
             int region = label_img.at<int>(r, c);
-            if (region > 0)
+            if (region > 0 && region <= max_regions)
             {
-                locations[region - 1].push_back(cv::Vec2b(r, c));
+                locations[region - 1].push_back(cv::Vec2i(r, c));
             }
         }
     }

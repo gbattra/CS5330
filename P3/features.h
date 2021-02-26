@@ -27,7 +27,7 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            double computeMoments(int p, int q, std::vector<cv::Vec2b> pixel_locations);
+            double computeMoments(int p, int q, std::vector<cv::Vec2i> pixel_locations);
 
         public:
             /**
@@ -52,13 +52,13 @@ namespace ftrs
             /**
              * The pixel locations for the region to calculate the moments for.
              */
-            std::vector<cv::Vec2b> pixel_locations;
+            std::vector<cv::Vec2i> pixel_locations;
 
             /**
              * Constructor for the moments class. Takes the vector of pixel locations for the
              * relevant region.
              */
-            RegionMoments(std::vector<cv::Vec2b> pl): pixel_locations(pl) {}
+            RegionMoments(std::vector<cv::Vec2i> pl): pixel_locations(pl) {}
 
             /**
              * Computes the moment values.
@@ -86,15 +86,15 @@ namespace ftrs
              * 
              * @return the centroid-relative pixel locations
              */
-            std::vector<cv::Vec2b> computeCentroidLocations(std::vector<cv::Vec2b> region_locations);
+            std::vector<cv::Vec2i> computeCentroidLocations(std::vector<cv::Vec2i> region_locations);
 
         public:
             /**
              * Central moments for the segmented regions. Each digit following mu_ represents p and
              * q respectively from the moments equation.
              */
-            double mu_x;
-            double mu_y;
+            int mu_x;
+            int mu_y;
             double m_mu;
             double mu_11;
             double mu_02;
@@ -110,7 +110,7 @@ namespace ftrs
             /**
              * The pixel locations relative to the region centroid.
              */
-            std::vector<cv::Vec2b> centroid_locations;
+            std::vector<cv::Vec2i> centroid_locations;
 
             /**
              * Constructor for the central moments class. Takes a region moments instance as it will
@@ -137,13 +137,17 @@ namespace ftrs
              */
             CentralMoments central_moments;
 
+            // the length and width of the bounding box
+            double length;
+            double width;
+
             /**
              * The points representing the corners of the bounding box.
              */
-            cv::Vec2b top_left;
-            cv::Vec2b top_right;
-            cv::Vec2b bot_left;
-            cv::Vec2b bot_right;
+            cv::Vec2i top_left;
+            cv::Vec2i top_right;
+            cv::Vec2i bot_left;
+            cv::Vec2i bot_right;
 
         public:
             /**
@@ -156,7 +160,7 @@ namespace ftrs
             /**
              * Computes the corner points for the bounding box.
              * 
-             * @return a vector of 4 Vec2b objects representing the points
+             * @return a vector of 4 Vec2i objects representing the points
              */
             bool compute();
 
@@ -165,11 +169,11 @@ namespace ftrs
     /**
      * Object for holding features and their label.
      */
-    struct RegionFeatures
+    struct RegionFeature
     {
-        RegionMoments region_moments;
-        CentralMoments central_moments;
-        BoundingBox bounding_box;
+        int region_id;
+        std::string name;
+        double value;
     };
 }
 

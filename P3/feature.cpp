@@ -9,17 +9,29 @@
 #include "features.h"
 #include "pipeline.h"
 
+/**
+ * Instantiates a new pipeline with a fresh state.
+ * 
+ * @param img pointer to the image that the pipeline will process
+ * 
+ * @return a pointer to the new pipeline
+ */
 pl::Feature* pl::Feature::build(cv::Mat *img)
 {
     return new Feature(segment->build(img));
 }
 
+/**
+ * Executes the pipeline to process the image. A Feature step takes a segmented image
+ * and computes features on the regions, such as moments and bounding box features.
+ * 
+ * @return bool if execution was successful
+ */
 bool pl::Feature::execute()
 {
     if (segment->execute())
     {
-        std::vector<std::vector<cv::Vec2b>> regions = segment->regionPixelLocations();
-        // std::cout << regions.size() << std::endl;
+        std::vector<std::vector<cv::Vec2i>> regions = segment->regionPixelLocations();
         for (int r = 0; r < regions.size(); r++)
         {
             ftrs::RegionMoments region_moments = ftrs::RegionMoments(regions[r]);
@@ -29,7 +41,14 @@ bool pl::Feature::execute()
             central_moments.compute();
 
             ftrs::BoundingBox bounding_box = ftrs::BoundingBox(central_moments);
-            struct ftrs::RegionFeatures rf = {region_moments, central_moments, bounding_box};
+            bounding_box.compute();
+
+            struct ftrs::RegionFeature rf =
+            {
+                r + 1,
+                "Central Axis Moment",
+                central_moments.mu_22_alpha
+            };
             region_features.push_back(rf);
         }
         step_complete = true;
@@ -62,9 +81,9 @@ std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::Pipelin
     cv::Mat img = initialImg()->clone();
     for (int f = 0; f < region_features.size(); f++)
     {
-        struct ftrs::RegionFeatures rf = region_features[f];
+        struct ftrs::RegionFeature rf = region_features[f];
         cv::putText(img,
-                    "Central Axis Moment: " + std::to_string((int) rf.region_moments.m_00),
+                    rf.name + ": " + std::to_string((int) rf.value),
                     cv::Point(10, img.rows - 10),
                     cv::FONT_HERSHEY_DUPLEX,
                     1.0,

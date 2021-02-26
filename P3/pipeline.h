@@ -307,7 +307,7 @@ namespace pl
              * 
              * @return lists of pixel locations for each region
              */
-            std::vector<std::vector<cv::Vec2b>> regionPixelLocations();
+            std::vector<std::vector<cv::Vec2i>> regionPixelLocations();
 
             /**
              * Getter for the image to be processed.
@@ -336,7 +336,7 @@ namespace pl
             /**
              * Vector of features computed for each region.
              */
-            std::vector<ftrs::RegionFeatures> region_features;
+            std::vector<ftrs::RegionFeature> region_features;
 
         public:
             /**
