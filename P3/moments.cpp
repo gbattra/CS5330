@@ -15,7 +15,7 @@ double ftrs::RegionMoments::compute_moments(int p, int q, std::vector<cv::Vec2b>
     for (int l = 0; l < pixel_locations.size(); l++)
     {
         cv::Vec2b pixel = pixel_locations[l];
-        moment += pow(pixel[0], p) * pow(pixel[1], q);
+        moment += pow(pixel[1], p) * pow(pixel[0], q);
     }
 
     return moment;
@@ -27,6 +27,8 @@ bool ftrs::RegionMoments::compute()
     m_01 = compute_moments(0, 1, pixel_locations);
     m_10 = compute_moments(1, 0, pixel_locations);
 
+    std::cout << m_01 << std::endl;
+
     return true;
 }
 
@@ -36,7 +38,7 @@ double ftrs::CentralMoments::compute_moments(int p, int q, std::vector<cv::Vec2b
     for (int l = 0; l < pixel_locations.size(); l++)
     {
         cv::Vec2b pixel = pixel_locations[l];
-        moment += pow(pixel[0] - mu_x, p) * pow(pixel[1] - mu_y, q);
+        moment += pow(pixel[1] - mu_x, p) * pow(pixel[0] - mu_y, q);
     }
 
     return moment;
@@ -58,7 +60,7 @@ bool ftrs::CentralMoments::compute()
     {
         cv::Vec2b pixel = region_moments.pixel_locations[l];
         mu_22_alpha += pow(
-            pow(pixel[1] - mu_y, 2) * cos(beta) + pow(pixel[0] - mu_x, 2) * sin(beta), 2);
+            pow(pixel[0] - mu_y, 2) * cos(beta) + pow(pixel[1] - mu_x, 2) * sin(beta), 2);
     }
     mu_22_alpha *= 1 / region_moments.m_00;
 
