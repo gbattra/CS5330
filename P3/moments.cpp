@@ -59,9 +59,8 @@ bool ftrs::CentralMoments::compute()
     mu_22_alpha = 0;
     for (int l = 0; l < centroid_locations.size(); l++)
     {
-        cv::Vec2b pixel = centroid_locations[l];
-        mu_22_alpha += pow(
-            pow(pixel[0], 2) * cos(beta) + pow(pixel[1], 2) * sin(beta), 2);
+        cv::Vec2i pixel = centroid_locations[l];
+        mu_22_alpha += pow((pixel[0] * cos(beta)) + (pixel[1] * sin(beta)), 2);
     }
     mu_22_alpha *= 1 / region_moments.m_00;
 

@@ -22,6 +22,23 @@ pl::Segment* pl::Segment::build(cv::Mat *img)
         max_regions);
 }
 
+bool trimLabelImg(cv::Mat label_img, int max_regions)
+{
+    for (int r = 0; r < label_img.rows; r++)
+    {
+        for (int c = 0; c < label_img.cols; c++)
+        {
+            int &pixel = label_img.at<int>(r, c);
+            if (pixel > max_regions)
+            {
+                pixel = 0;
+            }
+        }
+    }
+
+    return true;
+}
+
 /**
  * Executes the pipeline to process the image. Segment takes a threshold image and
  * labels the regions of the image.
@@ -35,6 +52,11 @@ bool pl::Segment::execute()
         cv::Mat *timg = threshold->getThresholdImg();
         label_img = cv::Mat(timg->size(), CV_32S);
         n_regions = cv::connectedComponents(*timg, label_img, 8) - 1;
+        if (n_regions > max_regions)
+        {
+            trimLabelImg(label_img, max_regions);
+            n_regions = max_regions;
+        }
 
         std::vector<cv::Vec3b> colors(n_regions + 1);
         colors[0] = cv::Vec3b(0, 0, 0); // bg
