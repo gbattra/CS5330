@@ -27,8 +27,7 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            virtual double compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
-            { throw; }
+            double computeMoments(int p, int q, std::vector<cv::Vec2b> pixel_locations);
 
         public:
             /**
@@ -62,17 +61,6 @@ namespace ftrs
             RegionMoments(std::vector<cv::Vec2b> pl): pixel_locations(pl) {}
 
             /**
-             * Implements the generic moments equation.
-             * 
-             * @param p the p order param
-             * @param q the q order param
-             * @param pixel_locations the vector of pixel locations
-             * 
-             * @return the computed moment value
-             */
-            double compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
-
-            /**
              * Computes the moment values.
              * 
              * @return true if successful
@@ -80,10 +68,25 @@ namespace ftrs
             bool compute() override;
     };
 
+    /**
+     * Computes central moments / moments around the pixel centroid.
+     */
     class CentralMoments: public Moments
     {
         private:
+            /**
+             * The region moments to use when calculating central moments.
+             */
             RegionMoments region_moments;
+
+            /**
+             * Computes the pixel locations relative to the region centroid.
+             * 
+             * @param region_locations the pixel locations used for the region moments
+             * 
+             * @return the centroid-relative pixel locations
+             */
+            std::vector<cv::Vec2b> computeCentroidLocations(std::vector<cv::Vec2b> region_locations);
 
         public:
             /**
@@ -105,21 +108,15 @@ namespace ftrs
             double beta;
 
             /**
+             * The pixel locations relative to the region centroid.
+             */
+            std::vector<cv::Vec2b> centroid_locations;
+
+            /**
              * Constructor for the central moments class. Takes a region moments instance as it will
              * use its moments properties to compute the central moments.
              */
             CentralMoments(RegionMoments rm): region_moments(rm) {}
-
-            /**
-             * Implements the generic moments equation.
-             * 
-             * @param p the p order param
-             * @param q the q order param
-             * @param pixel_locations the vector of pixel locations
-             * 
-             * @return the computed moment value
-             */
-            double compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
 
             /**
              * Computes the moment values.
@@ -129,13 +126,39 @@ namespace ftrs
             bool compute() override;
     };
 
+    /**
+     * Class for computing the bounding box of a region.
+     */
     class BoundingBox
     {
         private:
+            /**
+             * The moments to use when calculating the bounding box.
+             */
             CentralMoments central_moments;
 
+            /**
+             * The points representing the corners of the bounding box.
+             */
+            cv::Vec2b top_left;
+            cv::Vec2b top_right;
+            cv::Vec2b bot_left;
+            cv::Vec2b bot_right;
+
         public:
+            /**
+             * Primary constructor for the bounding box.
+             * 
+             * @param cm the central moments needed to compute the bounding box
+             */
             BoundingBox(CentralMoments cm): central_moments(cm) {};
+
+            /**
+             * Computes the corner points for the bounding box.
+             * 
+             * @return a vector of 4 Vec2b objects representing the points
+             */
+            bool compute();
 
     };
 
