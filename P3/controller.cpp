@@ -117,11 +117,11 @@ bool ctrl::Controller::run_pipeline(cv::Mat *frame)
     {
         struct pl::PipelineStepResult result = results[r];
         cv::namedWindow(result.step_name);
-        cv::imshow(result.step_name, *result.img);
+        cv::imshow(result.step_name, result.img);
 
         if (save_img)
         {
-            saveImage(result.img, r);
+            saveImage(&result.img, r);
         }
     }
 

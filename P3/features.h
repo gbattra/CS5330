@@ -128,6 +128,26 @@ namespace ftrs
              */
             bool compute() override;
     };
+
+    class BoundingBox
+    {
+        private:
+            CentralMoments central_moments;
+
+        public:
+            BoundingBox(CentralMoments cm): central_moments(cm) {};
+
+    };
+
+    /**
+     * Object for holding features and their label.
+     */
+    struct RegionFeatures
+    {
+        RegionMoments region_moments;
+        CentralMoments central_moments;
+        BoundingBox bounding_box;
+    };
 }
 
 #endif

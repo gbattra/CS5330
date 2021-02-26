@@ -35,8 +35,7 @@ bool pl::Segment::execute()
 {
     if (threshold->execute())
     {
-        std::cout << "exec\n";
-        cv::Mat *timg = threshold->getImg();
+        cv::Mat *timg = threshold->getThresholdImg();
         label_img = cv::Mat(timg->size(), CV_32S);
         n_regions = cv::connectedComponents(*timg, label_img, 8);
 
@@ -88,7 +87,7 @@ std::vector<pl::PipelineStepResult> pl::Segment::results(std::vector<pl::Pipelin
 
     if (step_complete && &segment_img != NULL)
     {
-        struct pl::PipelineStepResult result = {&segment_img, "Segment Image"};
+        struct pl::PipelineStepResult result = {segment_img, "Segment Image"};
         r.push_back(result);
     }
 
@@ -102,7 +101,7 @@ std::vector<pl::PipelineStepResult> pl::Segment::results(std::vector<pl::Pipelin
  * 
  * @return lists of pixel locations for each region
  */
-std::vector<std::vector<cv::Vec2b>> pl::Segment::region_pixel_locations()
+std::vector<std::vector<cv::Vec2b>> pl::Segment::regionPixelLocations()
 {
     std::vector<std::vector<cv::Vec2b>> locations(n_regions);
     for (int n = 0; n < n_regions; n++)
@@ -123,4 +122,14 @@ std::vector<std::vector<cv::Vec2b>> pl::Segment::region_pixel_locations()
     }
 
     return locations;
+}
+
+/**
+ * Getter for the initial image.
+ * 
+ * @return the initial image for the pipeline
+ */
+cv::Mat* pl::Segment::initialImg()
+{
+    return threshold->initialImg();
 }

@@ -18,14 +18,19 @@ bool pl::Feature::execute()
 {
     if (segment->execute())
     {
-        std::vector<std::vector<cv::Vec2b>> region_locations = segment->region_pixel_locations();
-        for (int r = 0; r < region_locations.size(); r++)
+        std::vector<ftrs::RegionFeatures> rfs;
+        std::vector<std::vector<cv::Vec2b>> regions = segment->regionPixelLocations();
+        for (int r = 0; r < regions.size(); r++)
         {
-            ftrs::RegionMoments region_moments = ftrs::RegionMoments(region_locations[r]);
+            ftrs::RegionMoments region_moments = ftrs::RegionMoments(regions[r]);
             region_moments.compute();
 
             ftrs::CentralMoments central_moments = ftrs::CentralMoments(region_moments);
             central_moments.compute();
+
+            ftrs::BoundingBox bounding_box = ftrs::BoundingBox(central_moments);
+            struct ftrs::RegionFeatures rf = {region_moments, central_moments, bounding_box};
+            rfs.push_back(rf);
         }
         step_complete = true;
     }
@@ -54,6 +59,31 @@ std::vector<pl::PipelineStepResult> pl::Feature::results()
 std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::PipelineStepResult> r)
 {
     r = segment->results(r);
+    cv::Mat img = *initialImg();
+    for (int f = 0; f < region_features.size(); f++)
+    {
+        struct ftrs::RegionFeatures rf = region_features[f];
+        cv::putText(img,
+                    "Central Axis Moment: " + std::to_string(rf.central_moments.mu_22_alpha),
+                    cv::Point(10, img.rows / 2),
+                    cv::FONT_HERSHEY_DUPLEX,
+                    1.0,
+                    CV_RGB(0, 0, 0),
+                    2);
+    }
 
+    struct pl::PipelineStepResult result = {img, "Features"};
+    r.push_back(result);
+    
     return r;
+}
+
+/**
+ * Returns the initial image for the pipeline.
+ * 
+ * @return the initial image
+ */
+cv::Mat* pl::Feature::initialImg()
+{
+    return segment->initialImg();
 }

@@ -28,7 +28,7 @@ pl::Threshold* pl::Threshold::build(cv::Mat *i)
  * 
  * @return the resulting threshold image
  */
-cv::Mat pl::Threshold::compute_threshold_img(cv::Mat *src)
+cv::Mat pl::Threshold::computeThresholdImg(cv::Mat *src)
 {
     cv::Mat timg = cv::Mat(src->size(), CV_8UC1);
     for (int r = 0; r < src->rows; r++)
@@ -53,7 +53,7 @@ cv::Mat pl::Threshold::compute_threshold_img(cv::Mat *src)
  * 
  * @return the cleaned threshold image
  */
-cv::Mat pl::Threshold::clean_threshold_img(cv::Mat *timg)
+cv::Mat pl::Threshold::cleanThresholdImg(cv::Mat *timg)
 {
     cv::Mat temp_clean;
     cv::Mat clean_img;
@@ -78,10 +78,10 @@ bool pl::Threshold::execute()
     if (init->execute())
     {
         // threshold image
-        threshold_img = compute_threshold_img(init->getImg());
+        threshold_img = computeThresholdImg(init->initialImg());
 
         // clean image to remove holes / islands
-        threshold_img = clean_threshold_img(&threshold_img);
+        threshold_img = cleanThresholdImg(&threshold_img);
 
         step_complete = true;
     }
@@ -113,14 +113,29 @@ std::vector<pl::PipelineStepResult> pl::Threshold::results(std::vector<pl::Pipel
 
     if (step_complete && &threshold_img != NULL)
     {
-        struct pl::PipelineStepResult result = {&threshold_img, "Threshold Image"};
+        struct pl::PipelineStepResult result = {threshold_img, "Threshold Image"};
         r.push_back(result);
     }
 
     return r;
 }
 
-cv::Mat* pl::Threshold::getImg()
+/**
+ * Getter for the computed threshold img.
+ * 
+ * @return the threshold img
+ */
+cv::Mat* pl::Threshold::getThresholdImg()
 {
     return &threshold_img;
+}
+
+/**
+ * Getter for the initail image.
+ * 
+ * @return the initial image
+ */
+cv::Mat* pl::Threshold::initialImg()
+{
+    return init->initialImg();
 }

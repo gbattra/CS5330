@@ -21,7 +21,7 @@ namespace pl
     struct PipelineStepResult
     {
         // the image result of the pipeline step
-        cv::Mat *img;
+        cv::Mat img;
 
         // the name of the pipeline step
         std::string step_name;
@@ -41,6 +41,13 @@ namespace pl
             bool step_complete = false;
 
         public:
+            /**
+             * Returns the original image for the pipeline.
+             * 
+             * @return the image used to initialize the pipeline
+             */
+            virtual cv::Mat* initialImg() { throw; }
+
             /**
              * Executes the pipeline and processes the target image.
              *
@@ -140,7 +147,7 @@ namespace pl
              * 
              * @return the start image for the pipeline
              */
-            cv::Mat* getImg();
+            cv::Mat* initialImg() override;
     };
 
     class Threshold: public Pipeline
@@ -156,8 +163,8 @@ namespace pl
             cv::Mat threshold_img;
 
         protected:
-            cv::Mat compute_threshold_img(cv::Mat *src);
-            cv::Mat clean_threshold_img(cv::Mat *timg);
+            cv::Mat computeThresholdImg(cv::Mat *src);
+            cv::Mat cleanThresholdImg(cv::Mat *timg);
 
         public:
             /**
@@ -208,7 +215,14 @@ namespace pl
              * 
              * @return the threshold image produced by this step
              */
-            cv::Mat* getImg();
+            cv::Mat* getThresholdImg();
+
+            /**
+             * Getter for the image to be processed.
+             * 
+             * @return the start image for the pipeline
+             */
+            cv::Mat* initialImg() override;
     };
 
     /**
@@ -293,19 +307,14 @@ namespace pl
              * 
              * @return lists of pixel locations for each region
              */
-            std::vector<std::vector<cv::Vec2b>> region_pixel_locations();
-    };
+            std::vector<std::vector<cv::Vec2b>> regionPixelLocations();
 
-    /**
-     * Struct for holding features and their label.
-     */
-    struct FeatureResult
-    {
-        // the name of the feature
-        std::string feature_name;
-
-        // the feature vector
-        std::vector<float> feature_vector;
+            /**
+             * Getter for the image to be processed.
+             * 
+             * @return the start image for the pipeline
+             */
+            cv::Mat* initialImg() override;
     };
 
     /**
@@ -323,6 +332,11 @@ namespace pl
              * An image to display the feature results.
              */
             cv::Mat feature_img;
+
+            /**
+             * Vector of features computed for each region.
+             */
+            std::vector<ftrs::RegionFeatures> region_features;
 
         public:
             /**
@@ -364,6 +378,13 @@ namespace pl
              * @return a vector of pipeline results
              */
             std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
+
+            /**
+             * Getter for the image to be processed.
+             * 
+             * @return the start image for the pipeline
+             */
+            cv::Mat* initialImg() override;
     };
 }
 

@@ -53,7 +53,7 @@ std::vector<pl::PipelineStepResult> pl::Init::results()
  */
 std::vector<pl::PipelineStepResult> pl::Init::results(std::vector<pl::PipelineStepResult> r)
 {
-    struct pl::PipelineStepResult result = {&img, "Initial Image"};
+    struct pl::PipelineStepResult result = {img, "Initial Image"};
     r.push_back(result);
     return r;
 }
@@ -63,7 +63,7 @@ std::vector<pl::PipelineStepResult> pl::Init::results(std::vector<pl::PipelineSt
  * 
  * @return the start image for the pipeline
  */
-cv::Mat* pl::Init::getImg()
+cv::Mat* pl::Init::initialImg()
 {
     return &img;
 }
