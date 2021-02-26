@@ -27,7 +27,7 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            virtual int compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
+            virtual float compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations)
             { throw; }
 
         public:
@@ -70,7 +70,7 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            int compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
+            float compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
 
             /**
              * Computes the moment values.
@@ -119,7 +119,7 @@ namespace ftrs
              * 
              * @return the computed moment value
              */
-            int compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
+            float compute_moments(int p, int q, std::vector<cv::Vec2b> pixel_locations) override;
 
             /**
              * Computes the moment values.

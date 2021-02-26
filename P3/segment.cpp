@@ -37,11 +37,11 @@ bool pl::Segment::execute()
     {
         cv::Mat *timg = threshold->getThresholdImg();
         label_img = cv::Mat(timg->size(), CV_32S);
-        n_regions = cv::connectedComponents(*timg, label_img, 8);
+        n_regions = cv::connectedComponents(*timg, label_img, 8) - 1;
 
-        std::vector<cv::Vec3b> colors(n_regions);
+        std::vector<cv::Vec3b> colors(n_regions + 1);
         colors[0] = cv::Vec3b(0, 0, 0); // bg
-        for (int i = 1; i < n_regions; i++)
+        for (int i = 1; i < n_regions + 1; i++)
         {
             colors[i] = cv::Vec3b((rand()&255), (rand()&255), (rand()&255));
         }
@@ -116,7 +116,7 @@ std::vector<std::vector<cv::Vec2b>> pl::Segment::regionPixelLocations()
             int region = label_img.at<int>(r, c);
             if (region > 0)
             {
-                locations[region].push_back(cv::Vec2b(r, c));
+                locations[region - 1].push_back(cv::Vec2b(r, c));
             }
         }
     }

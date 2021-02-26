@@ -18,7 +18,6 @@ bool pl::Feature::execute()
 {
     if (segment->execute())
     {
-        std::vector<ftrs::RegionFeatures> rfs;
         std::vector<std::vector<cv::Vec2b>> regions = segment->regionPixelLocations();
         for (int r = 0; r < regions.size(); r++)
         {
@@ -30,7 +29,7 @@ bool pl::Feature::execute()
 
             ftrs::BoundingBox bounding_box = ftrs::BoundingBox(central_moments);
             struct ftrs::RegionFeatures rf = {region_moments, central_moments, bounding_box};
-            rfs.push_back(rf);
+            region_features.push_back(rf);
         }
         step_complete = true;
     }
@@ -59,7 +58,7 @@ std::vector<pl::PipelineStepResult> pl::Feature::results()
 std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::PipelineStepResult> r)
 {
     r = segment->results(r);
-    cv::Mat img = *initialImg();
+    cv::Mat img = initialImg()->clone();
     for (int f = 0; f < region_features.size(); f++)
     {
         struct ftrs::RegionFeatures rf = region_features[f];
