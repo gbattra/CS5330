@@ -78,7 +78,7 @@ int ftrs::CentralMoments::computeCentralAxisMoment()
     for (int l = 0; l < centroid_locations.size(); l++)
     {
         cv::Vec2i pixel = centroid_locations[l];
-        sum += pow((pixel[0] * cos(beta)) + (pixel[1] * sin(beta)), 2);
+        sum += pow((pixel[1] * cos(beta)) + (pixel[0] * sin(beta)), 2);
     }
     sum /= region_moments.m_00;
 
