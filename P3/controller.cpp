@@ -92,6 +92,29 @@ bool ctrl::Controller::processKeystroke(int key)
             max_regions));
         return true;
     }
+    if (key == 'l')
+    {
+        if (labelling)
+        {
+            labelling = false;
+            pipeline = new pl::Init();
+            printf("Labelling ceased...\n");
+            return true;
+        }
+
+        labelling = true;
+        std::string label = getInput<std::string>("Object label (string): ");
+        pipeline = new pl::Label(
+            new pl::Feature(
+                new pl::Segment(
+                    new pl::Threshold(
+                        new pl::Init(),
+                        threshold),
+                max_regions)),
+            label);
+        printf("Labelling started...\n");
+        return true;
+    }
 
     return false;
 }

@@ -6,6 +6,8 @@
  */
 
 #include <opencv2/opencv.hpp>
+#include <iostream>
+#include <fstream>
 #include "pipeline.h"
 
 /**
@@ -21,8 +23,9 @@ pl::Label* pl::Label::build(cv::Mat *img)
 }
 
 /**
- * Executes the pipeline to process the image. A Feature step takes a segmented image
- * and computes features on the regions, such as moments and bounding box features.
+ * Executes the pipeline to process the image. The Label step wil label the first region
+ * of the image with the provided label. This generally assumes the image being labeled
+ * contains only one object.
  * 
  * @return bool if execution was successful
  */
@@ -30,6 +33,19 @@ bool pl::Label::execute()
 {
     if (feature->execute())
     {
+        ftrs::RegionFeatures region_features = feature->region_features[0];
+
+        std::fstream file;
+        file.open("labels/" + label, std::ios::out | std::ios::binary);
+        if (!file)
+        {
+            printf("Could not open file for labeling\n");
+            step_complete = false;
+            return step_complete;
+        }
+
+        file.write((char *) &region_features, sizeof(region_features));
+        file.close();
         step_complete = true;
     }
 

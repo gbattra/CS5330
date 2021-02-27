@@ -34,17 +34,10 @@ bool pl::Feature::execute()
         std::vector<std::vector<cv::Vec2i>> regions = segment->regionPixelLocations();
         for (int r = 0; r < regions.size(); r++)
         {
-            ftrs::RegionMoments region_moments = ftrs::RegionMoments(regions[r]);
-            region_moments.compute();
+            ftrs::RegionFeatures rf = ftrs::RegionFeatures(r + 1, regions[r]);
+            rf.compute();
 
-            ftrs::CentralMoments central_moments = ftrs::CentralMoments(region_moments);
-            central_moments.compute();
-
-            ftrs::BoundingBox bounding_box = ftrs::BoundingBox(central_moments);
-            bounding_box.compute();
-            
-            region_features.push_back(ftrs::RegionFeatures(
-                r + 1, region_moments, central_moments, bounding_box));
+            region_features.push_back(rf);
         }
         step_complete = true;
     }

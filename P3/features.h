@@ -172,17 +172,18 @@ namespace ftrs
     {
         public:
             int region_id;
+            std::vector<cv::Vec2i> pixel_locations;
             RegionMoments region_moments;
             CentralMoments central_moments;
             BoundingBox bounding_box;
 
-            RegionFeatures(
-                int id,
-                RegionMoments rm,
-                CentralMoments cm,
-                BoundingBox bb):
-                region_id(id), region_moments(rm), central_moments(cm), bounding_box(bb)
-                {}
+            RegionFeatures(int id, std::vector<cv::Vec2i> pl):
+                region_id(id),
+                pixel_locations(pl),
+                region_moments(RegionMoments(pixel_locations)),
+                central_moments(CentralMoments(region_moments)),
+                bounding_box(BoundingBox(central_moments))
+            {}
 
             bool compute();
     };
