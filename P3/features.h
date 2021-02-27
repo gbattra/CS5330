@@ -89,11 +89,16 @@ namespace ftrs
             /**
              * Computes the pixel locations relative to the region centroid.
              * 
-             * @param region_locations the pixel locations used for the region moments
-             * 
              * @return the centroid-relative pixel locations
              */
-            std::vector<cv::Vec2i> computeCentroidLocations(std::vector<cv::Vec2i> region_locations);
+            std::vector<cv::Vec2i> computeCentroidLocations();
+
+            /**
+             * Computes the pixel locations relative to the central axis.
+             * 
+             * @return the central-axis-relative pixel locations
+             */
+            std::vector<cv::Vec2i> computeCentralAxisLocations();
 
         public:
             /**
@@ -105,7 +110,8 @@ namespace ftrs
             int mu_11;
             int mu_02;
             int mu_20;
-            int mu_22_alpha;
+            int mu_20_alpha;
+            int mu_02_alpha;
 
             // central axis value
             float alpha;
@@ -117,6 +123,11 @@ namespace ftrs
              * The pixel locations relative to the region centroid.
              */
             std::vector<cv::Vec2i> centroid_locations;
+
+            /**
+             * The pixel locations relative to the central axis.
+             */
+            std::vector<cv::Vec2i> axis_locations;
 
             /**
              * Constructor for the central moments class. Takes a region moments instance as it will
@@ -178,12 +189,25 @@ namespace ftrs
     class RegionFeatures
     {
         public:
+            // id of the region represented by these features
             int region_id;
+
+            // pixel locations of the region
             std::vector<cv::Vec2i> pixel_locations;
+
+            /**
+             * Moments calculated for this region.
+             */
             RegionMoments region_moments;
             CentralMoments central_moments;
             BoundingBox bounding_box;
 
+            /**
+             * Primary constructor for the RegionFeatures object.
+             * 
+             * @param id the region id
+             * @param pl the pixel locations of the region
+             */
             RegionFeatures(int id, std::vector<cv::Vec2i> pl):
                 region_id(id),
                 pixel_locations(pl),
@@ -192,6 +216,11 @@ namespace ftrs
                 bounding_box(BoundingBox(central_moments))
             {}
 
+            /**
+             * Computes all the features for the region given the pixel locations.
+             * 
+             * @return true if successful
+             */
             bool compute();
     };
 }

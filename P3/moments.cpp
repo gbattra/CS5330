@@ -51,38 +51,36 @@ bool ftrs::RegionMoments::compute()
  * 
  * @return the centroid-relative pixel locations
  */
-std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentroidLocations(
-    std::vector<cv::Vec2i> region_locations)
+std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentroidLocations()
 {
     mu_x = region_moments.m_10 / region_moments.m_00;
     mu_y = region_moments.m_01 / region_moments.m_00;
 
-    std::vector<cv::Vec2i> c_locations(region_locations.size());
-    for (int l = 0; l < region_locations.size(); l++)
+    std::vector<cv::Vec2i> c_locations(region_moments.pixel_locations.size());
+    for (int l = 0; l < region_moments.pixel_locations.size(); l++)
     {
-        cv::Vec2i pixel = region_locations[l];
+        cv::Vec2i pixel = region_moments.pixel_locations[l];
         c_locations[l] = cv::Vec2i(mu_y - pixel[0], pixel[1] - mu_x);
     }
 
     return c_locations;
 }
 
-/**
- * Computes the central axis moment for the region.
- * 
- * @return int the central axis moment
- */
-int ftrs::CentralMoments::computeCentralAxisMoment()
+std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentralAxisLocations()
 {
-    int sum = 0;
+    alpha = 0.5 * atan2(2 * mu_11, mu_20 - mu_02);
+    beta = alpha + (M_PI / 2);
+
+    std::vector<cv::Vec2i> a_locations(centroid_locations.size());
     for (int l = 0; l < centroid_locations.size(); l++)
     {
         cv::Vec2i pixel = centroid_locations[l];
-        sum += pow((pixel[1] * cos(beta)) + (pixel[0] * sin(beta)), 2);
+        int x_aligned = pixel[1]*cos(beta) + pixel[0]*sin(beta);
+        int y_aligned = -pixel[1]*sin(beta) + pixel[0]*cos(beta);
+        a_locations[l] = cv::Vec2i(y_aligned, x_aligned);
     }
-    sum /= region_moments.m_00;
 
-    return sum;
+    return a_locations;
 }
 
 /**
@@ -92,15 +90,14 @@ int ftrs::CentralMoments::computeCentralAxisMoment()
  */
 bool ftrs::CentralMoments::compute()
 {
-    centroid_locations = computeCentroidLocations(region_moments.pixel_locations);
-
+    centroid_locations = computeCentroidLocations();
     mu_11 = computeMoments(1, 1, centroid_locations) / region_moments.m_00;
     mu_02 = computeMoments(0, 2, centroid_locations) / region_moments.m_00;
     mu_20 = computeMoments(2, 0, centroid_locations) / region_moments.m_00;
-    alpha = 0.5 * atan2(2 * mu_11, mu_20 - mu_02);
-    beta = alpha + (M_PI / 2);
 
-    mu_22_alpha = computeCentralAxisMoment();
-
+    axis_locations = computeCentralAxisLocations();
+    mu_20_alpha = computeMoments(2, 0, axis_locations) / region_moments.m_00;
+    mu_02_alpha = computeMoments(0, 2, axis_locations) / region_moments.m_00;
+    std::cout << mu_02_alpha << std::endl;
     return true;
 }

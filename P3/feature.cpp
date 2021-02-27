@@ -71,7 +71,7 @@ std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::Pipelin
     {
         ftrs::RegionFeatures rf = region_features[f];
         cv::putText(img,
-                    "Central Axis Moment: " + std::to_string((int) rf.central_moments.mu_22_alpha),
+                    "Mu 20 Alpha: " + std::to_string((int) rf.central_moments.mu_20_alpha),
                     cv::Point(10, img.rows - 10),
                     cv::FONT_HERSHEY_DUPLEX,
                     1.0,
