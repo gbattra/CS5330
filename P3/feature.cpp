@@ -42,14 +42,9 @@ bool pl::Feature::execute()
 
             ftrs::BoundingBox bounding_box = ftrs::BoundingBox(central_moments);
             bounding_box.compute();
-
-            struct ftrs::RegionFeature rf =
-            {
-                r + 1,
-                "Central Axis Moment",
-                central_moments.mu_22_alpha
-            };
-            region_features.push_back(rf);
+            
+            region_features.push_back(ftrs::RegionFeatures(
+                r + 1, region_moments, central_moments, bounding_box));
         }
         step_complete = true;
     }
@@ -81,9 +76,9 @@ std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::Pipelin
     cv::Mat img = initialImg()->clone();
     for (int f = 0; f < region_features.size(); f++)
     {
-        struct ftrs::RegionFeature rf = region_features[f];
+        ftrs::RegionFeatures rf = region_features[f];
         cv::putText(img,
-                    rf.name + ": " + std::to_string((int) rf.value),
+                    "Central Axis Moment: " + std::to_string((int) rf.central_moments.mu_22_alpha),
                     cv::Point(10, img.rows - 10),
                     cv::FONT_HERSHEY_DUPLEX,
                     1.0,

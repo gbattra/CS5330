@@ -69,10 +69,7 @@ namespace pl
              * 
              * @return a vector of PipelineStepResult structs which have an image and label
              */
-            virtual std::vector<PipelineStepResult> results()
-            {
-                return std::vector<PipelineStepResult>(0);
-            }
+            virtual std::vector<PipelineStepResult> results() { throw; }
 
             /**
              * Override for the results() method so that parent pipeline steps may capture the results of
@@ -83,9 +80,7 @@ namespace pl
              * @return a vector of pipeline results
              */
             virtual std::vector<PipelineStepResult> results(std::vector<PipelineStepResult>)
-            {
-                return std::vector<PipelineStepResult>(0);
-            }
+            { throw ;}
     };
 
     class Init: public Pipeline
@@ -130,7 +125,7 @@ namespace pl
              * 
              * @return a vector of PipelineStepResult structs which have an image and label
              */
-            std::vector<PipelineStepResult> results();
+            std::vector<PipelineStepResult> results() override;
 
             /**
              * Override for the results() method so that parent pipeline steps may capture the results of
@@ -140,7 +135,7 @@ namespace pl
              * 
              * @return a vector of pipeline results
              */
-            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
+            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r) override;
 
             /**
              * Getter for the image to be processed.
@@ -198,7 +193,7 @@ namespace pl
              * 
              * @return a vector of PipelineStepResult structs which have an image and label
              */
-            std::vector<PipelineStepResult> results();
+            std::vector<PipelineStepResult> results() override;
 
             /**
              * Override for the results() method so that parent pipeline steps may capture the results of
@@ -208,7 +203,7 @@ namespace pl
              * 
              * @return a vector of pipeline results
              */
-            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
+            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r) override;
 
             /**
              * Getter for the threshold img.
@@ -288,7 +283,7 @@ namespace pl
              * 
              * @return a vector of PipelineStepResult structs which have an image and label
              */
-            std::vector<PipelineStepResult> results();
+            std::vector<PipelineStepResult> results() override;
 
             /**
              * Override for the results() method so that parent pipeline steps may capture the results of
@@ -298,7 +293,7 @@ namespace pl
              * 
              * @return a vector of pipeline results
              */
-            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
+            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r) override;
 
             /**
              * Returns a list of the x and y pixel locations for each region, where the region is dictated
@@ -333,12 +328,12 @@ namespace pl
              */
             cv::Mat feature_img;
 
+        public:
             /**
              * Vector of features computed for each region.
              */
-            std::vector<ftrs::RegionFeature> region_features;
+            std::vector<ftrs::RegionFeatures> region_features;
 
-        public:
             /**
              * Primary constructor for Feature. Takes a Segment pipeline step to call prior to
              * computing features.
@@ -367,7 +362,7 @@ namespace pl
              * 
              * @return a vector of PipelineStepResult structs which have an image and label
              */
-            std::vector<PipelineStepResult> results();
+            std::vector<PipelineStepResult> results() override;
 
             /**
              * Override for the results() method so that parent pipeline steps may capture the results of
@@ -377,7 +372,58 @@ namespace pl
              * 
              * @return a vector of pipeline results
              */
-            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r);
+            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r) override;
+
+            /**
+             * Getter for the image to be processed.
+             * 
+             * @return the start image for the pipeline
+             */
+            cv::Mat* initialImg() override;
+    };
+
+    class Label: public Pipeline
+    {
+        private:
+            Feature *feature;
+            std::string label;
+
+        public:
+            Label(Feature *f, std::string l): feature(f), label(l) {}
+            ~Label() { delete feature; }
+
+            /**
+             * Instantiates a new pipeline with a fresh state.
+             * 
+             * @param img pointer to the image that the pipeline will process
+             * 
+             * @return a pointer to the new pipeline
+             */
+            Label* build(cv::Mat *img) override;
+
+            /**
+             * Executes the pipeline and processes the target image.
+             *
+             * @return true if execution succeeded.
+             */
+            bool execute();
+
+            /**
+             * Returns a vector of image results from this step in the pipeline.
+             * 
+             * @return a vector of PipelineStepResult structs which have an image and label
+             */
+            std::vector<PipelineStepResult> results() override;
+
+            /**
+             * Override for the results() method so that parent pipeline steps may capture the results of
+             * child pipeline steps and aggregate them into a single vector.
+             * 
+             * @param r the current vector of results to add to
+             * 
+             * @return a vector of pipeline results
+             */
+            std::vector<PipelineStepResult> results(std::vector<PipelineStepResult> r) override;
 
             /**
              * Getter for the image to be processed.

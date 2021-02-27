@@ -166,13 +166,25 @@ namespace ftrs
     };
 
     /**
-     * Object for holding features and their label.
+     * Object for holding features computed on a region.
      */
-    struct RegionFeature
+    class RegionFeatures
     {
-        int region_id;
-        std::string name;
-        int value;
+        public:
+            int region_id;
+            RegionMoments region_moments;
+            CentralMoments central_moments;
+            BoundingBox bounding_box;
+
+            RegionFeatures(
+                int id,
+                RegionMoments rm,
+                CentralMoments cm,
+                BoundingBox bb):
+                region_id(id), region_moments(rm), central_moments(cm), bounding_box(bb)
+                {}
+
+            bool compute();
     };
 }
 
