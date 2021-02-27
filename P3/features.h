@@ -80,6 +80,13 @@ namespace ftrs
             RegionMoments region_moments;
 
             /**
+             * Computes the central axis moment for the region.
+             * 
+             * @return int the central axis moment
+             */
+            int computeCentralAxisMoment();
+
+            /**
              * Computes the pixel locations relative to the region centroid.
              * 
              * @param region_locations the pixel locations used for the region moments

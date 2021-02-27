@@ -9,6 +9,15 @@
 #include <math.h>
 #include "features.h"
 
+/**
+ * Implements the generic moments equation.
+ * 
+ * @param p the p order param
+ * @param q the q order param
+ * @param pixel_locations the vector of pixel locations
+ * 
+ * @return the computed moment value
+ */
 int ftrs::Moments::computeMoments(int p, int q, std::vector<cv::Vec2i> pixel_locations)
 {
     int moment = 0;
@@ -21,6 +30,11 @@ int ftrs::Moments::computeMoments(int p, int q, std::vector<cv::Vec2i> pixel_loc
     return moment;
 }
 
+/**
+ * Call this to compute all moments defined by the class.
+ * 
+ * @return true if successful
+ */
 bool ftrs::RegionMoments::compute()
 {
     m_00 = computeMoments(0, 0, pixel_locations);
@@ -30,6 +44,13 @@ bool ftrs::RegionMoments::compute()
     return true;
 }
 
+/**
+ * Computes the pixel locations relative to the region centroid.
+ * 
+ * @param region_locations the pixel locations used for the region moments
+ * 
+ * @return the centroid-relative pixel locations
+ */
 std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentroidLocations(
     std::vector<cv::Vec2i> region_locations)
 {
@@ -40,12 +61,35 @@ std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentroidLocations(
     for (int l = 0; l < region_locations.size(); l++)
     {
         cv::Vec2i pixel = region_locations[l];
-        c_locations[l] = cv::Vec2i(pixel[0] - mu_y, pixel[1] - mu_x);
+        c_locations[l] = cv::Vec2i(mu_y - pixel[0], pixel[1] - mu_x);
     }
 
     return c_locations;
 }
 
+/**
+ * Computes the central axis moment for the region.
+ * 
+ * @return int the central axis moment
+ */
+int ftrs::CentralMoments::computeCentralAxisMoment()
+{
+    int sum = 0;
+    for (int l = 0; l < centroid_locations.size(); l++)
+    {
+        cv::Vec2i pixel = centroid_locations[l];
+        sum += pow((pixel[0] * cos(beta)) + (pixel[1] * sin(beta)), 2);
+    }
+    sum /= region_moments.m_00;
+
+    return sum;
+}
+
+/**
+ * Call this to compute all moments defined by the class.
+ * 
+ * @return true if successful
+ */
 bool ftrs::CentralMoments::compute()
 {
     centroid_locations = computeCentroidLocations(region_moments.pixel_locations);
@@ -56,17 +100,7 @@ bool ftrs::CentralMoments::compute()
     alpha = 0.5 * atan2(2 * mu_11, mu_20 - mu_02);
     beta = alpha + (M_PI / 2);
 
-    int sum = 0;
-    for (int l = 0; l < centroid_locations.size(); l++)
-    {
-        cv::Vec2i pixel = centroid_locations[l];
-        sum += pow((pixel[0] * cos(beta)) + (pixel[1] * sin(beta)), 2);
-    }
-    sum /= region_moments.m_00;
-
-    mu_22_alpha = sum;
-
-
+    mu_22_alpha = computeCentralAxisMoment();
 
     return true;
 }
