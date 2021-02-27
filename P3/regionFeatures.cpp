@@ -23,7 +23,7 @@ bool ftrs::RegionFeatures::compute()
     central_moments = ftrs::CentralMoments(region_moments);
     successs &= central_moments.compute();
 
-    bounding_box = ftrs::BoundingBox(central_moments);
+    bounding_box = ftrs::BoundingBox(pixel_locations);
     successs &= bounding_box.compute();
 
     return successs;

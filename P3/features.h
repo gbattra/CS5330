@@ -149,10 +149,8 @@ namespace ftrs
     class BoundingBox
     {
         private:
-            /**
-             * The moments to use when calculating the bounding box.
-             */
-            CentralMoments central_moments;
+            // pixel locations of the region
+            std::vector<cv::Vec2i> pixel_locations;
 
             // the length and width of the bounding box
             double length;
@@ -161,18 +159,18 @@ namespace ftrs
             /**
              * The points representing the corners of the bounding box.
              */
-            cv::Vec2i top_left;
-            cv::Vec2i top_right;
-            cv::Vec2i bot_left;
-            cv::Vec2i bot_right;
+            cv::Point2i top_left;
+            cv::Point2i top_right;
+            cv::Point2i bot_left;
+            cv::Point2i bot_right;
 
         public:
             /**
              * Primary constructor for the bounding box.
              * 
-             * @param cm the central moments needed to compute the bounding box
+             * @param pl pixel locations of the region
              */
-            BoundingBox(CentralMoments cm): central_moments(cm) {};
+            BoundingBox(std::vector<cv::Vec2i> pl): pixel_locations(pl) {};
 
             /**
              * Computes the corner points for the bounding box.
@@ -181,6 +179,14 @@ namespace ftrs
              */
             bool compute();
 
+            /**
+             * Draw the bounding box on the image.
+             * 
+             * @param img the image to draw on
+             *
+             * @return true if successful
+             */
+            bool draw(cv::Mat *img);
     };
 
     /**
@@ -213,7 +219,7 @@ namespace ftrs
                 pixel_locations(pl),
                 region_moments(RegionMoments(pixel_locations)),
                 central_moments(CentralMoments(region_moments)),
-                bounding_box(BoundingBox(central_moments))
+                bounding_box(BoundingBox(pl))
             {}
 
             /**

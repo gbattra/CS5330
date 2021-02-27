@@ -98,6 +98,6 @@ bool ftrs::CentralMoments::compute()
     axis_locations = computeCentralAxisLocations();
     mu_20_alpha = computeMoments(2, 0, axis_locations) / region_moments.m_00;
     mu_02_alpha = computeMoments(0, 2, axis_locations) / region_moments.m_00;
-    std::cout << mu_02_alpha << std::endl;
+
     return true;
 }

@@ -65,18 +65,20 @@ std::vector<pl::PipelineStepResult> pl::Feature::results()
  */
 std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::PipelineStepResult> r)
 {
+    std::cout << "hey";
     r = segment->results(r);
     cv::Mat img = initialImg()->clone();
     for (int f = 0; f < region_features.size(); f++)
     {
         ftrs::RegionFeatures rf = region_features[f];
-        cv::putText(img,
-                    "Mu 20 Alpha: " + std::to_string((int) rf.central_moments.mu_20_alpha),
-                    cv::Point(10, img.rows - 10),
-                    cv::FONT_HERSHEY_DUPLEX,
-                    1.0,
-                    CV_RGB(0, 0, 0),
-                    2);
+        // cv::putText(img,
+        //             "Mu 20 Alpha: " + std::to_string((int) rf.central_moments.mu_20_alpha),
+        //             cv::Point(10, img.rows - 10),
+        //             cv::FONT_HERSHEY_DUPLEX,
+        //             1.0,
+        //             CV_RGB(0, 0, 0),
+        //             2);
+        bool drawn = rf.bounding_box.draw(&img);
     }
 
     struct pl::PipelineStepResult result = {img, "Features"};
