@@ -26,7 +26,8 @@ bool ftrs::RegionFeatures::compute()
     bounding_box = ftrs::BoundingBox(pixel_locations);
     successs &= bounding_box.compute();
     
-    oriented_bounding_box = ftrs::OrientedBoundingBox(central_moments, pixel_locations);
+    oriented_bounding_box = ftrs::OrientedBoundingBox(
+        central_moments, region_moments, pixel_locations);
     successs &= oriented_bounding_box.compute();
 
     return successs;

@@ -94,6 +94,12 @@ bool ftrs::OrientedBoundingBox::compute()
         (central_moments.mu_x + max_a * cos(central_moments.alpha) + min_b * cos(central_moments.beta)),
         (central_moments.mu_y - max_a * sin(central_moments.alpha) - min_b * sin(central_moments.beta)));
 
+    double right_side = cv::norm(top_right - bot_right);
+    double top_side = cv::norm(top_left - top_right);
+
+    area = right_side * top_side;
+    pct_filled = area > 0 ? region_moments.m_00 / area : 0;
+
     return true;
 }
 
@@ -106,6 +112,13 @@ bool ftrs::OrientedBoundingBox::draw(cv::Mat *img)
     cv::line(*img, top_right, bot_right, cv::Scalar(0, 0, 255), 1, cv::LINE_8);
     cv::line(*img, bot_right, bot_left, cv::Scalar(0, 0, 255), 1, cv::LINE_8);
     cv::line(*img, bot_left, top_left, cv::Scalar(0, 0, 255), 1, cv::LINE_8);
+    cv::putText(*img,
+                std::to_string((int) (pct_filled * 100)) + "% filled",
+                cv::Point(top_right.x + 5, top_right.y + 20),
+                cv::FONT_HERSHEY_DUPLEX,
+                0.5,
+                CV_RGB(0, 0, 0),
+                1);
 
     return true;
 }

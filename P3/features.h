@@ -202,10 +202,14 @@ namespace ftrs
     {
         private:
             CentralMoments central_moments;
+            RegionMoments region_moments;
+            double area;
+            double pct_filled;
+
         public:
             OrientedBoundingBox(
-                CentralMoments cm, std::vector<cv::Vec2i> pl):
-                BoundingBox(pl), central_moments(cm)
+                CentralMoments cm, RegionMoments rm, std::vector<cv::Vec2i> pl):
+                BoundingBox(pl), central_moments(cm), region_moments(rm)
             {}
 
             /**
@@ -257,7 +261,7 @@ namespace ftrs
                 region_moments(RegionMoments(pixel_locations)),
                 central_moments(CentralMoments(region_moments)),
                 bounding_box(BoundingBox(pl)),
-                oriented_bounding_box(OrientedBoundingBox(central_moments, pl))
+                oriented_bounding_box(OrientedBoundingBox(central_moments, region_moments, pl))
             {}
 
             /**
