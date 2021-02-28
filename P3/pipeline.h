@@ -337,6 +337,8 @@ namespace pl
             /**
              * Primary constructor for Feature. Takes a Segment pipeline step to call prior to
              * computing features.
+             * 
+             * @param s the segment step preceding this step
              */
             Feature(Segment *s) : segment(s) {}
             ~Feature() { delete segment; }
@@ -407,6 +409,11 @@ namespace pl
             FeatureLabel feature_label;
 
         public:
+            /**
+             * Primary constructor for the Classify step.
+             * 
+             * @param f the feature step preceding this step
+             */
             Label(Feature *f, std::string l): feature(f), label(l) {}
             ~Label() { delete feature; }
 
@@ -460,8 +467,16 @@ namespace pl
             Feature *feature;
         
         public:
-            std::string predicted_label;
+            /**
+             * Track the labels for each region in this object.
+             */
+            std::vector<FeatureLabel> predicted_labels;
 
+            /**
+             * Primary constructor for the Classify step.
+             * 
+             * @param f the feature step preceding this step
+             */
             Classify(Feature *f): feature(f) {}
             ~Classify() { delete feature; }
 
@@ -504,6 +519,29 @@ namespace pl
              * @return the start image for the pipeline
              */
             cv::Mat* initialImg() override;
+
+            /**
+             * Classifies an object by ranking its feature set distance against a list of labeled
+             * feature sets.
+             * 
+             * @param feature_set the target features
+             * @param feature_labels the labeled features from the db
+             * 
+             * @return the string label of the target features
+             */
+            std::string rankAndLabel(
+                FeatureSet feature_set,
+                std::vector<FeatureLabel> feature_labels);
+
+            /**
+             * Computes the distance between two feature sets.
+             * 
+             * @param one the first feature set
+             * @param two the second feature set
+             * 
+             * @return the computed distance
+             */
+            float computeDistance(FeatureSet one, FeatureSet two);
     };
 }
 

@@ -43,7 +43,7 @@ pl::FeatureLabel loadFeatureLabel(std::string filename)
     std::string temp_name = filename.substr(filename.find("/") + 1, filename.size());
     fl.label = temp_name.substr(0, temp_name.find("."));
     fl.features = fs;
-    
+
     return fl;
 }
 
@@ -85,6 +85,23 @@ std::vector<pl::FeatureLabel> loadFeatureLabels()
 }
 
 /**
+ * Classifies an object by ranking its feature set distance against a list of labeled
+ * feature sets.
+ * 
+ * @param feature_set the target features
+ * @param feature_labels the labeled features from the db
+ * 
+ * @return the string label of the target features
+ */
+std::string pl::Classify::rankAndLabel(
+    pl::FeatureSet feature_set,
+    std::vector<pl::FeatureLabel> feature_labels)
+{
+    std::vector<float> distances(0);
+
+}
+
+/**
  * Executes the pipeline to process the image. Classify attempts to label the objects in the image.
  * 
  * @return bool if execution was successful
@@ -93,7 +110,24 @@ bool pl::Classify::execute()
 {
     if (feature->execute())
     {
+        predicted_labels = std::vector<pl::FeatureLabel>(0);
         std::vector<pl::FeatureLabel> feature_labels = loadFeatureLabels();
+        for (ftrs::RegionFeatures region_feature : feature->region_features)
+        {
+            pl::FeatureSet feature_set = {
+                region_feature.oriented_bounding_box.height,
+                region_feature.oriented_bounding_box.width,
+                region_feature.oriented_bounding_box.pct_filled,
+                region_feature.central_moments.mu_20_alpha
+            };
+
+            pl::FeatureLabel feature_label = {
+                rankAndLabel(feature_set, feature_labels),
+                feature_set
+            };
+
+            predicted_labels.push_back(feature_label);
+        }
         step_complete = true;
     }
 
@@ -123,16 +157,20 @@ std::vector<pl::PipelineStepResult> pl::Classify::results(std::vector<pl::Pipeli
     r = feature->results(r);
     
     cv::Mat img = initialImg()->clone();
-    ftrs::RegionFeatures rf = feature->region_features[0];
-    rf.draw(&img);
-    cv::putText(
-        img,
-        "Predicted Label: " + predicted_label,
-        cv::Point(rf.bounding_box.top_right.x + 5, rf.bounding_box.top_right.y - 5),
-        cv::FONT_HERSHEY_DUPLEX,
-        0.5,
-        CV_RGB(0, 0, 0),
-        1);
+    for (int i = 0; i < feature->region_features.size(); i++)
+    {
+        ftrs::RegionFeatures rf = feature->region_features[i];
+        pl::FeatureLabel fl = predicted_labels[i];
+        rf.draw(&img);
+        cv::putText(
+            img,
+            "Predicted Label: " + fl.label,
+            cv::Point(rf.bounding_box.top_right.x + 5, rf.bounding_box.top_right.y - 5),
+            cv::FONT_HERSHEY_DUPLEX,
+            0.5,
+            CV_RGB(0, 0, 0),
+            1);
+    }
     
     struct pl::PipelineStepResult result = {img, "Label"};
     r.push_back(result);
