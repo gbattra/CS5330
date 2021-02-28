@@ -35,8 +35,7 @@ bool pl::Label::execute()
     {
         ftrs::RegionFeatures region_features = feature->region_features[0];
 
-        std::fstream file;
-        file.open("labels/" + label + ".lbl", std::ios::out | std::ios::binary);
+        std::ofstream file("labels/" + label + ".lbl", std::ios::binary);
         if (!file)
         {
             printf("Could not open file for labeling\n");
@@ -44,16 +43,18 @@ bool pl::Label::execute()
             return step_complete;
         }
 
-        feature_label = {
-            label,
+        pl::FeatureSet fs = {
             region_features.oriented_bounding_box.height,
             region_features.oriented_bounding_box.width,
             region_features.oriented_bounding_box.pct_filled,
             region_features.central_moments.mu_20_alpha
         };
 
-        file.write((char *) &feature_label, sizeof(feature_label));
+        file.write((char *) &fs, sizeof(fs));
         file.close();
+
+        feature_label = {label, fs};
+
         step_complete = true;
     }
 
@@ -81,7 +82,7 @@ std::vector<pl::PipelineStepResult> pl::Label::results()
 std::vector<pl::PipelineStepResult> pl::Label::results(std::vector<pl::PipelineStepResult> r)
 {
     r = feature->results(r);
-    
+
     cv::Mat img = initialImg()->clone();
     ftrs::RegionFeatures rf = feature->region_features[0];
     rf.draw(&img);

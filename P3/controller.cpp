@@ -115,6 +115,17 @@ bool ctrl::Controller::processKeystroke(int key)
         printf("Labelling started...\n");
         return true;
     }
+    if (key == 'c')
+    {
+        pipeline = new pl::Classify(
+            new pl::Feature(
+                new pl::Segment(
+                    new pl::Threshold(
+                        new pl::Init(),
+                        threshold),
+                    max_regions)));
+        return true;
+    }
 
     return false;
 }

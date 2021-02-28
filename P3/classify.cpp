@@ -6,6 +6,12 @@
  */
 
 #include <opencv2/opencv.hpp>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <dirent.h>
+#include <iostream>
+#include <fstream>
 #include "pipeline.h"
 
 /**
@@ -20,10 +26,66 @@ pl::Classify* pl::Classify::build(cv::Mat *img)
     return new Classify(feature->build(img));
 }
 
+pl::FeatureLabel loadFeatureLabel(std::string filename)
+{
+    pl::FeatureLabel fl;
+    pl::FeatureSet fs;
+    std::ifstream file(filename, std::ios::binary);
+    if (!file)
+    {
+        printf("Could not open label file\n");
+        return fl;
+    }
+
+    file.read((char *) &fs, sizeof(fs));
+    file.close();
+
+    std::string temp_name = filename.substr(filename.find("/") + 1, filename.size());
+    fl.label = temp_name.substr(0, temp_name.find("."));
+    fl.features = fs;
+    
+    return fl;
+}
+
+std::vector<pl::FeatureLabel> loadFeatureLabels()
+{
+    std::vector<pl::FeatureLabel> feature_labels(0);
+
+    FILE *f;
+    DIR *dir;
+    struct dirent *dirent;
+    int i;
+    std::vector<std::string> filenames;
+    dir = opendir("labels");
+    if (dir == NULL)
+    {
+        printf("Could not open labels/ directory\n");
+        return feature_labels;
+    }
+
+    while (dirent = readdir(dir))
+    {
+        if (!strstr(dirent->d_name, ".lbl"))
+        {
+            continue;
+        }
+
+        char buffer[256];
+        strcpy(buffer, "labels/");
+        strcat(buffer, dirent->d_name);
+        filenames.push_back(std::string(buffer));
+    }
+
+    for (std::string filename : filenames)
+    {
+        feature_labels.push_back(loadFeatureLabel(filename));
+    }
+
+    return feature_labels;
+}
+
 /**
- * Executes the pipeline to process the image. The Label step wil label the first region
- * of the image with the provided label. This generally assumes the image being labeled
- * contains only one object.
+ * Executes the pipeline to process the image. Classify attempts to label the objects in the image.
  * 
  * @return bool if execution was successful
  */
@@ -31,7 +93,7 @@ bool pl::Classify::execute()
 {
     if (feature->execute())
     {
-        
+        std::vector<pl::FeatureLabel> feature_labels = loadFeatureLabels();
         step_complete = true;
     }
 

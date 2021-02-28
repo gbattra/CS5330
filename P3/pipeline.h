@@ -382,13 +382,18 @@ namespace pl
             cv::Mat* initialImg() override;
     };
 
-    struct FeatureLabel
+    struct FeatureSet
     {
-        std::string label;
         double height;
         double width;
         double pct_filled;
         int mu_20_alpha;
+    };
+
+    struct FeatureLabel
+    {
+        std::string label;
+        FeatureSet features;
     };
 
     /**
