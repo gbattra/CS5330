@@ -148,7 +148,7 @@ namespace ftrs
      */
     class BoundingBox
     {
-        private:
+        protected:
             // pixel locations of the region
             std::vector<cv::Vec2i> pixel_locations;
 
@@ -189,6 +189,33 @@ namespace ftrs
             bool draw(cv::Mat *img);
     };
 
+    class OrientedBoundingBox: public BoundingBox
+    {
+        private:
+            CentralMoments central_moments;
+        public:
+            OrientedBoundingBox(
+                CentralMoments cm, std::vector<cv::Vec2i> pl):
+                BoundingBox(pl), central_moments(cm)
+            {}
+
+            /**
+             * Computes the corner points for the bounding box.
+             * 
+             * @return a vector of 4 Vec2i objects representing the points
+             */
+            bool compute();
+
+            /**
+             * Draw the bounding box on the image.
+             * 
+             * @param img the image to draw on
+             *
+             * @return true if successful
+             */
+            bool draw(cv::Mat *img);
+    };
+
     /**
      * Object for holding features computed on a region.
      */
@@ -207,6 +234,7 @@ namespace ftrs
             RegionMoments region_moments;
             CentralMoments central_moments;
             BoundingBox bounding_box;
+            OrientedBoundingBox oriented_bounding_box;
 
             /**
              * Primary constructor for the RegionFeatures object.
@@ -219,7 +247,8 @@ namespace ftrs
                 pixel_locations(pl),
                 region_moments(RegionMoments(pixel_locations)),
                 central_moments(CentralMoments(region_moments)),
-                bounding_box(BoundingBox(pl))
+                bounding_box(BoundingBox(pl)),
+                oriented_bounding_box(OrientedBoundingBox(central_moments, pl))
             {}
 
             /**

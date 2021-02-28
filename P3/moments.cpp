@@ -75,8 +75,8 @@ std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentralAxisLocations()
     for (int l = 0; l < centroid_locations.size(); l++)
     {
         cv::Vec2i pixel = centroid_locations[l];
-        int x_aligned = pixel[1]*cos(beta) + pixel[0]*sin(beta);
-        int y_aligned = -pixel[1]*sin(beta) + pixel[0]*cos(beta);
+        int x_aligned = pixel[1]*cos(alpha) + pixel[0]*sin(alpha);
+        int y_aligned = -pixel[1]*sin(alpha) + pixel[0]*cos(alpha);
         a_locations[l] = cv::Vec2i(y_aligned, x_aligned);
     }
 

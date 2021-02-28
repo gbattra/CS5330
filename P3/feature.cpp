@@ -65,7 +65,6 @@ std::vector<pl::PipelineStepResult> pl::Feature::results()
  */
 std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::PipelineStepResult> r)
 {
-    std::cout << "hey";
     r = segment->results(r);
     cv::Mat img = initialImg()->clone();
     for (int f = 0; f < region_features.size(); f++)
@@ -78,7 +77,7 @@ std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::Pipelin
         //             1.0,
         //             CV_RGB(0, 0, 0),
         //             2);
-        bool drawn = rf.bounding_box.draw(&img);
+        bool drawn = rf.oriented_bounding_box.draw(&img);
     }
 
     struct pl::PipelineStepResult result = {img, "Features"};
