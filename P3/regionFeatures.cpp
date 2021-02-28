@@ -48,5 +48,16 @@ bool ftrs::RegionFeatures::draw(cv::Mat *img)
         CV_RGB(0, 0, 0),
         1);
 
+    std::string height = std::to_string((int) oriented_bounding_box.height);
+    std::string width = std::to_string((int) oriented_bounding_box.width);
+    cv::putText(
+        *img,
+        "Height/Width: " + height + ", " + width,
+        cv::Point(bounding_box.top_right.x + 5, bounding_box.top_right.y + 40),
+        cv::FONT_HERSHEY_DUPLEX,
+        0.5,
+        CV_RGB(0, 0, 0),
+        1);
+
     return drawn;
 }

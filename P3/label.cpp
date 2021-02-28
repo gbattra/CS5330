@@ -82,6 +82,20 @@ std::vector<pl::PipelineStepResult> pl::Label::results(std::vector<pl::PipelineS
 {
     r = feature->results(r);
     
+    cv::Mat img = initialImg()->clone();
+    ftrs::RegionFeatures rf = feature->region_features[0];
+    rf.draw(&img);
+    cv::putText(
+        img,
+        "Label: " + label,
+        cv::Point(rf.bounding_box.top_right.x + 5, rf.bounding_box.top_right.y - 5),
+        cv::FONT_HERSHEY_DUPLEX,
+        0.5,
+        CV_RGB(0, 0, 0),
+        1);
+    
+    struct pl::PipelineStepResult result = {img, "Label"};
+    r.push_back(result);
     return r;
 }
 
