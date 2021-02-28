@@ -106,7 +106,7 @@ bool ftrs::CentralMoments::draw(cv::Mat *img, cv::Point2i start_point)
 {
     cv::putText(*img,
                 "Mu 20 Alpha: " + std::to_string((int) mu_20_alpha),
-                cv::Point(start_point.x + 5, start_point.y),
+                cv::Point(start_point.x + 5, start_point.y + 10),
                 cv::FONT_HERSHEY_DUPLEX,
                 0.5,
                 CV_RGB(0, 0, 0),

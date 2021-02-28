@@ -382,6 +382,9 @@ namespace pl
             cv::Mat* initialImg() override;
     };
 
+    /**
+     * Pipeline step for labeling objects.
+     */
     class Label: public Pipeline
     {
         private:
@@ -431,6 +434,11 @@ namespace pl
              * @return the start image for the pipeline
              */
             cv::Mat* initialImg() override;
+    };
+
+    class Classifier: public Pipeline
+    {
+        
     };
 }
 

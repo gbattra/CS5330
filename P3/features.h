@@ -203,10 +203,11 @@ namespace ftrs
         private:
             CentralMoments central_moments;
             RegionMoments region_moments;
-            double area;
-            double pct_filled;
 
         public:
+            double area;
+            double pct_filled;
+            
             OrientedBoundingBox(
                 CentralMoments cm, RegionMoments rm, std::vector<cv::Vec2i> pl):
                 BoundingBox(pl), central_moments(cm), region_moments(rm)

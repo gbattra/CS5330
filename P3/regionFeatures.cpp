@@ -38,4 +38,13 @@ bool ftrs::RegionFeatures::draw(cv::Mat *img)
 
     bool drawn = oriented_bounding_box.draw(img) && bounding_box.draw(img)
                  && central_moments.draw(img, bounding_box.top_right);
+    
+    cv::putText(
+        *img,
+        "Fills " + std::to_string((int) (oriented_bounding_box.pct_filled * 100)) + "% of oriented box",
+        cv::Point(bounding_box.top_right.x + 5, bounding_box.top_right.y + 25),
+        cv::FONT_HERSHEY_DUPLEX,
+        0.5,
+        CV_RGB(0, 0, 0),
+        1);
 }

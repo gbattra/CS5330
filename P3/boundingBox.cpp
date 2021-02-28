@@ -112,13 +112,6 @@ bool ftrs::OrientedBoundingBox::draw(cv::Mat *img)
     cv::line(*img, top_right, bot_right, cv::Scalar(0, 0, 255), 1, cv::LINE_8);
     cv::line(*img, bot_right, bot_left, cv::Scalar(0, 0, 255), 1, cv::LINE_8);
     cv::line(*img, bot_left, top_left, cv::Scalar(0, 0, 255), 1, cv::LINE_8);
-    cv::putText(*img,
-                std::to_string((int) (pct_filled * 100)) + "% filled",
-                cv::Point(top_right.x + 5, top_right.y + 20),
-                cv::FONT_HERSHEY_DUPLEX,
-                0.5,
-                CV_RGB(0, 0, 0),
-                1);
 
     return true;
 }
