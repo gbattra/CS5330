@@ -16,7 +16,7 @@ namespace ctrl
     #define ERROR_CODE -1
     #define SUCCESS_CODE 0
     #define DEFAULT_THRESHOLD 100
-    #define DEFAULT_MAX_REGIONS 1
+    #define DEFAULT_MAX_REGIONS 3
 
     /**
      * Base controller for the OR application. Implements common

@@ -141,6 +141,15 @@ namespace ftrs
              * @return true if successful
              */
             bool compute() override;
+
+            /**
+             * Draw the bounding box on the image.
+             * 
+             * @param img the image to draw on
+             *
+             * @return true if successful
+             */
+            bool draw(cv::Mat *img, cv::Point2i point);
     };
 
     /**
@@ -156,6 +165,7 @@ namespace ftrs
             double length;
             double width;
 
+        public:
             /**
              * The points representing the corners of the bounding box.
              */
@@ -164,7 +174,6 @@ namespace ftrs
             cv::Point2i bot_left;
             cv::Point2i bot_right;
 
-        public:
             /**
              * Primary constructor for the bounding box.
              * 
@@ -257,6 +266,8 @@ namespace ftrs
              * @return true if successful
              */
             bool compute();
+
+            bool draw(cv::Mat *img);
     };
 }
 

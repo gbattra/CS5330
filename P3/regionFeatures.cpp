@@ -31,3 +31,10 @@ bool ftrs::RegionFeatures::compute()
 
     return successs;
 }
+
+bool ftrs::RegionFeatures::draw(cv::Mat *img)
+{
+
+    bool drawn = oriented_bounding_box.draw(img) && bounding_box.draw(img)
+                 && central_moments.draw(img, bounding_box.top_right);
+}
