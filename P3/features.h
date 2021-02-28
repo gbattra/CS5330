@@ -205,9 +205,11 @@ namespace ftrs
             RegionMoments region_moments;
 
         public:
+            double height;
+            double width;
             double area;
             double pct_filled;
-            
+
             OrientedBoundingBox(
                 CentralMoments cm, RegionMoments rm, std::vector<cv::Vec2i> pl):
                 BoundingBox(pl), central_moments(cm), region_moments(rm)

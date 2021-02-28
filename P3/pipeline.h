@@ -382,6 +382,15 @@ namespace pl
             cv::Mat* initialImg() override;
     };
 
+    struct FeatureLabel
+    {
+        std::string label;
+        double height;
+        double width;
+        double pct_filled;
+        int mu_20_alpha;
+    };
+
     /**
      * Pipeline step for labeling objects.
      */
@@ -390,6 +399,7 @@ namespace pl
         private:
             Feature *feature;
             std::string label;
+            FeatureLabel feature_label;
 
         public:
             Label(Feature *f, std::string l): feature(f), label(l) {}
@@ -438,7 +448,7 @@ namespace pl
 
     class Classifier: public Pipeline
     {
-        
+
     };
 }
 

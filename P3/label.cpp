@@ -36,7 +36,7 @@ bool pl::Label::execute()
         ftrs::RegionFeatures region_features = feature->region_features[0];
 
         std::fstream file;
-        file.open("labels/" + label, std::ios::out | std::ios::binary);
+        file.open("labels/" + label + ".lbl", std::ios::out | std::ios::binary);
         if (!file)
         {
             printf("Could not open file for labeling\n");
@@ -44,7 +44,15 @@ bool pl::Label::execute()
             return step_complete;
         }
 
-        file.write((char *) &region_features, sizeof(region_features));
+        feature_label = {
+            label,
+            region_features.oriented_bounding_box.height,
+            region_features.oriented_bounding_box.width,
+            region_features.oriented_bounding_box.pct_filled,
+            region_features.central_moments.mu_20_alpha
+        };
+
+        file.write((char *) &feature_label, sizeof(feature_label));
         file.close();
         step_complete = true;
     }

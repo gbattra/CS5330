@@ -94,10 +94,10 @@ bool ftrs::OrientedBoundingBox::compute()
         (central_moments.mu_x + max_a * cos(central_moments.alpha) + min_b * cos(central_moments.beta)),
         (central_moments.mu_y - max_a * sin(central_moments.alpha) - min_b * sin(central_moments.beta)));
 
-    double right_side = cv::norm(top_right - bot_right);
-    double top_side = cv::norm(top_left - top_right);
+    height = cv::norm(top_right - bot_right);
+    width = cv::norm(top_left - top_right);
 
-    area = right_side * top_side;
+    area = height * width;
     pct_filled = area > 0 ? region_moments.m_00 / area : 0;
 
     return true;

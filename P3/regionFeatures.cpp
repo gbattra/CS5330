@@ -47,4 +47,6 @@ bool ftrs::RegionFeatures::draw(cv::Mat *img)
         0.5,
         CV_RGB(0, 0, 0),
         1);
+
+    return drawn;
 }
