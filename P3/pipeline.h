@@ -472,6 +472,8 @@ namespace pl
     {
         private:
             Feature *feature;
+            std::vector<pl::FeatureLabel> feature_labels;
+            bool labels_loaded;
         
         public:
             /**
@@ -485,6 +487,16 @@ namespace pl
              * @param f the feature step preceding this step
              */
             Classify(Feature *f): feature(f) {}
+
+            /**
+             * Alt constructor which takes preloaded feature labels.
+             * 
+             * @param f the feature step preceding this step
+             * @param fl preloaded feature labels
+             */
+            Classify(Feature *f, std::vector<FeatureLabel> fl):
+            feature(f), feature_labels(fl), labels_loaded(true) {}
+
             ~Classify() { delete feature; }
 
             /**
@@ -549,6 +561,13 @@ namespace pl
              * @return the computed distance
              */
             float computeDistance(FeatureSet one, FeatureSet two);
+
+            /**
+             * Loads the labeled features from the labels/ dir.
+             *
+             * @return true if load successful
+             */
+            bool loadFeatureLabels();
     };
 }
 

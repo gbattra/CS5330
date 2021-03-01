@@ -23,7 +23,7 @@
  */
 pl::Classify* pl::Classify::build(cv::Mat *img)
 {
-    return new Classify(feature->build(img));
+    return new Classify(feature->build(img), feature_labels);
 }
 
 pl::FeatureLabel loadFeatureLabel(std::string filename)
@@ -52,9 +52,9 @@ pl::FeatureLabel loadFeatureLabel(std::string filename)
  *
  * @return the list of labled features
  */
-std::vector<pl::FeatureLabel> loadFeatureLabels()
+bool pl::Classify::loadFeatureLabels()
 {
-    std::vector<pl::FeatureLabel> feature_labels(0);
+    feature_labels = std::vector<pl::FeatureLabel>(0);
 
     FILE *f;
     DIR *dir;
@@ -65,7 +65,7 @@ std::vector<pl::FeatureLabel> loadFeatureLabels()
     if (dir == NULL)
     {
         printf("Could not open labels/ directory\n");
-        return feature_labels;
+        return false;
     }
 
     while (dirent = readdir(dir))
@@ -86,7 +86,9 @@ std::vector<pl::FeatureLabel> loadFeatureLabels()
         feature_labels.push_back(loadFeatureLabel(filename));
     }
 
-    return feature_labels;
+    labels_loaded = true;
+
+    return true;
 }
 
 /**
@@ -156,8 +158,9 @@ bool pl::Classify::execute()
 {
     if (feature->execute())
     {
+        if (!labels_loaded) loadFeatureLabels();
+
         predicted_labels = std::vector<pl::FeatureDistance>(0);
-        std::vector<pl::FeatureLabel> feature_labels = loadFeatureLabels();
         for (ftrs::RegionFeatures region_feature : feature->region_features)
         {
             pl::FeatureSet feature_set = {

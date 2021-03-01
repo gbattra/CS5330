@@ -11,22 +11,22 @@ Overall the system performed well. Misclassifications only took place when the o
 
 **Objects**
 <br>
-<img style="height: 150px" src="images/examples/original/coaster_original.png">
-<img style="height: 150px" src="images/examples/original/controller_original.png">
-<img style="height: 150px" src="images/examples/original/flipflop_original.png">
-<img style="height: 150px" src="images/examples/original/glove_original.png">
-<img style="height: 150px" src="images/examples/original/hat_original.png">
-<img style="height: 150px" src="images/examples/original/headphone_original.png">
-<img style="height: 150px" src="images/examples/original/phone_original.png">
-<img style="height: 150px" src="images/examples/original/remote_original.png">
-<img style="height: 150px" src="images/examples/original/shoe_original.png">
-<img style="height: 150px" src="images/examples/original/speaker_original.png">
+<img width=150px src="images/examples/original/coaster_original.png">
+<img width=150px src="images/examples/original/controller_original.png">
+<img width=150px src="images/examples/original/flipflop_original.png">
+<img width=150px src="images/examples/original/glove_original.png">
+<img width=150px src="images/examples/original/hat_original.png">
+<img width=150px src="images/examples/original/headphone_original.png">
+<img width=150px src="images/examples/original/phone_original.png">
+<img width=150px src="images/examples/original/remote_original.png">
+<img width=150px src="images/examples/original/shoe_original.png">
+<img width=150px src="images/examples/original/speaker_original.png">
 <br>
 *Unlabeled Objects*
 <br>
-<img style="height: 150px" src="images/examples/original/alt_headphones_original.png">
-<img style="height: 150px" src="images/examples/original/plantpot_original.png">
-<img style="height: 150px" src="images/examples/original/brace_original.png">
+<img width=150px src="images/examples/original/alt_headphones_original.png">
+<img width=150px src="images/examples/original/plantpot_original.png">
+<img width=150px src="images/examples/original/brace_original.png">
 
 
 **Confusion Matrix:**
