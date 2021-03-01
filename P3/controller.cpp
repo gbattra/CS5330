@@ -103,7 +103,6 @@ bool ctrl::Controller::processKeystroke(int key)
                         threshold),
                 max_regions)),
             label);
-        printf("Labelling started...\n");
         return true;
     }
     if (key == 'c')

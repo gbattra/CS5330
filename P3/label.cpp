@@ -22,6 +22,37 @@ pl::Label* pl::Label::build(cv::Mat *img)
     return new Label(feature->build(img), label, label_done);
 }
 
+int datasetSize(std::string label)
+{
+    int size = 0;
+    std::ifstream ifile("labels/" + label + ".lbl", std::ios::binary);
+    if (ifile)
+    {
+        ifile.read((char *) &size, sizeof(int));
+    }
+    ifile.close();
+
+    return size;
+}
+
+bool readDatasetFeatures(pl::FeatureSet *db_features, std::string label)
+{
+    int size = 0;
+    std::ifstream ifile("labels/" + label + ".lbl", std::ios::binary);
+    if (!ifile)
+    {
+        return false;
+    }
+    ifile.read((char *) &size, sizeof(int));
+    for (int f = 0; f < size; f++)
+    {
+        ifile.read((char *) &db_features[f], sizeof(pl::FeatureSet));
+    }
+    ifile.close();
+
+    return true;
+}
+
 /**
  * Executes the pipeline to process the image. The Label step wil label the first region
  * of the image with the provided label. This generally assumes the image being labeled
@@ -35,8 +66,16 @@ bool pl::Label::execute()
     {
         ftrs::RegionFeatures region_features = feature->region_features[0];
 
-        std::ofstream file("labels/" + label + ".lbl", std::ios::binary);
-        if (!file)
+        int size = datasetSize(label);
+        pl::FeatureSet feature_sets[size + 1]; //extra space for new features
+        if (size > 0 && !readDatasetFeatures(feature_sets, label))
+        {
+            printf("Could not read existing dataset file\n");
+            return false;
+        }
+
+        std::ofstream ofile("labels/" + label + ".lbl", std::ios::binary);
+        if (!ofile)
         {
             printf("Could not open file for labeling\n");
             step_complete = false;
@@ -49,9 +88,16 @@ bool pl::Label::execute()
             region_features.oriented_bounding_box.pct_filled,
             region_features.central_moments.mu_20_alpha
         };
+        
+        feature_sets[size * sizeof(pl::FeatureSet)] = fs;
 
-        file.write((char *) &fs, sizeof(fs));
-        file.close();
+        size += 1;
+        ofile.write((char *) &size, sizeof(int));
+        for (int f = 0; f < size; f++)
+        {
+            ofile.write((char *) &feature_sets[f], sizeof(feature_sets[f]));
+        }
+        ofile.close();
 
         feature_label = {label, fs};
         label_done = true;
@@ -90,7 +136,7 @@ std::vector<pl::PipelineStepResult> pl::Label::results(std::vector<pl::PipelineS
     cv::putText(
         img,
         "Label: " + label,
-        cv::Point(rf.bounding_box.top_left.x, rf.bounding_box.top_left.y - 55),
+        cv::Point(rf.bounding_box.top_left.x, rf.bounding_box.top_left.y - 10),
         cv::FONT_HERSHEY_DUPLEX,
         0.5,
         CV_RGB(0, 0, 0),
