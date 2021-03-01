@@ -85,7 +85,6 @@ bool writeDatasetFeatures(pl::FeatureSet *db_features, int size, std::string lab
     ofile.write((char *) &size, sizeof(int));
     for (int f = 0; f < size; f++)
     {
-        std::cout << db_features[f * sizeof(pl::FeatureSet)].height << std::endl;
         ofile.write((char *) &db_features[f * sizeof(pl::FeatureSet)], sizeof(pl::FeatureSet));
     }
     ofile.close();

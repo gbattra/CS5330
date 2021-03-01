@@ -37,7 +37,6 @@ bool pl::Label::execute()
         ftrs::RegionFeatures region_features = feature->region_features[0];
 
         int size = datasetSize(label);
-        std::cout << size << std::endl;
         pl::FeatureSet db_features[size + 1]; //extra space for new features
         if (size > 0 && !readDatasetFeatures(db_features, label))
         {
