@@ -207,7 +207,7 @@ Overall the system performed well. Misclassifications only took place when the o
         <td>0</td>
     </tr>
     <tr>
-        <th><strong>Metal</strong></td>
+        <th><strong>Metal Brace</strong></td>
         <td>0</td>
         <td>0</td>
         <td>0</td>

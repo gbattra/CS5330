@@ -407,14 +407,25 @@ namespace pl
             Feature *feature;
             std::string label;
             FeatureLabel feature_label;
+            bool label_done;
 
         public:
             /**
              * Primary constructor for the Classify step.
              * 
              * @param f the feature step preceding this step
+             * @param l the label of the object
              */
             Label(Feature *f, std::string l): feature(f), label(l) {}
+
+            /**
+             * Secondary constructor for the Classify step.
+             * 
+             * @param f the feature step preceding this step
+             * @param l the label of the object
+             * @param b bool indicating if the label has already executed
+             */
+            Label(Feature *f, std::string l, bool lb): feature(f), label(l) {}
             ~Label() { delete feature; }
 
             /**

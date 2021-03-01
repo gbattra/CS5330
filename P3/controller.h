@@ -37,11 +37,6 @@ namespace ctrl
             bool save_img = false;
 
             /**
-             * Used for toggling labelling on/off.
-             */
-            bool labelling = false;
-
-            /**
              * Threshold value to use when instantiating a threshold pipeline.
              */
             float threshold = DEFAULT_THRESHOLD;

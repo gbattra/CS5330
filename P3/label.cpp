@@ -19,7 +19,7 @@
  */
 pl::Label* pl::Label::build(cv::Mat *img)
 {
-    return new Label(feature->build(img), label);
+    return new Label(feature->build(img), label, label_done);
 }
 
 /**
@@ -31,7 +31,7 @@ pl::Label* pl::Label::build(cv::Mat *img)
  */
 bool pl::Label::execute()
 {
-    if (feature->execute())
+    if (feature->execute() && !label_done)
     {
         ftrs::RegionFeatures region_features = feature->region_features[0];
 
@@ -54,11 +54,12 @@ bool pl::Label::execute()
         file.close();
 
         feature_label = {label, fs};
+        label_done = true;
 
         step_complete = true;
     }
 
-    return step_complete;
+    return step_complete || label_done;
 }
 
 /**
