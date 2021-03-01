@@ -497,7 +497,7 @@ namespace pl
              * 
              * @param f the feature step preceding this step
              */
-            Classify(Feature *f): feature(f) {}
+            Classify(Feature *f): feature(f), labels_loaded(false) {}
 
             /**
              * Alt constructor which takes preloaded feature labels.

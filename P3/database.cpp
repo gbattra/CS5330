@@ -61,7 +61,7 @@ bool readDatasetFeatures(pl::FeatureSet *db_features, std::string label)
     }
     ifile.close();
 
-    return true;
+    return ifile.good();
 }
 
 /**
@@ -88,6 +88,8 @@ bool writeDatasetFeatures(pl::FeatureSet *db_features, int size, std::string lab
         ofile.write((char *) &db_features[f * sizeof(pl::FeatureSet)], sizeof(pl::FeatureSet));
     }
     ofile.close();
+
+    return ofile.good();
 }
 
 /**
@@ -121,6 +123,5 @@ std::vector<std::string> loadLabelFilenames()
         strcat(buffer, dirent->d_name);
         filenames.push_back(std::string(buffer));
     }
-
     return filenames;
 }

@@ -24,7 +24,12 @@
  */
 pl::Classify* pl::Classify::build(cv::Mat *img)
 {
-    return new Classify(feature->build(img), feature_labels);
+    if (labels_loaded)
+    {
+        return new Classify(feature->build(img), feature_labels);
+    } else {
+        return new Classify(feature->build(img));
+    }
 }
 
 /**
@@ -39,7 +44,6 @@ pl::FeatureLabel loadFeatureLabel(std::string filename)
     pl::FeatureLabel fl;
     std::string temp_name = filename.substr(filename.find("/") + 1, filename.size());
     fl.label = temp_name.substr(0, temp_name.find("."));
-
     int size = datasetSize(fl.label);
     std::cout << size << std::endl;
     pl::FeatureSet db_features[size + 1]; //extra space for new features
@@ -67,7 +71,6 @@ pl::FeatureLabel loadFeatureLabel(std::string filename)
 bool pl::Classify::loadFeatureLabels()
 {
     feature_labels = std::vector<pl::FeatureLabel>(0);
-
     std::vector<std::string> label_filenames = loadLabelFilenames();
 
     for (std::string filename : label_filenames)
