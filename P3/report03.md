@@ -9,6 +9,26 @@ To evaluate the performance of the system, I ran 5 classifications for each of t
 
 Overall the system performed well. Misclassifications only took place when the object was partially out of the camera frame or there were significant shadows present. The one exception to that was the glove, which had a tendancy to be misclassified as a flipflop even when well lit and within the frame.
 
+**Objects**
+<br>
+<img style="height: 150px" src="images/examples/original/coaster_original.png">
+<img style="height: 150px" src="images/examples/original/controller_original.png">
+<img style="height: 150px" src="images/examples/original/flipflop_original.png">
+<img style="height: 150px" src="images/examples/original/glove_original.png">
+<img style="height: 150px" src="images/examples/original/hat_original.png">
+<img style="height: 150px" src="images/examples/original/headphone_original.png">
+<img style="height: 150px" src="images/examples/original/phone_original.png">
+<img style="height: 150px" src="images/examples/original/remote_original.png">
+<img style="height: 150px" src="images/examples/original/shoe_original.png">
+<img style="height: 150px" src="images/examples/original/speaker_original.png">
+<br>
+*Unlabeled Objects*
+<br>
+<img style="height: 150px" src="images/examples/original/alt_headphones_original.png">
+<img style="height: 150px" src="images/examples/original/plantpot_original.png">
+<img style="height: 150px" src="images/examples/original/brace_original.png">
+
+
 **Confusion Matrix:**
 
 (Actual on the top row, Prediction along the side)
@@ -157,5 +177,46 @@ Overall the system performed well. Misclassifications only took place when the o
         <td>0</td>
         <td>3</td>
     </tr>
-        
+    <tr>
+        <td>UNLABELED OBJECTS:</td>
+    </tr>
+    <tr>
+        <th><strong>Alt. Headphones</strong></td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>5</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <th><strong>Plant Pot</strong></td>
+        <td>5</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <th><strong>Metal</strong></td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
 </table>
