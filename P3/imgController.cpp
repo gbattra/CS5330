@@ -7,6 +7,7 @@
 
 #include <opencv2/opencv.hpp>
 #include "controller.h"
+#include "init.h"
 
 int ctrl::ImgController::spin()
 {

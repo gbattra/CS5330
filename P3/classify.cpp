@@ -12,7 +12,7 @@
 #include <dirent.h>
 #include <iostream>
 #include <fstream>
-#include "pipeline.h"
+#include "classify.h"
 #include "database.h"
 
 /**
@@ -103,7 +103,7 @@ bool sort_distances(pl::FeatureDistance first, pl::FeatureDistance second)
  * 
  * @return the computed distance
  */
-float pl::Classify::computeDistance(FeatureSet one, FeatureSet two)
+float pl::Classify::computeDistance(pl::FeatureSet one, pl::FeatureSet two)
 {
     float height_d = 1 - (std::min(one.height, two.height) / std::max(one.height, two.height));
     float width_d = 1 - (std::min(one.width, two.width) / std::max(one.width, two.width));

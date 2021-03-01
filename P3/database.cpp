@@ -5,7 +5,7 @@
  * Implementation of the Database class defined in database.h
  */
 
-#include "pipeline.h"
+#include "feature.h"
 #include "database.h"
 #include <iostream>
 #include <fstream>

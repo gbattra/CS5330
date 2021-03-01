@@ -6,7 +6,8 @@
  */
 
 #include <opencv2/opencv.hpp>
-#include "pipeline.h"
+#include "segment.h"
+#include "threshold.h"
 
 /**
  * Instantiates a new pipeline with a fresh state.

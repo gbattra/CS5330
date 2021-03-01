@@ -7,7 +7,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
-#include "pipeline.h"
+#include "init.h"
 #include "controller.h"
 
 /**

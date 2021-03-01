@@ -7,6 +7,12 @@
 
 #include <opencv2/opencv.hpp>
 #include "controller.h"
+#include "init.h"
+#include "threshold.h"
+#include "segment.h"
+#include "features.h"
+#include "label.h"
+#include "classify.h"
 
 /**
  * Helper function for getting user input from the console.

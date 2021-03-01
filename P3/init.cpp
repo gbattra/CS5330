@@ -6,7 +6,7 @@
  */
 
 #include <opencv2/opencv.hpp>
-#include "pipeline.h"
+#include "init.h"
 
 /**
  * Implementation of the base class build() method. Instantiates

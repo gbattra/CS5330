@@ -8,7 +8,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <fstream>
-#include "pipeline.h"
+#include "label.h"
 #include "database.h"
 
 /**

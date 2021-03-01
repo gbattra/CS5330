@@ -7,7 +7,8 @@
 
 #include <opencv2/opencv.hpp>
 #include "features.h"
-#include "pipeline.h"
+#include "feature.h"
+#include "segment.h"
 
 /**
  * Instantiates a new pipeline with a fresh state.
