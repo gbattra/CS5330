@@ -395,7 +395,7 @@ namespace pl
     struct FeatureLabel
     {
         std::string label;
-        FeatureSet features;
+        std::vector<FeatureSet> feature_sets;
     };
 
     /**

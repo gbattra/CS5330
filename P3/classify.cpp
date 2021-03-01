@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include "pipeline.h"
+#include "database.h"
 
 /**
  * Instantiates a new pipeline with a fresh state.
@@ -26,23 +27,34 @@ pl::Classify* pl::Classify::build(cv::Mat *img)
     return new Classify(feature->build(img), feature_labels);
 }
 
+/**
+ * Load a feature label object from the specified file.
+ * 
+ * @param filename the file to load from
+ * 
+ * @return the loaded feature label
+ */
 pl::FeatureLabel loadFeatureLabel(std::string filename)
 {
     pl::FeatureLabel fl;
-    pl::FeatureSet fs;
-    std::ifstream file(filename, std::ios::binary);
-    if (!file)
+    std::string temp_name = filename.substr(filename.find("/") + 1, filename.size());
+    fl.label = temp_name.substr(0, temp_name.find("."));
+
+    int size = datasetSize(fl.label);
+    std::cout << size << std::endl;
+    pl::FeatureSet db_features[size + 1]; //extra space for new features
+    if (size > 0 && !readDatasetFeatures(db_features, fl.label))
     {
-        printf("Could not open label file\n");
+        printf("Could not read existing dataset file\n");
         return fl;
     }
 
-    file.read((char *) &fs, sizeof(fs));
-    file.close();
-
-    std::string temp_name = filename.substr(filename.find("/") + 1, filename.size());
-    fl.label = temp_name.substr(0, temp_name.find("."));
-    fl.features = fs;
+    std::vector<pl::FeatureSet> feature_sets(0);
+    for (int f = 0; f < size; f++)
+    {
+        feature_sets.push_back(db_features[f * sizeof(pl::FeatureSet)]);
+    }
+    fl.feature_sets = feature_sets;
 
     return fl;
 }
@@ -56,32 +68,9 @@ bool pl::Classify::loadFeatureLabels()
 {
     feature_labels = std::vector<pl::FeatureLabel>(0);
 
-    FILE *f;
-    DIR *dir;
-    struct dirent *dirent;
-    int i;
-    std::vector<std::string> filenames;
-    dir = opendir("labels");
-    if (dir == NULL)
-    {
-        printf("Could not open labels/ directory\n");
-        return false;
-    }
+    std::vector<std::string> label_filenames = loadLabelFilenames();
 
-    while (dirent = readdir(dir))
-    {
-        if (!strstr(dirent->d_name, ".lbl"))
-        {
-            continue;
-        }
-
-        char buffer[256];
-        strcpy(buffer, "labels/");
-        strcat(buffer, dirent->d_name);
-        filenames.push_back(std::string(buffer));
-    }
-
-    for (std::string filename : filenames)
+    for (std::string filename : label_filenames)
     {
         feature_labels.push_back(loadFeatureLabel(filename));
     }
@@ -140,7 +129,7 @@ pl::FeatureDistance pl::Classify::rankAndLabel(
     {
         distances.push_back({
             feature_label.label,
-            computeDistance(feature_set, feature_label.features)
+            computeDistance(feature_set, feature_label.feature_sets[0])
         });
     }
 

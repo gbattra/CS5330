@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include "pipeline.h"
+#include "database.h"
 
 /**
  * Instantiates a new pipeline with a fresh state.
@@ -20,37 +21,6 @@
 pl::Label* pl::Label::build(cv::Mat *img)
 {
     return new Label(feature->build(img), label, label_done);
-}
-
-int datasetSize(std::string label)
-{
-    int size = 0;
-    std::ifstream ifile("labels/" + label + ".lbl", std::ios::binary);
-    if (ifile)
-    {
-        ifile.read((char *) &size, sizeof(int));
-    }
-    ifile.close();
-
-    return size;
-}
-
-bool readDatasetFeatures(pl::FeatureSet *db_features, std::string label)
-{
-    int size = 0;
-    std::ifstream ifile("labels/" + label + ".lbl", std::ios::binary);
-    if (!ifile)
-    {
-        return false;
-    }
-    ifile.read((char *) &size, sizeof(int));
-    for (int f = 0; f < size; f++)
-    {
-        ifile.read((char *) &db_features[f], sizeof(pl::FeatureSet));
-    }
-    ifile.close();
-
-    return true;
 }
 
 /**
@@ -67,19 +37,12 @@ bool pl::Label::execute()
         ftrs::RegionFeatures region_features = feature->region_features[0];
 
         int size = datasetSize(label);
-        pl::FeatureSet feature_sets[size + 1]; //extra space for new features
-        if (size > 0 && !readDatasetFeatures(feature_sets, label))
+        std::cout << size << std::endl;
+        pl::FeatureSet db_features[size + 1]; //extra space for new features
+        if (size > 0 && !readDatasetFeatures(db_features, label))
         {
             printf("Could not read existing dataset file\n");
             return false;
-        }
-
-        std::ofstream ofile("labels/" + label + ".lbl", std::ios::binary);
-        if (!ofile)
-        {
-            printf("Could not open file for labeling\n");
-            step_complete = false;
-            return step_complete;
         }
 
         pl::FeatureSet fs = {
@@ -89,17 +52,17 @@ bool pl::Label::execute()
             region_features.central_moments.mu_20_alpha
         };
         
-        feature_sets[size * sizeof(pl::FeatureSet)] = fs;
-
+        db_features[size * sizeof(pl::FeatureSet)] = fs;
         size += 1;
-        ofile.write((char *) &size, sizeof(int));
+        writeDatasetFeatures(db_features, size, label);
+
+        std::vector<pl::FeatureSet> feature_sets(0);
         for (int f = 0; f < size; f++)
         {
-            ofile.write((char *) &feature_sets[f], sizeof(feature_sets[f]));
+            feature_sets.push_back(db_features[f * sizeof(pl::FeatureSet)]);
         }
-        ofile.close();
 
-        feature_label = {label, fs};
+        feature_label = {label, feature_sets};
         label_done = true;
 
         step_complete = true;
