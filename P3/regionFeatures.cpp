@@ -52,7 +52,7 @@ bool ftrs::RegionFeatures::draw(cv::Mat *img)
     std::string width = std::to_string((int) oriented_bounding_box.width);
     cv::putText(
         *img,
-        "Height/Width: " + height + ", " + width,
+        "Height/Width: " + height + "/" + width,
         cv::Point(bounding_box.top_left.x, bounding_box.top_left.y - 40),
         cv::FONT_HERSHEY_DUPLEX,
         0.5,
