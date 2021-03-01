@@ -47,6 +47,11 @@ pl::FeatureLabel loadFeatureLabel(std::string filename)
     return fl;
 }
 
+/**
+ * Loads the labeled features from the labels/ dir.
+ *
+ * @return the list of labled features
+ */
 std::vector<pl::FeatureLabel> loadFeatureLabels()
 {
     std::vector<pl::FeatureLabel> feature_labels(0);
@@ -85,6 +90,37 @@ std::vector<pl::FeatureLabel> loadFeatureLabels()
 }
 
 /**
+ * A function for sorting two ImgMetric objects.
+ * 
+ * @param first the first distance value
+ * @param second the second distance value
+ * 
+ * @return true if first value is less then the second value
+ */
+bool sort_distances(pl::FeatureDistance first, pl::FeatureDistance second)
+{
+    return first.distance < second.distance;
+}
+
+/**
+ * Computes the distance between two feature sets.
+ * 
+ * @param one the first feature set
+ * @param two the second feature set
+ * 
+ * @return the computed distance
+ */
+float pl::Classify::computeDistance(FeatureSet one, FeatureSet two)
+{
+    float height_d = 1 - (std::min(one.height, two.height) / std::max(one.height, two.height));
+    float width_d = 1 - (std::min(one.width, two.width) / std::max(one.width, two.width));
+    float pct_filled_d = 1 - (std::min(one.pct_filled, two.pct_filled) / std::max(one.pct_filled, two.pct_filled));
+    float mu_20_alpha_d = 1 - (std::min(one.mu_20_alpha, two.mu_20_alpha) / std::max(one.mu_20_alpha, two.mu_20_alpha));
+
+    return (height_d + width_d + pct_filled_d + mu_20_alpha_d) / 4;
+}
+
+/**
  * Classifies an object by ranking its feature set distance against a list of labeled
  * feature sets.
  * 
@@ -93,12 +129,22 @@ std::vector<pl::FeatureLabel> loadFeatureLabels()
  * 
  * @return the string label of the target features
  */
-std::string pl::Classify::rankAndLabel(
+pl::FeatureDistance pl::Classify::rankAndLabel(
     pl::FeatureSet feature_set,
     std::vector<pl::FeatureLabel> feature_labels)
 {
-    std::vector<float> distances(0);
+    std::vector<pl::FeatureDistance> distances(0);
+    for (pl::FeatureLabel feature_label : feature_labels)
+    {
+        distances.push_back({
+            feature_label.label,
+            computeDistance(feature_set, feature_label.features)
+        });
+    }
 
+    std::sort(distances.begin(), distances.end(), sort_distances);
+
+    return distances[0];
 }
 
 /**
@@ -110,7 +156,7 @@ bool pl::Classify::execute()
 {
     if (feature->execute())
     {
-        predicted_labels = std::vector<pl::FeatureLabel>(0);
+        predicted_labels = std::vector<pl::FeatureDistance>(0);
         std::vector<pl::FeatureLabel> feature_labels = loadFeatureLabels();
         for (ftrs::RegionFeatures region_feature : feature->region_features)
         {
@@ -121,12 +167,7 @@ bool pl::Classify::execute()
                 region_feature.central_moments.mu_20_alpha
             };
 
-            pl::FeatureLabel feature_label = {
-                rankAndLabel(feature_set, feature_labels),
-                feature_set
-            };
-
-            predicted_labels.push_back(feature_label);
+            predicted_labels.push_back(rankAndLabel(feature_set, feature_labels));
         }
         step_complete = true;
     }
@@ -160,19 +201,19 @@ std::vector<pl::PipelineStepResult> pl::Classify::results(std::vector<pl::Pipeli
     for (int i = 0; i < feature->region_features.size(); i++)
     {
         ftrs::RegionFeatures rf = feature->region_features[i];
-        pl::FeatureLabel fl = predicted_labels[i];
+        pl::FeatureDistance fd = predicted_labels[i];
         rf.draw(&img);
         cv::putText(
             img,
-            "Predicted Label: " + fl.label,
-            cv::Point(rf.bounding_box.top_right.x + 5, rf.bounding_box.top_right.y - 5),
+            "Predicted Label: " + fd.label,
+            cv::Point(rf.bounding_box.top_left.x, rf.bounding_box.top_left.y - 10),
             cv::FONT_HERSHEY_DUPLEX,
             0.5,
             CV_RGB(0, 0, 0),
             1);
     }
     
-    struct pl::PipelineStepResult result = {img, "Label"};
+    struct pl::PipelineStepResult result = {img, "Classification"};
     r.push_back(result);
     return r;
 }

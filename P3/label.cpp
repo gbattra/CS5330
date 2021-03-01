@@ -89,7 +89,7 @@ std::vector<pl::PipelineStepResult> pl::Label::results(std::vector<pl::PipelineS
     cv::putText(
         img,
         "Label: " + label,
-        cv::Point(rf.bounding_box.top_right.x + 5, rf.bounding_box.top_right.y - 5),
+        cv::Point(rf.bounding_box.top_left.x, rf.bounding_box.top_left.y - 55),
         cv::FONT_HERSHEY_DUPLEX,
         0.5,
         CV_RGB(0, 0, 0),

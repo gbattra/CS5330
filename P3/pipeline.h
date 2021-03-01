@@ -458,6 +458,13 @@ namespace pl
             cv::Mat* initialImg() override;
     };
 
+
+    struct FeatureDistance
+    {
+        std::string label;
+        float distance;
+    };
+    
     /**
      * Pipeline step to classify an input img.
      */
@@ -468,9 +475,9 @@ namespace pl
         
         public:
             /**
-             * Track the labels for each region in this object.
+             * Track the labels and distance for each region in this object.
              */
-            std::vector<FeatureLabel> predicted_labels;
+            std::vector<FeatureDistance> predicted_labels;
 
             /**
              * Primary constructor for the Classify step.
@@ -527,9 +534,9 @@ namespace pl
              * @param feature_set the target features
              * @param feature_labels the labeled features from the db
              * 
-             * @return the string label of the target features
+             * @return the label and distance from db features for that label
              */
-            std::string rankAndLabel(
+            pl::FeatureDistance rankAndLabel(
                 FeatureSet feature_set,
                 std::vector<FeatureLabel> feature_labels);
 
