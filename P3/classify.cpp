@@ -45,7 +45,6 @@ pl::FeatureLabel loadFeatureLabel(std::string filename)
     std::string temp_name = filename.substr(filename.find("/") + 1, filename.size());
     fl.label = temp_name.substr(0, temp_name.find("."));
     int size = datasetSize(fl.label);
-    std::cout << size << std::endl;
     pl::FeatureSet db_features[size + 1]; //extra space for new features
     if (size > 0 && !readDatasetFeatures(db_features, fl.label))
     {
