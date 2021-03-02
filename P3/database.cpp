@@ -118,7 +118,7 @@ std::vector<std::string> loadLabelFilenames()
             continue;
         }
 
-        char buffer[256];
+        char buffer[400];
         strcpy(buffer, "labels/");
         strcat(buffer, dirent->d_name);
         filenames.push_back(std::string(buffer));

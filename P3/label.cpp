@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include "label.h"
+#include "features.h"
 #include "database.h"
 
 /**
@@ -20,6 +21,7 @@
  */
 pl::Label* pl::Label::build(cv::Mat *img)
 {
+    std::cout << (label_done ? "done" : "not done") << std::endl;
     return new Label(feature->build(img), label, label_done);
 }
 
@@ -34,40 +36,35 @@ bool pl::Label::execute()
 {
     if (feature->execute() && !label_done)
     {
+        std::cout << "inner" << std::endl;
         ftrs::RegionFeatures region_features = feature->region_features[0];
 
         int size = datasetSize(label);
-        pl::FeatureSet db_features[size + 1]; //extra space for new features
-        if (size > 0 && !readDatasetFeatures(db_features, label))
-        {
-            printf("Could not read existing dataset file\n");
-            return false;
-        }
+        // pl::FeatureSet db_features[size + 1]; //extra space for new features
+        // if (size > 0 && !readDatasetFeatures(db_features, label))
+        // {
+        //     printf("Could not read existing dataset file\n");
+        //     return false;
+        // }
 
-        pl::FeatureSet fs = {
-            region_features.oriented_bounding_box.height,
-            region_features.oriented_bounding_box.width,
-            region_features.oriented_bounding_box.pct_filled,
-            region_features.central_moments.mu_20_alpha
-        };
-        
-        db_features[size * sizeof(pl::FeatureSet)] = fs;
-        size += 1;
-        writeDatasetFeatures(db_features, size, label);
+        // pl::FeatureSet fs = {
+        //     region_features.oriented_bounding_box.height,
+        //     region_features.oriented_bounding_box.width,
+        //     region_features.oriented_bounding_box.pct_filled,
+        //     region_features.central_moments.mu_20_alpha
+        // };
+        // db_features[size * sizeof(pl::FeatureSet)] = fs;
 
-        std::vector<pl::FeatureSet> feature_sets(0);
-        for (int f = 0; f < size; f++)
-        {
-            feature_sets.push_back(db_features[f * sizeof(pl::FeatureSet)]);
-        }
+        // size += 1;
+        // bool written = writeDatasetFeatures(db_features, size, label);
 
-        feature_label = {label, feature_sets};
         label_done = true;
-
-        step_complete = true;
     }
 
-    return step_complete || label_done;
+    label_done = true;
+    step_complete = label_done;
+
+    return step_complete;
 }
 
 /**
@@ -91,7 +88,6 @@ std::vector<pl::PipelineStepResult> pl::Label::results()
 std::vector<pl::PipelineStepResult> pl::Label::results(std::vector<pl::PipelineStepResult> r)
 {
     r = feature->results(r);
-
     cv::Mat img = initialImg()->clone();
     ftrs::RegionFeatures rf = feature->region_features[0];
     rf.draw(&img);
@@ -103,7 +99,6 @@ std::vector<pl::PipelineStepResult> pl::Label::results(std::vector<pl::PipelineS
         0.5,
         CV_RGB(0, 0, 0),
         1);
-    
     struct pl::PipelineStepResult result = {img, "Label"};
     r.push_back(result);
     return r;

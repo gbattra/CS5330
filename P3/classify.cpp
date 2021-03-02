@@ -122,7 +122,7 @@ float pl::Classify::computeDistance(pl::FeatureSet one, pl::FeatureSet two)
  * 
  * @return the string label of the target features
  */
-pl::FeatureDistance pl::Classify::rankAndLabel(
+std::string pl::Classify::rankAndLabel(
     pl::FeatureSet feature_set,
     std::vector<pl::FeatureLabel> feature_labels)
 {
@@ -137,7 +137,7 @@ pl::FeatureDistance pl::Classify::rankAndLabel(
 
     std::sort(distances.begin(), distances.end(), sort_distances);
 
-    return distances[0];
+    return distances[0].label;
 }
 
 /**
@@ -151,7 +151,7 @@ bool pl::Classify::execute()
     {
         if (!labels_loaded) loadFeatureLabels();
 
-        predicted_labels = std::vector<pl::FeatureDistance>(0);
+        predicted_labels = std::vector<std::string>(0);
         for (ftrs::RegionFeatures region_feature : feature->region_features)
         {
             pl::FeatureSet feature_set = {
@@ -195,11 +195,11 @@ std::vector<pl::PipelineStepResult> pl::Classify::results(std::vector<pl::Pipeli
     for (int i = 0; i < feature->region_features.size(); i++)
     {
         ftrs::RegionFeatures rf = feature->region_features[i];
-        pl::FeatureDistance fd = predicted_labels[i];
+        std::string label = predicted_labels[i];
         rf.draw(&img);
         cv::putText(
             img,
-            "Predicted Label: " + fd.label,
+            "Predicted Label: " + label,
             cv::Point(rf.bounding_box.top_left.x, rf.bounding_box.top_left.y - 10),
             cv::FONT_HERSHEY_DUPLEX,
             0.5,

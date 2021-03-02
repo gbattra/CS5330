@@ -34,9 +34,9 @@ namespace pl
         
         public:
             /**
-             * Track the labels and distance for each region in this object.
+             * Track the labels for each region in this object.
              */
-            std::vector<FeatureDistance> predicted_labels;
+            std::vector<std::string> predicted_labels;
 
             /**
              * Primary constructor for the Classify step.
@@ -103,9 +103,9 @@ namespace pl
              * @param feature_set the target features
              * @param feature_labels the labeled features from the db
              * 
-             * @return the label and distance from db features for that label
+             * @return the label for the region
              */
-            pl::FeatureDistance rankAndLabel(
+            std::string rankAndLabel(
                 FeatureSet feature_set,
                 std::vector<FeatureLabel> feature_labels);
 
@@ -125,6 +125,60 @@ namespace pl
              * @return true if load successful
              */
             bool loadFeatureLabels();
+    };
+
+    /**
+     * Object for tracking frequency of neighbor in KNN algo.
+     */
+    struct NeighborCount
+    {
+        // the label of the neighbor
+        std::string label;
+
+        // the freq of that label
+        int count = 0;
+    };
+
+    /**
+     * Alternate classifier which uses K-nearest neighbors to find the closest match to a feature
+     * set.
+     */
+    class KNNClassify: public Classify
+    {
+        private:
+            // the number of neighbors to use for the algo
+            int K;
+
+        public:
+            /**
+             * Primary constructor for KNNClassify.
+             * 
+             * @param f the feature step preceding this step
+             * @param k the number of neighbors for the algo
+             */
+            KNNClassify(Feature *f, int k): Classify(f), K(k) {}
+
+            /**
+             * Secondary constructor for KNNClassify.
+             * 
+             * @param f the feature step preceding this step
+             * @param fl the preloaded feature labels
+             * @param k the number of neighbors for the algo
+             */
+            KNNClassify(Feature *f, std::vector<FeatureLabel> fl, int k): Classify(f, fl), K(k) {}
+            
+            /**
+             * Classifies an object by ranking its feature set distance against a list of labeled
+             * feature sets.
+             * 
+             * @param feature_set the target features
+             * @param feature_labels the labeled features from the db
+             * 
+             * @return the label for the region
+             */
+            std::string rankAndLabel(
+                FeatureSet feature_set,
+                std::vector<FeatureLabel> feature_labels);
     };
 }
 

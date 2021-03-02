@@ -29,8 +29,7 @@ namespace pl
         private:
             Feature *feature;
             std::string label;
-            FeatureLabel feature_label;
-            bool label_done;
+            bool label_done = false;
 
         public:
             /**
@@ -48,7 +47,7 @@ namespace pl
              * @param l the label of the object
              * @param b bool indicating if the label has already executed
              */
-            Label(Feature *f, std::string l, bool lb): feature(f), label(l) {}
+            Label(Feature *f, std::string l, bool ld): feature(f), label(l), label_done(ld) {}
             ~Label() { delete feature; }
 
             /**

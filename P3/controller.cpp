@@ -156,7 +156,9 @@ bool ctrl::Controller::run_pipeline(cv::Mat *frame)
     }
 
     save_img = false;
-    delete p;
+    
+    delete pipeline;
+    pipeline = p;
 
     return true;
 }
