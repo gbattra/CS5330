@@ -16,6 +16,12 @@
 namespace pl
 {
     /**
+     * Specifies the minimum number of pixels that a region must contain
+     * to be considered an object for detection.
+     */
+    #define MIN_REGION_PIXELS 2000
+
+    /**
      * Pipeline step for computing features for a segmented image.
      */
     class Feature : public Pipeline

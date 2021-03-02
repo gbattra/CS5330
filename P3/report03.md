@@ -10,6 +10,8 @@ The OR2D program is a real-time 2D object recognition program which uses thresho
 ## Threshold
 This is the first step in the object recognition pipeline. With the program running, press `t` to threshold the image. The user will be prompted enter the intensity value with which to threshold the image. The result will be a binary image with the background in black and the object in white.
 
+As a final step, the system will perform morphological operations to clean up the threshold image. Specifically, it will `dialate` and then `erode` the threshold image. This means it is best to select a threshold value on the lower side so as to minimize the chance of island regions. Dialation will fill most gaps in regions that represent the same object which may result from the lower threshold value.
+
 **Examples:**
 <br>
 <img width=150px src="images/examples/threshold/glove_threshold.png">
@@ -18,7 +20,7 @@ This is the first step in the object recognition pipeline. With the program runn
 <img width=150px src="images/examples/threshold/multi_threshold.png">
 
 ## Segment
-This step succeeds the threshold step and labels each region with an id, coloring the regions as well. To segment an image, press `s`. The user will be prompted to enter the max number of regions to segment.
+This step succeeds the threshold step and labels each region with an id, coloring the regions as well. To segment an image, press `s`. The user will be prompted to enter the max number of regions to segment. While this step does not discard regions that are considered too small to constitute an object for recognition (`< MAX_REGION_PIXELS`), the `Feature` step will ignore small regions when computing features and so they will not be labeled or classified by the system.
 
 **Examples:**
 <br>
