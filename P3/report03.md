@@ -37,7 +37,7 @@ This step takes the features computed a region and labels them, storing these fe
 **Note**: this step assumes that only one object is present in the image. If there are multiple objects, whichever object is labeled as region 1 will be labeled.
 
 ## Classify
-This step classifies an image by computing its features and finding the closest matching feature set from the datafiles in the `labels/` directory. Press `c` to classify objects. It uses the following equation to compute the distances:
+This step classifies an image by computing its features and finding the closest matching feature set from the datafiles in the `labels/` directory. Press `c` to classify objects. It uses the following equation to compute the distances (where `Feature_A` is a feature from the image to classify and `Feature_B` is that same feature from a labeled sample in the database):
 ```
 float distance = 1 - (min(feature_A, feature_B) / max(feature_A, feature_B))
 ```
