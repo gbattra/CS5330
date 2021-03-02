@@ -196,13 +196,14 @@ std::vector<pl::PipelineStepResult> pl::Classify::results(std::vector<pl::Pipeli
     {
         ftrs::RegionFeatures rf = feature->region_features[i];
         std::string label = predicted_labels[i];
-        rf.draw(&img);
+        rf.bounding_box.draw(&img);
+        rf.oriented_bounding_box.draw(&img);
         cv::putText(
             img,
             "Predicted Label: " + label,
             cv::Point(rf.bounding_box.top_left.x, rf.bounding_box.top_left.y - 10),
             cv::FONT_HERSHEY_DUPLEX,
-            0.5,
+            .65,
             CV_RGB(0, 0, 0),
             1);
     }
