@@ -34,34 +34,38 @@ pl::Label* pl::Label::build(cv::Mat *img)
  */
 bool pl::Label::execute()
 {
-    if (feature->execute() && !label_done)
+    if (feature->execute())
     {
+
+        std::cout << "checking" << std::endl;
+        if (label_done) return true;
+
         std::cout << "inner" << std::endl;
         ftrs::RegionFeatures region_features = feature->region_features[0];
 
         int size = datasetSize(label);
-        // pl::FeatureSet db_features[size + 1]; //extra space for new features
-        // if (size > 0 && !readDatasetFeatures(db_features, label))
-        // {
-        //     printf("Could not read existing dataset file\n");
-        //     return false;
-        // }
+        std::cout << size << std::endl;
+        pl::FeatureSet db_features[size + 1]; //extra space for new features
+        if (size > 0 && !readDatasetFeatures(db_features, label))
+        {
+            printf("Could not read existing dataset file\n");
+            return false;
+        }
 
-        // pl::FeatureSet fs = {
-        //     region_features.oriented_bounding_box.height,
-        //     region_features.oriented_bounding_box.width,
-        //     region_features.oriented_bounding_box.pct_filled,
-        //     region_features.central_moments.mu_20_alpha
-        // };
-        // db_features[size * sizeof(pl::FeatureSet)] = fs;
+        pl::FeatureSet fs = {
+            region_features.oriented_bounding_box.height,
+            region_features.oriented_bounding_box.width,
+            region_features.oriented_bounding_box.pct_filled,
+            region_features.central_moments.mu_20_alpha
+        };
+        db_features[size * sizeof(pl::FeatureSet)] = fs;
 
-        // size += 1;
-        // bool written = writeDatasetFeatures(db_features, size, label);
+        size += 1;
+        bool written = writeDatasetFeatures(db_features, size, label);
 
-        label_done = true;
+        label_done = written;
     }
 
-    label_done = true;
     step_complete = label_done;
 
     return step_complete;

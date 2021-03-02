@@ -136,8 +136,8 @@ bool ctrl::Controller::processKeystroke(int key)
 bool ctrl::Controller::run_pipeline(cv::Mat *frame)
 {
     pl::Pipeline *p = pipeline->build(frame);
-    p->execute();
-    if (!p)
+    bool executed = p->execute();
+    if (!executed)
     {
         return false;
     }
@@ -156,7 +156,7 @@ bool ctrl::Controller::run_pipeline(cv::Mat *frame)
     }
 
     save_img = false;
-    
+
     delete pipeline;
     pipeline = p;
 
