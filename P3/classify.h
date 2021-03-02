@@ -128,15 +128,18 @@ namespace pl
     };
 
     /**
-     * Object for tracking frequency of neighbor in KNN algo.
+     * Object for tracking sum of neighbors in KNN algo.
      */
-    struct NeighborCount
+    struct NeighborDistance
     {
         // the label of the neighbor
         std::string label;
 
         // the freq of that label
         int count = 0;
+
+        // the distance for that label
+        float distance = 0;
     };
 
     /**

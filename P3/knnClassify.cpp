@@ -45,11 +45,11 @@ bool sort_distances_knn(pl::FeatureDistance first, pl::FeatureDistance second)
  * @param first the first neighbor
  * @param second the second neighbor
  * 
- * @return true if first > second
+ * @return true if first < second
  */
-bool sort_neighbors(pl::NeighborCount first, pl::NeighborCount second)
+bool sort_neighbors(pl::NeighborDistance first, pl::NeighborDistance second)
 {
-    return first.count > second.count;
+    return first.distance < second.distance;
 }
 
 /**
@@ -79,27 +79,30 @@ std::string pl::KNNClassify::rankAndLabel(
 
     std::sort(distances.begin(), distances.end(), sort_distances_knn);
 
-    std::vector<pl::NeighborCount> neighbors(0);
-    for (int k = 0; k < K; k++)
+    std::vector<pl::NeighborDistance> neighbors(0);
+    for (int d = 0; d < distances.size(); d++)
     {
         bool neighbor_found = false;
         for (int n = 0; n < neighbors.size(); n++)
         {
-            if (neighbors[n].label == distances[k].label)
+            if (neighbors[n].label == distances[d].label)
             {
                 neighbor_found = true;
-                neighbors[n].count += 1;
+                if (neighbors[n].count < K)
+                {
+                    neighbors[n].count += 1;
+                    neighbors[n].distance += distances[d].distance;
+                }
+                break;
             }
         }
         if (!neighbor_found)
         {
-            neighbors.push_back({distances[k].label, 1});
+            neighbors.push_back({distances[d].label, 1, distances[d].distance});
         }
     }
 
     std::sort(neighbors.begin(), neighbors.end(), sort_neighbors);
 
-    pl::NeighborCount nearest = neighbors[0];
-
-    return nearest.count > 1 ? nearest.label : distances[0].label;
+    return neighbors[0].label;
 }
