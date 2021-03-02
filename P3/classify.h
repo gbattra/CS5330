@@ -27,7 +27,7 @@ namespace pl
      */
     class Classify: public Pipeline
     {
-        private:
+        protected:
             Feature *feature;
             std::vector<pl::FeatureLabel> feature_labels;
             bool labels_loaded;
@@ -105,7 +105,7 @@ namespace pl
              * 
              * @return the label for the region
              */
-            std::string rankAndLabel(
+            virtual std::string rankAndLabel(
                 FeatureSet feature_set,
                 std::vector<FeatureLabel> feature_labels);
 
@@ -168,6 +168,15 @@ namespace pl
             KNNClassify(Feature *f, std::vector<FeatureLabel> fl, int k): Classify(f, fl), K(k) {}
             
             /**
+             * Instantiates a new pipeline with a fresh state.
+             * 
+             * @param img pointer to the image that the pipeline will process
+             * 
+             * @return a pointer to the new pipeline
+             */
+            KNNClassify* build(cv::Mat *img) override;
+
+            /**
              * Classifies an object by ranking its feature set distance against a list of labeled
              * feature sets.
              * 
@@ -178,7 +187,7 @@ namespace pl
              */
             std::string rankAndLabel(
                 FeatureSet feature_set,
-                std::vector<FeatureLabel> feature_labels);
+                std::vector<FeatureLabel> feature_labels) override;
     };
 }
 

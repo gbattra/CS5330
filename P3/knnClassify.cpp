@@ -10,6 +10,23 @@
 #include <opencv2/opencv.hpp>
 
 /**
+ * Instantiates a new pipeline with a fresh state.
+ * 
+ * @param img pointer to the image that the pipeline will process
+ * 
+ * @return a pointer to the new pipeline
+ */
+pl::KNNClassify* pl::KNNClassify::build(cv::Mat *img)
+{
+    if (labels_loaded)
+    {
+        return new KNNClassify(feature->build(img), feature_labels, K);
+    } else {
+        return new KNNClassify(feature->build(img), K);
+    }
+}
+
+/**
  * A function for sorting two ImgMetric objects.
  * 
  * @param first the first distance value
@@ -17,7 +34,7 @@
  * 
  * @return true if first value is less then the second value
  */
-bool sort_distances(pl::FeatureDistance first, pl::FeatureDistance second)
+bool sort_distances_knn(pl::FeatureDistance first, pl::FeatureDistance second)
 {
     return first.distance < second.distance;
 }
@@ -60,7 +77,7 @@ std::string pl::KNNClassify::rankAndLabel(
         }
     }
 
-    std::sort(distances.begin(), distances.end(), sort_distances);
+    std::sort(distances.begin(), distances.end(), sort_distances_knn);
 
     std::vector<pl::NeighborCount> neighbors(0);
     for (int k = 0; k < K; k++)
@@ -70,7 +87,6 @@ std::string pl::KNNClassify::rankAndLabel(
         {
             if (neighbors[n].label == distances[k].label)
             {
-                std::cout << "sup" << std::endl;
                 neighbor_found = true;
                 neighbors[n].count += 1;
             }

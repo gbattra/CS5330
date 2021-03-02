@@ -122,6 +122,19 @@ bool ctrl::Controller::processKeystroke(int key)
                     max_regions)));
         return true;
     }
+    if (key == 'k')
+    {
+        int k = getInput<int>("K value (int): ");
+        pipeline = new pl::KNNClassify(
+            new pl::Feature(
+                new pl::Segment(
+                    new pl::Threshold(
+                        new pl::Init(),
+                        threshold),
+                    max_regions)),
+            k);
+        return true;
+    }
 
     return false;
 }
