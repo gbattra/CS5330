@@ -116,6 +116,32 @@ namespace pl
              */
             virtual int segmentThresholdImg(cv::Mat *threshold_img, cv::Mat lbl_img);
     };
+
+    /**
+     * Alternative class for segmenting an image. Implements the 2-pass segmentation
+     * algorithm.
+     */
+    class TwoPassSegment: public Segment
+    {
+        public:
+            /**
+             * Primary constructor for the TwoPassSegment step.
+             * 
+             * @param t the threshold pipeline step which runs first
+             * @param n the max number of regions to segment
+             */
+            TwoPassSegment(Threshold *t, int n): Segment(t, n) {}
+
+            /**
+             * Segments the threshold image.
+             * 
+             * @param threshold_img the threshold image to segment
+             * @param lbl_img the label image to write region ids to
+             * 
+             * @return the number of regions in the image
+             */
+            int segmentThresholdImg(cv::Mat *threshold_img, cv::Mat lbl_img) override;
+    };
 }
 
 #endif
