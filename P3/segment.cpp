@@ -41,6 +41,19 @@ bool trimLabelImg(cv::Mat label_img, int max_regions)
 }
 
 /**
+ * Segments the threshold image.
+ * 
+ * @param threshold_img the threshold image to segment
+ * @param lbl_img the label image to write region ids to
+ * 
+ * @return the number of regions in the image
+ */
+int pl::Segment::segmentThresholdImg(cv::Mat *threshold_img, cv::Mat lbl_img)
+{
+    return cv::connectedComponents(*threshold_img, lbl_img, 8) - 1;
+}
+
+/**
  * Executes the pipeline to process the image. Segment takes a threshold image and
  * labels the regions of the image.
  * 
@@ -52,7 +65,7 @@ bool pl::Segment::execute()
     {
         cv::Mat *timg = threshold->getThresholdImg();
         label_img = cv::Mat(timg->size(), CV_32S);
-        n_regions = cv::connectedComponents(*timg, label_img, 8) - 1;
+        n_regions = segmentThresholdImg(timg, label_img);
         if (n_regions > max_regions)
         {
             trimLabelImg(label_img, max_regions);

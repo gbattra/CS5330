@@ -93,11 +93,21 @@ namespace pl
             cv::Mat* initialImg() override;
     };
 
+    /**
+     * Struct for holding features of a region.
+     */
     struct FeatureSet
     {
+        // height of oriented bounding box
         double height;
+
+        // width of oriented bounding box
         double width;
+
+        // % filled of oriented bounding box
         double pct_filled;
+
+        // moment along the central axis
         int mu_20_alpha;
     };
 }

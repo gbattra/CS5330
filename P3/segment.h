@@ -105,6 +105,16 @@ namespace pl
              * @return the start image for the pipeline
              */
             cv::Mat* initialImg() override;
+
+            /**
+             * Segments the threshold image.
+             * 
+             * @param threshold_img the threshold image to segment
+             * @param lbl_img the label image to write region ids to
+             * 
+             * @return the number of regions in the image
+             */
+            virtual int segmentThresholdImg(cv::Mat *threshold_img, cv::Mat lbl_img);
     };
 }
 
