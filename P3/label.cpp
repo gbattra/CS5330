@@ -21,7 +21,6 @@
  */
 pl::Label* pl::Label::build(cv::Mat *img)
 {
-    std::cout << (label_done ? "done" : "not done") << std::endl;
     return new Label(feature->build(img), label, label_done);
 }
 
@@ -36,15 +35,11 @@ bool pl::Label::execute()
 {
     if (feature->execute())
     {
-
-        std::cout << "checking" << std::endl;
         if (label_done) return true;
 
-        std::cout << "inner" << std::endl;
         ftrs::RegionFeatures region_features = feature->region_features[0];
 
         int size = datasetSize(label);
-        std::cout << size << std::endl;
         pl::FeatureSet db_features[size + 1]; //extra space for new features
         if (size > 0 && !readDatasetFeatures(db_features, label))
         {
@@ -92,6 +87,8 @@ std::vector<pl::PipelineStepResult> pl::Label::results()
 std::vector<pl::PipelineStepResult> pl::Label::results(std::vector<pl::PipelineStepResult> r)
 {
     r = feature->results(r);
+    if (!feature->region_features.size() > 0) return r;
+
     cv::Mat img = initialImg()->clone();
     ftrs::RegionFeatures rf = feature->region_features[0];
     rf.draw(&img);
