@@ -97,6 +97,14 @@ bool pl::Segment::execute()
 }
 
 /**
+ * Getter for the step name.
+ */
+std::string pl::Segment::stepName()
+{
+    return "Segment";
+}
+
+/**
  * Returns a vector of image results from this step in the pipeline.
  * 
  * @return a vector of PipelineStepResult structs which have an image and label

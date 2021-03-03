@@ -37,6 +37,12 @@ namespace pl
              */
             cv::Mat feature_img;
 
+        protected:
+            /**
+             * Getter for the step name.
+             */
+            std::string stepName() override;
+
         public:
             /**
              * Vector of features computed for each region.

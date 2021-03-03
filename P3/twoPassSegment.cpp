@@ -132,6 +132,14 @@ pl::TwoPassSegment* pl::TwoPassSegment::build(cv::Mat *img)
 };
 
 /**
+ * Getter for the step name.
+ */
+std::string pl::TwoPassSegment::stepName()
+{
+    return "2-Pass Segment";
+}
+
+/**
  * Segments the threshold image.
  * 
  * @param threshold_img the threshold image to segment

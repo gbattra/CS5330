@@ -47,3 +47,4 @@ Video mode: `$ ./OR2D -v`
 
 **Extensions**
 - `k` - Classify regions using the K-nearest neighbor algorithm. Will prompt user for the `K` value to use (the number of neighbors).
+- `u` - Segment an image with a 2-pass algorithm. Will prompt user for the max number of regions.

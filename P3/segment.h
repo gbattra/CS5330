@@ -42,6 +42,11 @@ namespace pl
              */
             cv::Mat label_img;
 
+            /**
+             * Getter for the step name.
+             */
+            std::string stepName() override;
+
         public:
             /**
              * The number of regions segmented in the image
@@ -123,6 +128,12 @@ namespace pl
      */
     class TwoPassSegment: public Segment
     {
+        protected:
+            /**
+             * Getter for the step name.
+             */
+            std::string stepName() override;
+
         public:
             /**
              * Primary constructor for the TwoPassSegment step.

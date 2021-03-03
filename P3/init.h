@@ -19,6 +19,12 @@ namespace pl
         private:
             // The raw target image to process.
             cv::Mat img;
+
+        protected:
+            /**
+             * Getter for the step name.
+             */
+            std::string stepName() override;
             
         public:
             /**

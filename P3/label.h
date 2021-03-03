@@ -27,9 +27,26 @@ namespace pl
     class Label: public Pipeline
     {
         private:
+            /**
+             * The feature step preceding this one.
+             */
             Feature *feature;
+
+            /**
+             * The label of the object being labeled.
+             */
             std::string label;
+
+            /**
+             * True if label ran for the image. Prevents duplicate labeling for the same image.
+             */
             bool label_done = false;
+
+        protected:
+            /**
+             * Getter for the step name.
+             */
+            std::string stepName() override;
 
         public:
             /**

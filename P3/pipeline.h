@@ -38,7 +38,13 @@ namespace pl
     class Pipeline
     {
         protected:
+            // is the step complete
             bool step_complete = false;
+
+            /**
+             * Getter for the step name.
+             */
+            virtual std::string stepName() { throw; }
 
         public:
             /**

@@ -170,6 +170,14 @@ bool pl::Classify::execute()
 }
 
 /**
+ * Getter for the step name.
+ */
+std::string pl::Classify::stepName()
+{
+    return "Classification";
+}
+
+/**
  * Returns a vector of image results from this step in the pipeline.
  * 
  * @return a vector of PipelineStepResult structs which have an image and label

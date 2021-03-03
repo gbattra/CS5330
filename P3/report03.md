@@ -283,6 +283,12 @@ Here is a demo of the system in action: https://youtu.be/iPKZYy79JhM
 
 ## Extensions
 
+**2-Pass Segmentation**
+
+A user can choose to segment the image using the 2-pass segmentation algorithm instead of OpenCV's
+built in `connectedComponents()` function. Press `u` to segment an image using this algorithm. To
+see the code implementation, see `twoPassSegment.cpp`.
+
 **Multi-object Recognition**
 
 As the video shows, the system can classify up to N objects simultaneously, where N is the number of regions specified by the user. To provide this value, press `d` and a prompt will request the max number of regions to segment.

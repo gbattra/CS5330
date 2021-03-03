@@ -51,6 +51,14 @@ bool pl::Feature::execute()
 }
 
 /**
+ * Getter for the step name.
+ */
+std::string pl::Feature::stepName()
+{
+    return "Features";
+}
+
+/**
  * Returns a vector of image results from this step in the pipeline.
  * 
  * @return a vector of PipelineStepResult structs which have an image and label

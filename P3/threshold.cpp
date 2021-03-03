@@ -91,6 +91,14 @@ bool pl::Threshold::execute()
 }
 
 /**
+ * Getter for the step name.
+ */
+std::string pl::Threshold::stepName()
+{
+    return "Threshold";
+}
+
+/**
  * Returns a vector of image results from this step in the pipeline.
  * 
  * @return a vector of PipelineStepResult structs which have an image and label
@@ -114,7 +122,7 @@ std::vector<pl::PipelineStepResult> pl::Threshold::results(std::vector<pl::Pipel
 
     if (step_complete && &threshold_img != NULL)
     {
-        struct pl::PipelineStepResult result = {threshold_img, "Threshold Image"};
+        struct pl::PipelineStepResult result = {threshold_img, stepName()};
         r.push_back(result);
     }
 

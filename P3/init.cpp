@@ -34,6 +34,14 @@ bool pl::Init::execute()
 }
 
 /**
+ * Getter for the step name.
+ */
+std::string pl::Init::stepName()
+{
+    return "Initial Image";
+}
+
+/**
  * Returns a vector of image results from this step in the pipeline.
  * 
  * @return a vector of PipelineStepResult structs which have an image and label

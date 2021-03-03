@@ -28,8 +28,28 @@ namespace pl
             cv::Mat threshold_img;
 
         protected:
+            /**
+             * Computes the threshold image.
+             * 
+             * @param src the source image
+             * 
+             * @return the threshold image
+             */
             cv::Mat computeThresholdImg(cv::Mat *src);
+
+            /**
+             * Cleans up the threshold image.
+             * 
+             * @param timg the threshold img
+             *
+             * @return the cleaned up image
+             */
             cv::Mat cleanThresholdImg(cv::Mat *timg);
+
+            /**
+             * Getter for the step name.
+             */
+            std::string stepName() override;
 
         public:
             /**

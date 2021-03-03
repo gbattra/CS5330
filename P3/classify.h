@@ -28,9 +28,26 @@ namespace pl
     class Classify: public Pipeline
     {
         protected:
+            /**
+             * The feature step preceding this step.
+             */
             Feature *feature;
+
+            /**
+             * The loaded feature labels from the data files.
+             */
             std::vector<pl::FeatureLabel> feature_labels;
+
+            /**
+             * True if feature labels already loaded from data files. Prevents excessive reads
+             * from files.
+             */
             bool labels_loaded;
+
+            /**
+             * Getter for the step name.
+             */
+            std::string stepName() override;
         
         public:
             /**
@@ -151,6 +168,12 @@ namespace pl
         private:
             // the number of neighbors to use for the algo
             int K;
+
+        protected:
+            /**
+             * Getter for the step name.
+             */
+            std::string stepName() override;
 
         public:
             /**
