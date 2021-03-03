@@ -24,25 +24,21 @@
  */
 std::vector<pl::FeatureSet> db::readDatasetFeatures(std::string label)
 {
-    int size;
     std::ifstream ifile("labels/" + label + ".lbl", std::ios::binary);
     if (!ifile)
     {
         return std::vector<pl::FeatureSet>(0);
     }
-    ifile >> size;
 
+    ifile.seekg(0, ifile.end);
+    int size = ifile.tellg() / sizeof(pl::FeatureSet);
     std::vector<pl::FeatureSet> dbfeatures(size);
-    double height;
-    double width;
-    double pct_filled;
-    int mu_20_alpa;
 
-    int counter = 0;
-    while (ifile >> height >> width >> pct_filled >> mu_20_alpa)
-    {
-        dbfeatures[counter] = { height, width, pct_filled, mu_20_alpa };
-    }
+    ifile.seekg(0, ifile.beg);
+    char* pointer = reinterpret_cast<char*>(&dbfeatures[0]);
+    ifile.read(pointer, ifile.tellg());
+
+    std::cout << dbfeatures.size() << std::endl;
 
     ifile.close();
 
@@ -66,10 +62,8 @@ bool db::writeDatasetFeatures(std::vector<pl::FeatureSet> dbfeatures, std::strin
         return false;
     }
 
-    for (int f = 0; f < dbfeatures.size(); f++)
-    {
-        ofile.write((char *) &dbfeatures[f], sizeof(pl::FeatureSet));
-    }
+    const char* pointer = reinterpret_cast<const char*>(&dbfeatures[0]);
+    ofile.write(pointer, dbfeatures.size() * sizeof(pl::FeatureSet));
     ofile.close();
 
     return ofile.good();

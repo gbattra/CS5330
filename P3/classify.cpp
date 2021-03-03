@@ -46,13 +46,7 @@ pl::FeatureLabel loadFeatureLabel(std::string filename)
     fl.label = temp_name.substr(0, temp_name.find("."));
     
     std::vector<pl::FeatureSet> dbfeatures = db::readDatasetFeatures(fl.label);
-
-    std::vector<pl::FeatureSet> feature_sets(0);
-    for (int f = 0; f < dbfeatures.size(); f++)
-    {
-        feature_sets.push_back(dbfeatures[f]);
-    }
-    fl.feature_sets = feature_sets;
+    fl.feature_sets = dbfeatures;
 
     return fl;
 }
