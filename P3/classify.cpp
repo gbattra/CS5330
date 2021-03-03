@@ -44,18 +44,13 @@ pl::FeatureLabel loadFeatureLabel(std::string filename)
     pl::FeatureLabel fl;
     std::string temp_name = filename.substr(filename.find("/") + 1, filename.size());
     fl.label = temp_name.substr(0, temp_name.find("."));
-    int size = datasetSize(fl.label);
-    pl::FeatureSet db_features[size + 1]; //extra space for new features
-    if (size > 0 && !readDatasetFeatures(db_features, fl.label))
-    {
-        printf("Could not read existing dataset file\n");
-        return fl;
-    }
+    
+    std::vector<pl::FeatureSet> dbfeatures = db::readDatasetFeatures(fl.label);
 
     std::vector<pl::FeatureSet> feature_sets(0);
-    for (int f = 0; f < size; f++)
+    for (int f = 0; f < dbfeatures.size(); f++)
     {
-        feature_sets.push_back(db_features[f * sizeof(pl::FeatureSet)]);
+        feature_sets.push_back(dbfeatures[f]);
     }
     fl.feature_sets = feature_sets;
 
@@ -70,7 +65,7 @@ pl::FeatureLabel loadFeatureLabel(std::string filename)
 bool pl::Classify::loadFeatureLabels()
 {
     feature_labels = std::vector<pl::FeatureLabel>(0);
-    std::vector<std::string> label_filenames = loadLabelFilenames();
+    std::vector<std::string> label_filenames = db::loadLabelFilenames();
 
     for (std::string filename : label_filenames)
     {

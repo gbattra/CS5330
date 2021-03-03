@@ -16,64 +16,48 @@
 #include <iostream>
 
 /**
- * Get the number of samples for a given label.
- * 
- * @param label the file to read from
- *
- * @return the number of samples in the file
- */
-int datasetSize(std::string label)
-{
-    int size = 0;
-    std::ifstream ifile("labels/" + label + ".lbl", std::ios::binary);
-    if (!ifile)
-    {
-        return size;
-    }
-
-    ifile.read((char *) &size, sizeof(int));
-    ifile.close();
-
-    return size;
-}
-
-/**
  * Read samples from the database file.
  * 
- * @param db_features pointer to the object to read into
  * @param label object to load features for
  * 
- * @return true if load successful
+ * @return list of feature sets
  */
-bool readDatasetFeatures(pl::FeatureSet *db_features, std::string label)
+std::vector<pl::FeatureSet> db::readDatasetFeatures(std::string label)
 {
-    int size = 0;
+    int size;
     std::ifstream ifile("labels/" + label + ".lbl", std::ios::binary);
     if (!ifile)
     {
-        return false;
+        return std::vector<pl::FeatureSet>(0);
+    }
+    ifile >> size;
+
+    std::vector<pl::FeatureSet> dbfeatures(size);
+    double height;
+    double width;
+    double pct_filled;
+    int mu_20_alpa;
+
+    int counter = 0;
+    while (ifile >> height >> width >> pct_filled >> mu_20_alpa)
+    {
+        dbfeatures[counter] = { height, width, pct_filled, mu_20_alpa };
     }
 
-    ifile.read((char *) &size, sizeof(int));
-    for (int f = 0; f < size; f++)
-    {
-        ifile.read((char *) &db_features[f * sizeof(pl::FeatureSet)], sizeof(pl::FeatureSet));
-    }
     ifile.close();
 
-    return ifile.good();
+    return dbfeatures;
 }
 
 /**
  * Write samples to the databse file.
  * 
  * @param db_features the features to write
- * @param size the number of features to write
  * @param label the name of the object
  * 
  * @return true if successful
  */
-bool writeDatasetFeatures(pl::FeatureSet *db_features, int size, std::string label)
+bool db::writeDatasetFeatures(std::vector<pl::FeatureSet> dbfeatures, std::string label)
 {
     std::ofstream ofile("labels/" + label + ".lbl", std::ios::binary);
     if (!ofile)
@@ -82,10 +66,9 @@ bool writeDatasetFeatures(pl::FeatureSet *db_features, int size, std::string lab
         return false;
     }
 
-    ofile.write((char *) &size, sizeof(int));
-    for (int f = 0; f < size; f++)
+    for (int f = 0; f < dbfeatures.size(); f++)
     {
-        ofile.write((char *) &db_features[f * sizeof(pl::FeatureSet)], sizeof(pl::FeatureSet));
+        ofile.write((char *) &dbfeatures[f], sizeof(pl::FeatureSet));
     }
     ofile.close();
 
@@ -97,7 +80,7 @@ bool writeDatasetFeatures(pl::FeatureSet *db_features, int size, std::string lab
  *
  * @return a list of filenames
  */
-std::vector<std::string> loadLabelFilenames()
+std::vector<std::string> db::loadLabelFilenames()
 {
     FILE *f;
     DIR *dir;
@@ -123,5 +106,6 @@ std::vector<std::string> loadLabelFilenames()
         strcat(buffer, dirent->d_name);
         filenames.push_back(std::string(buffer));
     }
+
     return filenames;
 }

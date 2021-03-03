@@ -55,7 +55,7 @@ namespace pl
              *
              * @return true if execution succeeded.
              */
-            bool execute();
+            bool execute() override;
 
             /**
              * Returns a vector of image results from this step in the pipeline.
