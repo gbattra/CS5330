@@ -88,6 +88,16 @@ bool ctrl::Controller::processKeystroke(int key)
             max_regions);
         return true;
     }
+    if (key == 'u')
+    {
+        max_regions = getInput<int>("Max number of regions (int): ");
+        pipeline = new pl::TwoPassSegment(
+            new pl::Threshold(
+                new pl::Init(),
+                threshold),
+            max_regions);
+        return true;
+    }
     if (key == 'f')
     {
         pipeline = new pl::Feature(

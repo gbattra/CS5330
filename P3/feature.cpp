@@ -37,7 +37,6 @@ bool pl::Feature::execute()
         {
             ftrs::RegionFeatures rf = ftrs::RegionFeatures(r + 1, regions[r]);
             rf.compute();
-            std::cout << rf.region_moments.m_00 << std::endl;
             if (rf.region_moments.m_00 < MIN_REGION_PIXELS)
             {
                 continue;

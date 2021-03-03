@@ -20,7 +20,7 @@ namespace pl
      */
     class Segment: public Pipeline
     {
-        private:
+        protected:
             /**
              * The parent pipeline step for this step. Segmenting requires
              * a thresholded image.
@@ -131,6 +131,15 @@ namespace pl
              * @param n the max number of regions to segment
              */
             TwoPassSegment(Threshold *t, int n): Segment(t, n) {}
+
+            /**
+             * Instantiates a new pipeline with a fresh state.
+             * 
+             * @param img pointer to the image that the pipeline will process
+             * 
+             * @return a pointer to the new pipeline
+             */
+            TwoPassSegment* build(cv::Mat *img) override;
 
             /**
              * Segments the threshold image.
