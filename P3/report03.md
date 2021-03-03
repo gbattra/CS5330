@@ -89,9 +89,19 @@ Overall the system performed well. Misclassifications only took place when the o
 
 (Actual on the top row, Prediction along the side)
 
+<style>
+    table, th, td {
+    border: 1px solid black;
+    }
+    table.center {
+    margin-left: auto;
+    margin-right: auto;
+    }
+</style>
+
 <table>
     <tr>
-        <th><strong>Predicted | Actual</strong></th>
+        <th><strong>Actual ⬇ | Predicted ➡ </strong></th>
         <th><strong>Coaster</strong></th>
         <th><strong>Controller</strong></th>
         <th><strong>Flipflop</strong></th>
@@ -118,15 +128,15 @@ Overall the system performed well. Misclassifications only took place when the o
     </tr>
     <tr>
         <th><strong>Controller</strong></td>
+        <td>0</td>
+        <td>4</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
         <td>1</td>
-        <td>3</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>1</td>
-        <td>0</td>
         <td>0</td>
     </tr>
     <tr>
