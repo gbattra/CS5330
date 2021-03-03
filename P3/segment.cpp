@@ -23,6 +23,14 @@ pl::Segment* pl::Segment::build(cv::Mat *img)
         max_regions);
 }
 
+/**
+ * Removes extra regions from the label image.
+ * 
+ * @param label_img the label image to trim
+ * @param max_regions the number of regions to trim down to
+ * 
+ * @return true if trim successful
+ */
 bool trimLabelImg(cv::Mat label_img, int max_regions)
 {
     for (int r = 0; r < label_img.rows; r++)

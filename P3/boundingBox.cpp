@@ -8,6 +8,11 @@
 #include <opencv2/opencv.hpp>
 #include "features.h"
 
+/**
+ * Compute the bounding box.
+ * 
+ * @return true if successful
+ */
 bool ftrs::BoundingBox::compute()
 {
     int min_x = pixel_locations[0][1];
@@ -30,6 +35,13 @@ bool ftrs::BoundingBox::compute()
     return true;
 }
 
+/**
+ * Draw the bounding box on the image.
+ * 
+ * @param img the image to draw on
+ * 
+ * @return true if draw successful
+ */
 bool ftrs::BoundingBox::draw(cv::Mat *img)
 {
     cv::line(*img, top_left, top_right, cv::Scalar(255, 0, 0), 1, cv::LINE_8);
@@ -40,6 +52,11 @@ bool ftrs::BoundingBox::draw(cv::Mat *img)
     return true;
 }
 
+/**
+ * Compute the oriented bounding box.
+ * 
+ * @return true if successful
+ */
 bool ftrs::OrientedBoundingBox::compute()
 {
     int min_a = central_moments.axis_locations[0][1];
@@ -54,9 +71,6 @@ bool ftrs::OrientedBoundingBox::compute()
         min_a = min_a < pixel[1] ? min_a : pixel[1];
         max_a = max_a > pixel[1] ? max_a : pixel[1];
     }
-
-    // int x_aligned = pixel[1]*cos(beta) + pixel[0]*sin(beta);
-    // int y_aligned = -pixel[1]*sin(beta) + pixel[0]*cos(beta);
 
     cv::Point2i top = cv::Point2i(
         (central_moments.mu_x + max_b * cos(central_moments.beta)),
@@ -103,6 +117,13 @@ bool ftrs::OrientedBoundingBox::compute()
     return true;
 }
 
+/**
+ * Draw the oriented bounding box on the img.
+ * 
+ * @param img the image to draw on
+ * 
+ * @return true if draw successful
+ */
 bool ftrs::OrientedBoundingBox::draw(cv::Mat *img)
 {
     cv::Point2i mu = cv::Point2i(

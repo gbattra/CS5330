@@ -33,6 +33,13 @@ bool ftrs::RegionFeatures::compute()
     return successs;
 }
 
+/**
+ * Draw the region features on the image.
+ * 
+ * @param img the image to draw on
+ * 
+ * @return true if successful
+ */
 bool ftrs::RegionFeatures::draw(cv::Mat *img)
 {
 

@@ -82,6 +82,15 @@ std::vector<int> firstPass(cv::Mat *threshold_img, cv::Mat label_img)
     return union_ds;
 }
 
+/**
+ * Second pass over the label image. Fixes regions using the union
+ * data structure.
+ * 
+ * @param label_img the label image to adjust
+ * @param union_ds the union datastructure to use
+ * 
+ * @return the final number of regions in the label image
+ */
 int secondPass(cv::Mat label_img, std::vector<int> union_ds)
 {
     std::vector<int> regions_seen(0);

@@ -66,23 +66,6 @@ std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentroidLocations()
     return c_locations;
 }
 
-std::vector<cv::Vec2i> ftrs::CentralMoments::computeCentralAxisLocations()
-{
-    alpha = 0.5 * atan2(2 * mu_11, mu_20 - mu_02);
-    beta = alpha + (M_PI / 2);
-
-    std::vector<cv::Vec2i> a_locations(centroid_locations.size());
-    for (int l = 0; l < centroid_locations.size(); l++)
-    {
-        cv::Vec2i pixel = centroid_locations[l];
-        int x_aligned = pixel[1]*cos(alpha) + pixel[0]*sin(alpha);
-        int y_aligned = -pixel[1]*sin(alpha) + pixel[0]*cos(alpha);
-        a_locations[l] = cv::Vec2i(y_aligned, x_aligned);
-    }
-
-    return a_locations;
-}
-
 /**
  * Call this to compute all moments defined by the class.
  * 
@@ -102,6 +85,14 @@ bool ftrs::CentralMoments::compute()
     return true;
 }
 
+/**
+ * Draw the moment value on the image.
+ * 
+ * @param img the image to draw on
+ * @param start_point the location to draw the value
+ * 
+ * @return true if draw successful
+ */
 bool ftrs::CentralMoments::draw(cv::Mat *img, cv::Point2i start_point)
 {
     cv::putText(*img,
