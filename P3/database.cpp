@@ -38,8 +38,6 @@ std::vector<pl::FeatureSet> db::readDatasetFeatures(std::string label)
     char* pointer = reinterpret_cast<char*>(&dbfeatures[0]);
     ifile.read(pointer, ifile.tellg());
 
-    std::cout << dbfeatures.size() << std::endl;
-
     ifile.close();
 
     return dbfeatures;
