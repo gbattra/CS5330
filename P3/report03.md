@@ -296,3 +296,25 @@ As the video shows, the system can classify up to N objects simultaneously, wher
 **Extra Feature Detection/Display**
 
 For each region, the system computes the bounding box and oriented bounding box, displaying each in the output image, along with the height and width of the oriented bounding box.
+
+## Reflection
+
+Overall, I found this project very rewarding. The program is relatively fast, in that it can process
+video feed in real-time as objects are introduced and removed. After struggling with the computation
+for the moments about the central axis and getting the right corners for the oriented bounding box,
+it was incredibly satisfactory to see it working in action. I'm also happy with my code design.
+There are always ways I could have improved, but being new to C++ at the start of this course, I
+am picking up on it relatively quickly. This project I leveraged OOP extensively to minimize code
+redundancy. Additionally, the nested nature of the pipeline objects makes it easy to create pipelines
+which terminate at various steps without needing to change the way the controller behaves.
+
+I was also surprised at how well the system was able to classify objects, especially given such
+limitted feature data (height, width, % oriented bounding box filled, and one moment about the central
+axis). Of course, this can be attributed to the fact that it was only trained on 10 objects which
+themselves were very diverse is size and shape. Plus, given the blank white backdrop created a very
+easy environment for segmentation.
+
+## Resources
+
+- OpenCV Documentation
+- TutorialsPoint
