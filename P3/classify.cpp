@@ -216,7 +216,7 @@ std::vector<pl::PipelineStepResult> pl::Classify::results(std::vector<pl::Pipeli
             1);
     }
     
-    struct pl::PipelineStepResult result = {img, "Classification"};
+    struct pl::PipelineStepResult result = {img, stepName()};
     r.push_back(result);
     return r;
 }

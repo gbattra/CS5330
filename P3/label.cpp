@@ -108,7 +108,7 @@ std::vector<pl::PipelineStepResult> pl::Label::results(std::vector<pl::PipelineS
         0.5,
         CV_RGB(0, 0, 0),
         1);
-    struct pl::PipelineStepResult result = {img, "Label"};
+    struct pl::PipelineStepResult result = {img, stepName()};
     r.push_back(result);
     return r;
 }

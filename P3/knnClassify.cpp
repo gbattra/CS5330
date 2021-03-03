@@ -27,6 +27,14 @@ pl::KNNClassify* pl::KNNClassify::build(cv::Mat *img)
 }
 
 /**
+ * Getter for the step name.
+ */
+std::string pl::KNNClassify::stepName()
+{
+    return "K-Nearest Neighbors Classification";
+}
+
+/**
  * A function for sorting two ImgMetric objects.
  * 
  * @param first the first distance value

@@ -86,7 +86,7 @@ std::vector<pl::PipelineStepResult> pl::Feature::results(std::vector<pl::Pipelin
         rf.draw(&img);
     }
 
-    struct pl::PipelineStepResult result = {img, "Features"};
+    struct pl::PipelineStepResult result = {img, stepName()};
     r.push_back(result);
     
     return r;
