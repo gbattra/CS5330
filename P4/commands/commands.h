@@ -34,7 +34,7 @@ namespace cmd
     /**
      * Command for computing and drawing corners on a target image.
      */
-    class DrawCornersCmd: public Command<mdl::Calibration>
+    class DrawCornersCmd: public Command<mdl::Calibrator>
     {
         public:
             /**
@@ -44,7 +44,7 @@ namespace cmd
              * 
              * @return true if execution was successful
              */
-            bool execute(mdl::Calibration receiver) override;
+            bool execute(mdl::Calibrator receiver) override;
     };
 }
 #endif

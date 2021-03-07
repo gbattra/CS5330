@@ -39,13 +39,13 @@ namespace ctrl
              * 
              * @param key the user-entered key
              */
-            virtual cmd::Command<T> getCommand(char key);
+            virtual cmd::Command<T> getCommand(int key);
     };
 
     /**
      * Controller for performing camera calibrations.
      */
-    class CalibrationController: public Controller<mdl::Calibration>
+    class CalibrationController: public Controller<mdl::Calibrator>
     {
         public:
             /**
@@ -53,7 +53,7 @@ namespace ctrl
              * 
              * @param m the calibration model
              */
-            CalibrationController(mdl::Calibration m) { model = m; }
+            CalibrationController(mdl::Calibrator m) { model = m; }
 
             /**
              * Runs the controller.
@@ -67,7 +67,7 @@ namespace ctrl
              * 
              * @param key the user-entered key
              */
-            cmd::Command<mdl::Calibration> getCommand(char key) override;
+            cmd::Command<mdl::Calibrator> getCommand(int key) override;
     };
 }
 

@@ -8,6 +8,8 @@
 #ifndef AR_VIEWS
 #define AR_VIEWS
 
+#include "models/models.h"
+
 namespace vw
 {
     /**
@@ -26,7 +28,23 @@ namespace vw
              *
              * @return true if render successful
              */
-            bool render(T model);
+            virtual bool render(T model) { throw; }
+    };
+
+    /**
+     * Class for drawing the corners located by the calibrator model.
+     */
+    class CornersView: public View<mdl::Calibration>
+    {
+        public:
+            /**
+             * Render the view.
+             * 
+             * @param model the model to use to populate the view
+             *
+             * @return true if render successful
+             */
+            bool render(mdl::Calibration model) override;
     };
 }
 

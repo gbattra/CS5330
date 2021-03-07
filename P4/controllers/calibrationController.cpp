@@ -14,9 +14,12 @@
  * 
  * @param key the user-entered key
  */
-cmd::Command<mdl::Calibration> ctrl::CalibrationController::getCommand(char key)
+cmd::Command<mdl::Calibrator> ctrl::CalibrationController::getCommand(int key)
 {
-    
+    if (key < 0)
+    {
+        return cmd::DrawCornersCmd();
+    }
 }
 
 /**
