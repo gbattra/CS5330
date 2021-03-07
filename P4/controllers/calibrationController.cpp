@@ -16,10 +16,7 @@
  */
 cmd::Command<mdl::Calibrator> ctrl::CalibrationController::getCommand(int key)
 {
-    if (key < 0)
-    {
-        return cmd::DrawCornersCmd();
-    }
+    return cmd::DrawCornersCmd();
 }
 
 /**

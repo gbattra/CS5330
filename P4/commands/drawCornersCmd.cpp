@@ -16,7 +16,7 @@
  * 
  * @return true if execution was successful
  */
-bool cmd::DrawCornersCmd::execute(mdl::Calibrator receiver)
+bool cmd::DrawCornersCmd::execute(mdl::Calibrator *receiver)
 {
     return true;
 }

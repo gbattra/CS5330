@@ -24,9 +24,16 @@ namespace ctrl
     {
         protected:
             // the model used by the controller
-            T model;
+            T *model;
 
         public:
+            /**
+             * Primary constructor for the Controller.
+             * 
+             * @param m the model used by the controller
+             */
+            Controller(T *m): model(m) {}
+
             /**
              * Runs the controller.
              * 
@@ -38,8 +45,10 @@ namespace ctrl
              * Gets the command to execute given the user entered key.
              * 
              * @param key the user-entered key
+             * 
+             * @return the command to execute
              */
-            virtual cmd::Command<T> getCommand(int key);
+            virtual cmd::Command<T> getCommand(int key) { throw; }
     };
 
     /**
@@ -51,9 +60,9 @@ namespace ctrl
             /**
              * Primary constructor for the Calibration Controller.
              * 
-             * @param m the calibration model
+             * @param m the calibrator model
              */
-            CalibrationController(mdl::Calibrator m) { model = m; }
+            CalibrationController(mdl::Calibrator *m): Controller(m) {}
 
             /**
              * Runs the controller.
@@ -66,6 +75,8 @@ namespace ctrl
              * Gets the command to execute given the user entered key.
              * 
              * @param key the user-entered key
+             * 
+             * @return the command to execute
              */
             cmd::Command<mdl::Calibrator> getCommand(int key) override;
     };

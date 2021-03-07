@@ -18,5 +18,5 @@
  */
 std::vector<cv::Point2f> mdl::Calibrator::locateCorners(cv::Mat *img)
 {
-
+    return std::vector<cv::Point2f>(0);
 }

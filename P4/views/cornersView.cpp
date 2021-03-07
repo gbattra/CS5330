@@ -17,5 +17,5 @@
  */
 bool vw::CornersView::render(mdl::Calibration model)
 {
-
+    return true;
 }

@@ -35,7 +35,7 @@ namespace mdl
         public:
             // the list of computed calibrations
             std::vector<mdl::Calibration> calibrations;
-
+            
             /**
              * Detects checkerboard corners and draws lines connecting them.
              * 

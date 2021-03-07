@@ -28,7 +28,7 @@ namespace cmd
              * 
              * @return true if execution was successful
              */
-            virtual bool execute(T receiver) { throw; }
+            virtual bool execute(T *receiver) { throw; }
     };
 
     /**
@@ -44,7 +44,7 @@ namespace cmd
              * 
              * @return true if execution was successful
              */
-            bool execute(mdl::Calibrator receiver) override;
+            bool execute(mdl::Calibrator *receiver) override;
     };
 }
 #endif
