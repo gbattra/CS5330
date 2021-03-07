@@ -10,7 +10,7 @@
 
 #include <opencv2/opencv.hpp>
 
-namespace cal
+namespace mdl
 {
     /**
      * Model for performing calibration operations.

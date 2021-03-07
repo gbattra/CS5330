@@ -8,8 +8,11 @@
 #ifndef AR_CONTROLLER
 #define AR_CONTROLLER
 
-#include "commands/command.h"
-#include "models/calibration.h"
+#include "commands/commands.h"
+#include "models/models.h"
+
+#define SUCCESS_CODE 0
+#define ERROR_CODE -1
 
 namespace ctrl
 {
@@ -42,7 +45,7 @@ namespace ctrl
     /**
      * Controller for performing camera calibrations.
      */
-    class CalibrationController: public Controller<cal::Calibration>
+    class CalibrationController: public Controller<mdl::Calibration>
     {
         public:
             /**
@@ -50,7 +53,7 @@ namespace ctrl
              * 
              * @param m the calibration model
              */
-            CalibrationController(cal::Calibration m) { model = m; }
+            CalibrationController(mdl::Calibration m) { model = m; }
 
             /**
              * Runs the controller.
@@ -64,7 +67,7 @@ namespace ctrl
              * 
              * @param key the user-entered key
              */
-            cmd::Command<cal::Calibration> getCommand(char key) override;
+            cmd::Command<mdl::Calibration> getCommand(char key) override;
     };
 }
 
