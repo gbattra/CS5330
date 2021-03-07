@@ -29,5 +29,36 @@ cmd::Command<mdl::Calibrator> ctrl::CalibrationController::getCommand(int key)
  */
 int ctrl::CalibrationController::spin()
 {
+    cv::VideoCapture *cam = new cv::VideoCapture(0);
+    if (!cam->isOpened())
+    {
+        printf("Failed to open camera\n");
+        return ERROR_CODE;
+    }
+
+    cv::Size bounds(
+        (int) cam->get(cv::CAP_PROP_FRAME_WIDTH),
+        (int) cam->get(cv::CAP_PROP_FRAME_HEIGHT));
+    printf("Image Size: %d %d\n", bounds.width, bounds.height);
+
+    cv::Mat frame;
+    for (;;)
+    {
+        int key = cv::waitKey(30);
+        if (key == 'q')
+        {
+            break;
+        }
+
+        cmd::Command<mdl::Calibrator> cmd = getCommand(key);
+        if (!cmd.execute(model))
+        {
+            printf("Failed to process keystroke\n");
+            return ERROR_CODE;
+        }
+    }
+
+    delete cam;
+
     return SUCCESS_CODE;
 }
