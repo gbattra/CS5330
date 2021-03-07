@@ -8,8 +8,8 @@
 #ifndef AR_CONTROLLER
 #define AR_CONTROLLER
 
-#include "command.h"
-#include "calibration.h"
+#include "commands/command.h"
+#include "models/calibration.h"
 
 namespace ctrl
 {
@@ -19,6 +19,10 @@ namespace ctrl
     template<typename T>
     class Controller
     {
+        protected:
+            // the model used by the controller
+            T model;
+
         public:
             /**
              * Runs the controller.
@@ -41,6 +45,13 @@ namespace ctrl
     class CalibrationController: public Controller<cal::Calibration>
     {
         public:
+            /**
+             * Primary constructor for the Calibration Controller.
+             * 
+             * @param m the calibration model
+             */
+            CalibrationController(cal::Calibration m) { model = m; }
+
             /**
              * Runs the controller.
              * 
