@@ -1,0 +1,60 @@
+// Greg Attra
+// 03/07/2021
+
+/**
+ * Header for defining controller methods.
+ */
+
+#ifndef AR_CONTROLLER
+#define AR_CONTROLLER
+
+#include "command.h"
+#include "calibration.h"
+
+namespace ctrl
+{
+    /**
+     * Base class for the controllers.
+     */
+    template<typename T>
+    class Controller
+    {
+        public:
+            /**
+             * Runs the controller.
+             * 
+             * @return status code 0 -> success, -1 -> error
+             */
+            virtual int spin() { throw; }
+
+            /**
+             * Gets the command to execute given the user entered key.
+             * 
+             * @param key the user-entered key
+             */
+            virtual cmd::Command<T> getCommand(char key);
+    };
+
+    /**
+     * Controller for performing camera calibrations.
+     */
+    class CalibrationController: public Controller<cal::Calibration>
+    {
+        public:
+            /**
+             * Runs the controller.
+             * 
+             * @return status code 0 -> success, -1 -> error
+             */
+            int spin() override;
+
+            /**
+             * Gets the command to execute given the user entered key.
+             * 
+             * @param key the user-entered key
+             */
+            cmd::Command<cal::Calibration> getCommand(char key) override;
+    };
+}
+
+#endif
