@@ -22,7 +22,7 @@ namespace mdl
     struct Calibration
     {
         // the image used to produce this calibration
-        cv::Mat *img;
+        cv::Mat img;
 
         // the location of the detected corners in the image
         std::vector<cv::Point2f> corners;
@@ -39,6 +39,11 @@ namespace mdl
         public:
             // the list of computed calibrations
             std::vector<mdl::Calibration> calibrations;
+
+            /**
+             * Primary constructor for the Calibrator.
+             */
+            Calibrator() { calibrations = std::vector<mdl::Calibration>(0); }
             
             /**
              * Detects checkerboard corners and draws lines connecting them.
@@ -48,6 +53,15 @@ namespace mdl
              * @return a vector of corner locations
              */
             std::vector<cv::Point2f> locateCorners(cv::Mat *img);
+
+            /**
+             * Register an image's corners and points list in the calibrations property.
+             * 
+             * @param img the image to extract corners
+             * 
+             * @return true if registration is successful
+             */
+            bool capture(cv::Mat *img);
     };
 }
 

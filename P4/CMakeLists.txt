@@ -8,7 +8,7 @@ include_directories(
 
 add_executable(
     AR ar.cpp
-    commands/commands.h commands/drawCornersCmd.cpp
+    commands/commands.h commands/drawCornersCmd.cpp commands/registerFrameCmd.cpp
     controllers/controllers.h controllers/calibrationController.cpp
     models/models.h models/calibrator.cpp
     views/views.h views/cornersView.cpp
