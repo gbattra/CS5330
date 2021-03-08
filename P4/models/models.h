@@ -12,6 +12,9 @@
 
 namespace mdl
 {
+    #define CHESSBOARD_WIDTH 9
+    #define CHESSBOARD_HEIGHT 6
+
     /**
      * Struct for holding calibrated data from an image.
      */

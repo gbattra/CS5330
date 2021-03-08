@@ -18,5 +18,10 @@
  */
 std::vector<cv::Point2f> mdl::Calibrator::locateCorners(cv::Mat *img)
 {
-    return std::vector<cv::Point2f>(0);
+    std::vector<cv::Point2f> points;
+    int flags = cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_NORMALIZE_IMAGE;
+    cv::Size size = cv::Size(CHESSBOARD_WIDTH, CHESSBOARD_HEIGHT);
+    bool found = cv::findChessboardCorners(*img, size, points, flags);
+    std::cout << (found ? "found" : "NOT found") << std::endl;
+    return points;
 }
