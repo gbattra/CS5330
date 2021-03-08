@@ -49,7 +49,7 @@ namespace ctrl
              * 
              * @return the command to execute
              */
-            virtual cmd::Command<T> getCommand(int key, cv::Mat *frame) { throw; }
+            virtual cmd::Command<T>* getCommand(int key, cv::Mat *frame) { throw; }
     };
 
     /**
@@ -80,7 +80,7 @@ namespace ctrl
              * 
              * @return the command to execute
              */
-            cmd::Command<mdl::Calibrator> getCommand(int key, cv::Mat *frame) override;
+            cmd::Command<mdl::Calibrator>* getCommand(int key, cv::Mat *frame) override;
     };
 }
 

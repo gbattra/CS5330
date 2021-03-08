@@ -11,12 +11,12 @@
 #include "models/models.h"
 
 std::string usage_string(
-    "Usage:\n"
-    "- Calibration Mode\n"
-    "./AR -c\n"
+    "USAGE\n"
+    "Calibration Mode:\n"
+    "$ ./AR -c\n"
     "\n"
-    "- Projection Mode\n"
-    "./AR -p <path-to-intrinsic-params-file>");
+    "Projection Mode:\n"
+    "$ ./AR -p <path-to-intrinsic-params-file>");
     
 int main(int argc, char** argv)
 {
@@ -31,8 +31,12 @@ int main(int argc, char** argv)
         mdl::Calibrator *model = new mdl::Calibrator();
         ctrl::CalibrationController *ctrl = new ctrl::CalibrationController(model);
         ctrl->spin();
-
-        delete ctrl;
-        delete model;
     }
+    else
+    {
+        printf("%s\n", usage_string.c_str());
+        return -1;
+    }
+
+    return 0;
 }

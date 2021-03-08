@@ -17,10 +17,10 @@
  * 
  * @return the command instance
  */
-cmd::Command<mdl::Calibrator> ctrl::CalibrationController::getCommand(
+cmd::Command<mdl::Calibrator>* ctrl::CalibrationController::getCommand(
     int key, cv::Mat *frame)
 {
-    return cmd::DrawCornersCmd(frame);
+    return new cmd::DrawCornersCmd(frame);
 }
 
 /**
@@ -53,12 +53,14 @@ int ctrl::CalibrationController::spin()
             break;
         }
 
-        cmd::Command<mdl::Calibrator> cmd = getCommand(key, &frame);
-        if (!cmd.execute(model))
+        cmd::Command<mdl::Calibrator> *cmd = getCommand(key, &frame);
+        if (!cmd->execute(model))
         {
             printf("Failed to process keystroke\n");
             return ERROR_CODE;
         }
+        
+        delete cmd;
     }
 
     delete cam;
