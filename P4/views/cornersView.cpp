@@ -17,6 +17,11 @@
  */
 bool vw::CornersView::render(mdl::Calibration model)
 {
+    cv::drawChessboardCorners(
+        *model.img,
+        cv::Size(CHESSBOARD_WIDTH, CHESSBOARD_HEIGHT),
+        cv::Mat(model.corners),
+        model.corners.size() > 0);
     cv::namedWindow("Circle Detection");
     cv::imshow("Circle Detection", *model.img);
     return true;
