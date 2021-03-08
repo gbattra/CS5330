@@ -20,7 +20,17 @@ namespace cmd
     template<typename T>
     class Command
     {
+        protected:
+            // the image to use when executing this command
+            cv::Mat *img;
         public:
+            /**
+             * Primary constructor for the command.
+             * 
+             * @param i the image to use for the command
+             */
+            Command(cv::Mat *i): img(i) {}
+        
             /**
              * Executes the command on the provided receiver.
              * 
@@ -38,6 +48,13 @@ namespace cmd
     {
         public:
             /**
+             * Primary constructor for the command.
+             * 
+             * @param i the image to use for the command
+             */
+            DrawCornersCmd(cv::Mat *i): Command(i) {}
+
+            /**
              * Executes the command on the provided receiver.
              * 
              * @param receiver the object via which to execute the command
@@ -47,4 +64,5 @@ namespace cmd
             bool execute(mdl::Calibrator *receiver) override;
     };
 }
+
 #endif

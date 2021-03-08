@@ -8,6 +8,7 @@
 
 #include "commands/commands.h"
 #include "models/models.h"
+#include "views/views.h"
 
 /**
  * Executes the command on the provided receiver.
@@ -18,5 +19,10 @@
  */
 bool cmd::DrawCornersCmd::execute(mdl::Calibrator *receiver)
 {
-    return true;
+    std::vector<cv::Point2f> corners = receiver->locateCorners(img);
+    mdl::Calibration calibration = { img, corners };
+    vw::CornersView *view = new vw::CornersView();
+    bool success = view->render(calibration);
+    if (success) cv::waitKey(0);
+    return success;
 }

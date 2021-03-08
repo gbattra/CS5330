@@ -45,10 +45,11 @@ namespace ctrl
              * Gets the command to execute given the user entered key.
              * 
              * @param key the user-entered key
+             * @param frame the frame to use when instantiating the command
              * 
              * @return the command to execute
              */
-            virtual cmd::Command<T> getCommand(int key) { throw; }
+            virtual cmd::Command<T> getCommand(int key, cv::Mat *frame) { throw; }
     };
 
     /**
@@ -75,10 +76,11 @@ namespace ctrl
              * Gets the command to execute given the user entered key.
              * 
              * @param key the user-entered key
+             * @param frame the frame to use when instantiating the command
              * 
              * @return the command to execute
              */
-            cmd::Command<mdl::Calibrator> getCommand(int key) override;
+            cmd::Command<mdl::Calibrator> getCommand(int key, cv::Mat *frame) override;
     };
 }
 

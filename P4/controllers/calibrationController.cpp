@@ -13,10 +13,14 @@
  * Gets the command to execute given the user entered key.
  * 
  * @param key the user-entered key
+ * @param frame the frame to use when instantiating the command
+ * 
+ * @return the command instance
  */
-cmd::Command<mdl::Calibrator> ctrl::CalibrationController::getCommand(int key)
+cmd::Command<mdl::Calibrator> ctrl::CalibrationController::getCommand(
+    int key, cv::Mat *frame)
 {
-    return cmd::DrawCornersCmd();
+    return cmd::DrawCornersCmd(frame);
 }
 
 /**
@@ -41,13 +45,15 @@ int ctrl::CalibrationController::spin()
     cv::Mat frame;
     for (;;)
     {
+        *cam >> frame;
+
         int key = cv::waitKey(30);
         if (key == 'q')
         {
             break;
         }
 
-        cmd::Command<mdl::Calibrator> cmd = getCommand(key);
+        cmd::Command<mdl::Calibrator> cmd = getCommand(key, &frame);
         if (!cmd.execute(model))
         {
             printf("Failed to process keystroke\n");

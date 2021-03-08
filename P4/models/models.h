@@ -18,7 +18,7 @@ namespace mdl
     struct Calibration
     {
         // the image used to produce this calibration
-        cv::Mat img;
+        cv::Mat *img;
 
         // the location of the detected corners in the image
         std::vector<cv::Point2f> corners;
