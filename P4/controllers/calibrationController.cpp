@@ -46,7 +46,6 @@ int ctrl::CalibrationController::spin()
     for (;;)
     {
         *cam >> frame;
-
         int key = cv::waitKey(30);
         if (key == 'q')
         {
@@ -59,7 +58,7 @@ int ctrl::CalibrationController::spin()
             printf("Failed to process keystroke\n");
             return ERROR_CODE;
         }
-        
+
         delete cmd;
     }
 

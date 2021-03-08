@@ -17,5 +17,7 @@
  */
 bool vw::CornersView::render(mdl::Calibration model)
 {
+    cv::namedWindow("Circle Detection");
+    cv::imshow("Circle Detection", *model.img);
     return true;
 }
