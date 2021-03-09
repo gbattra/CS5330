@@ -85,6 +85,37 @@ namespace cmd
              */
             bool execute(mdl::Calibrator *receiver) override;
     };
+
+    /**
+     * Command for calibrating a camera once at least 5 samples have been registered.
+     */
+    class Calibrate: public Command<mdl::Calibrator>
+    {
+        private:
+            // the col center pixel
+            int cx;
+
+            // the row center pixel
+            int cy;
+
+        public:
+            /**
+             * Primary constructor for the Calibrate command.
+             * 
+             * @param x the col center pixel
+             * @param y the row center pixel
+             */
+            Calibrate(int x, int y): cx(x), cy(y) {}
+            
+            /**
+             * Executes the command on the provided receiver.
+             * 
+             * @param receiver the object via which to execute the command
+             * 
+             * @return true if execution was successful
+             */
+            bool execute(mdl::Calibrator *receiver) override;
+    };
 }
 
 #endif

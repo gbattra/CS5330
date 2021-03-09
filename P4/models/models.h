@@ -37,13 +37,19 @@ namespace mdl
     class Calibrator
     {
         public:
+            // the calibrated camera matrix
+            cv::Mat camera_matrix;
+
+            // latest error to have occured
+            std::string latest_error;
+
             // the list of computed calibrations
             std::vector<mdl::Calibration> calibrations;
 
             /**
              * Primary constructor for the Calibrator.
              */
-            Calibrator() { calibrations = std::vector<mdl::Calibration>(0); }
+            Calibrator();
             
             /**
              * Detects checkerboard corners and draws lines connecting them.
@@ -62,6 +68,17 @@ namespace mdl
              * @return true if registration is successful
              */
             bool capture(cv::Mat *img);
+
+            /**
+             * Calibrate the camera given the registered samples. Requires at least
+             * 5 registered samples.
+             * 
+             * @param cx the col center pixel
+             * @param cy the row center pixel
+             * 
+             * @return true if calibration successful
+             */
+            bool calibrate(int cx, int cy);
     };
 }
 

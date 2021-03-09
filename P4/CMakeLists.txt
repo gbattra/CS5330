@@ -9,8 +9,12 @@ include_directories(
 add_executable(
     AR ar.cpp
     commands/commands.h commands/drawCornersCmd.cpp commands/registerFrameCmd.cpp
+    commands/calibrateCmd.cpp
+
     controllers/controllers.h controllers/calibrationController.cpp
+
     models/models.h models/calibrator.cpp
-    views/views.h views/cornersView.cpp
+
+    views/views.h views/cornersView.cpp views/cameraMatrixView.cpp
 )
 target_link_libraries( AR ${OpenCV_LIBS} )

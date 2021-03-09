@@ -24,7 +24,11 @@ cmd::Command<mdl::Calibrator>* ctrl::CalibrationController::getCommand(
     {
         return new cmd::RegisterFrameCmd(frame);
     }
-    
+    if (key == 'c')
+    {
+        return new cmd::Calibrate(frame->cols/2, frame->rows/2);
+    }
+
     return new cmd::DrawCornersCmd(frame);
 }
 
@@ -58,11 +62,7 @@ int ctrl::CalibrationController::spin()
         }
 
         cmd::Command<mdl::Calibrator> *cmd = getCommand(key, &frame);
-        if (!cmd->execute(model))
-        {
-            printf("Failed to process keystroke\n");
-            return ERROR_CODE;
-        }
+        if (!cmd->execute(model)) printf("Failed to process keystroke\n");
 
         delete cmd;
     }

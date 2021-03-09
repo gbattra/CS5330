@@ -46,6 +46,19 @@ namespace vw
              */
             bool render(mdl::Calibration model) override;
     };
+
+    class CameraMatrixView: public View<cv::Mat>
+    {
+        public:
+            /**
+             * Render the view.
+             * 
+             * @param model the model to use to populate the view
+             *
+             * @return true if render successful
+             */
+            bool render(cv::Mat model) override;
+    };
 }
 
 #endif

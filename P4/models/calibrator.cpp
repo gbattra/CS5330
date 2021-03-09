@@ -9,6 +9,12 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
 
+mdl::Calibrator::Calibrator()
+{
+    calibrations = std::vector<mdl::Calibration>(0);
+    camera_matrix = cv::Mat::ones(3, 3, CV_64FC1);
+}
+
 /**
  * Detects checkerboard corners and draws lines connecting them.
  * 
@@ -84,5 +90,21 @@ bool mdl::Calibrator::capture(cv::Mat *img)
     mdl::Calibration calibration = {img->clone(), corners, points};
     calibrations.push_back(calibration);
 
+    return true;
+}
+
+/**
+ * Calibrate the camera given the registered samples. Requires at least
+ * 5 registered samples.
+ * 
+ * @param cx the col center pixel
+ * @param cy the row center pixel
+ * 
+ * @return true if calibration successful
+ */
+bool mdl::Calibrator::calibrate(int cx, int cy)
+{
+    *camera_matrix.ptr<double>(0, 2) = (double) cx;
+    *camera_matrix.ptr<double>(1, 2) = (double) cy;
     return true;
 }
