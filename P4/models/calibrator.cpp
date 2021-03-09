@@ -104,6 +104,14 @@ bool mdl::Calibrator::capture(cv::Mat *img)
  */
 bool mdl::Calibrator::calibrate(int cx, int cy)
 {
+    if (calibrations.size() < MIN_CALIBRATION_SAMPLES)
+    {
+        latest_error = "Insufficient no. registered samples. Required: "
+                        + std::to_string(MIN_CALIBRATION_SAMPLES)
+                        + " | Currrent: "
+                        + std::to_string(calibrations.size()) + "\n";
+        return false;
+    }
     *camera_matrix.ptr<double>(0, 2) = (double) cx;
     *camera_matrix.ptr<double>(1, 2) = (double) cy;
     return true;
