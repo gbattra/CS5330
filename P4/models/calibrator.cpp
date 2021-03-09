@@ -12,7 +12,13 @@
 mdl::Calibrator::Calibrator()
 {
     samples = std::vector<mdl::Sample>(0);
-    calibration = { cv::Mat::ones(3, 3, CV_64FC1) };
+    calibration = {
+        cv::Mat::ones(3, 3, CV_64FC1),
+        cv::Mat::zeros(8, 1, CV_64F),
+        std::vector<cv::Mat>(0),
+        std::vector<cv::Mat>(0),
+        std::vector<float>(0)
+    };
 }
 
 /**
@@ -94,15 +100,33 @@ bool mdl::Calibrator::capture(cv::Mat *img)
 }
 
 /**
+ * Maps the corners and points vectors from each sample into a vector of vectors.
+ *
+ * @param samples the samples list
+ * @param corners_list the corners list to populate
+ * @param points_list the points list to populate
+ */
+void cornersAndPointsFromSamples(
+    std::vector<mdl::Sample> samples,
+    std::vector<std::vector<cv::Point2f>> corners_list,
+    std::vector<std::vector<cv::Vec3f>> points_list)
+{
+    for (int s = 0; s < samples.size(); s++)
+    {
+        corners_list.push_back(samples[s].corners);
+        points_list.push_back(samples[s].points);
+    }
+}
+
+/**
  * Calibrate the camera given the registered samples. Requires at least
  * 5 registered samples.
  * 
- * @param cx the col center pixel
- * @param cy the row center pixel
+ * @param size the size of the images used
  * 
  * @return true if calibration successful
  */
-bool mdl::Calibrator::calibrate(int cx, int cy)
+bool mdl::Calibrator::calibrate(cv::Size size)
 {
     if (samples.size() < MIN_CALIBRATION_SAMPLES)
     {
@@ -113,7 +137,21 @@ bool mdl::Calibrator::calibrate(int cx, int cy)
         return false;
     }
 
-    *calibration.camera_matrix.ptr<double>(0, 2) = (double) cx;
-    *calibration.camera_matrix.ptr<double>(1, 2) = (double) cy;
+    *calibration.camera_matrix.ptr<double>(0, 2) = (double) size.width / 2;
+    *calibration.camera_matrix.ptr<double>(1, 2) = (double) size.height / 2;
+
+    std::vector<std::vector<cv::Point2f>> corners_list;
+    std::vector<std::vector<cv::Vec3f>> points_list;
+    cornersAndPointsFromSamples(samples, corners_list, points_list);
+
+    calibration.final_proj_err = cv::calibrateCamera(
+        points_list,
+        corners_list,
+        size,
+        calibration.camera_matrix,
+        calibration.dist_coeffs,
+        calibration.rotations,
+        calibration.transformations);
+
     return true;
 }

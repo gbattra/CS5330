@@ -40,6 +40,20 @@ namespace mdl
         // the calibrated camera matrix
         cv::Mat camera_matrix;
 
+        // the distortion coefficients
+        cv::Mat dist_coeffs;
+
+        // rotations for calibration
+        std::vector<cv::Mat> rotations;
+
+        // transformations for calibration
+        std::vector<cv::Mat> transformations;
+
+        // the reprojection errors
+        std::vector<float> reproj_errors;
+
+        // the final reproj error
+        double final_proj_err;
     };
 
     /**
@@ -84,12 +98,11 @@ namespace mdl
              * Calibrate the camera given the registered samples. Requires at least
              * 5 registered samples.
              * 
-             * @param cx the col center pixel
-             * @param cy the row center pixel
+             * @param size the size of the images for calibration
              * 
              * @return true if calibration successful
              */
-            bool calibrate(int cx, int cy);
+            bool calibrate(cv::Size size);
     };
 }
 

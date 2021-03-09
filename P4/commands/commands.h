@@ -92,21 +92,17 @@ namespace cmd
     class Calibrate: public Command<mdl::Calibrator>
     {
         private:
-            // the col center pixel
-            int cx;
-
-            // the row center pixel
-            int cy;
+            // the size of the images used for calibration
+            cv::Size size;
 
         public:
             /**
              * Primary constructor for the Calibrate command.
              * 
-             * @param x the col center pixel
-             * @param y the row center pixel
+             * @param s the size of the images used for calibration
              */
-            Calibrate(int x, int y): cx(x), cy(y) {}
-            
+            Calibrate(cv::Size s): size(s) {}
+
             /**
              * Executes the command on the provided receiver.
              * 

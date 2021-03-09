@@ -19,7 +19,7 @@
  */
 bool cmd::Calibrate::execute(mdl::Calibrator *receiver)
 {
-    bool calibrated = receiver->calibrate(cx, cy);
+    bool calibrated = receiver->calibrate(size);
     if (!calibrated)
     {
         printf("%s", receiver->latest_error.c_str());
