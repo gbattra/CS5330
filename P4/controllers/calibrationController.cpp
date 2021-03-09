@@ -20,6 +20,11 @@
 cmd::Command<mdl::Calibrator>* ctrl::CalibrationController::getCommand(
     int key, cv::Mat *frame)
 {
+    if (key == 's')
+    {
+        return new cmd::RegisterFrameCmd(frame);
+    }
+    
     return new cmd::DrawCornersCmd(frame);
 }
 
