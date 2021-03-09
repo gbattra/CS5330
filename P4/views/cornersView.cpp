@@ -15,7 +15,7 @@
  *
  * @return true if render successful
  */
-bool vw::CornersView::render(mdl::Calibration model)
+bool vw::CornersView::render(mdl::Sample model)
 {
     cv::drawChessboardCorners(
         model.img,

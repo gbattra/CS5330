@@ -26,8 +26,8 @@ bool cmd::Calibrate::execute(mdl::Calibrator *receiver)
         return calibrated;
     }
 
-    vw::CameraMatrixView view;
-    view.render(receiver->camera_matrix);
+    vw::CalibrationView view;
+    view.render(receiver->calibration);
 
     return calibrated;
 }

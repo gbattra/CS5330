@@ -15,6 +15,6 @@ add_executable(
 
     models/models.h models/calibrator.cpp
 
-    views/views.h views/cornersView.cpp views/cameraMatrixView.cpp
+    views/views.h views/cornersView.cpp views/calibrationView.cpp
 )
 target_link_libraries( AR ${OpenCV_LIBS} )

@@ -20,8 +20,8 @@
 bool cmd::DrawCornersCmd::execute(mdl::Calibrator *receiver)
 {
     std::vector<cv::Point2f> corners = receiver->locateCorners(img);
-    mdl::Calibration calibration = { img->clone(), corners };
+    mdl::Sample sample = { img->clone(), corners };
     vw::CornersView *view = new vw::CornersView();
-    bool success = view->render(calibration);
+    bool success = view->render(sample);
     return success;
 }

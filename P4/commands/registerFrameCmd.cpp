@@ -20,6 +20,6 @@ bool cmd::RegisterFrameCmd::execute(mdl::Calibrator *receiver)
     bool registered = receiver->capture(img);
     if (!registered) printf("Failed to register image for calibration\n");
     else printf("Successfully registered image for calibration\n");
-    printf("Num Registered Samples: %ld\n", receiver->calibrations.size());
+    printf("Num Registered Samples: %ld\n", receiver->samples.size());
     return registered;
 }

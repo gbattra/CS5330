@@ -34,7 +34,20 @@ namespace vw
     /**
      * Class for drawing the corners located by the calibrator model.
      */
-    class CornersView: public View<mdl::Calibration>
+    class CornersView: public View<mdl::Sample>
+    {
+        public:
+            /**
+             * Render the view.
+             * 
+             * @param model the model to use to populate the view
+             *
+             * @return true if render successful
+             */
+            bool render(mdl::Sample model) override;
+    };
+
+    class CalibrationView: public View<mdl::Calibration>
     {
         public:
             /**
@@ -45,19 +58,6 @@ namespace vw
              * @return true if render successful
              */
             bool render(mdl::Calibration model) override;
-    };
-
-    class CameraMatrixView: public View<cv::Mat>
-    {
-        public:
-            /**
-             * Render the view.
-             * 
-             * @param model the model to use to populate the view
-             *
-             * @return true if render successful
-             */
-            bool render(cv::Mat model) override;
     };
 }
 

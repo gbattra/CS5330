@@ -11,8 +11,8 @@
 
 mdl::Calibrator::Calibrator()
 {
-    calibrations = std::vector<mdl::Calibration>(0);
-    camera_matrix = cv::Mat::ones(3, 3, CV_64FC1);
+    samples = std::vector<mdl::Sample>(0);
+    calibration = { cv::Mat::ones(3, 3, CV_64FC1) };
 }
 
 /**
@@ -87,8 +87,8 @@ bool mdl::Calibrator::capture(cv::Mat *img)
     std::vector<cv::Vec3f> points = computePoints(corners);
     if (points.empty()) return false;
 
-    mdl::Calibration calibration = {img->clone(), corners, points};
-    calibrations.push_back(calibration);
+    mdl::Sample sample = {img->clone(), corners, points};
+    samples.push_back(sample);
 
     return true;
 }
@@ -104,15 +104,16 @@ bool mdl::Calibrator::capture(cv::Mat *img)
  */
 bool mdl::Calibrator::calibrate(int cx, int cy)
 {
-    if (calibrations.size() < MIN_CALIBRATION_SAMPLES)
+    if (samples.size() < MIN_CALIBRATION_SAMPLES)
     {
         latest_error = "Insufficient no. registered samples. Required: "
                         + std::to_string(MIN_CALIBRATION_SAMPLES)
                         + " | Currrent: "
-                        + std::to_string(calibrations.size()) + "\n";
+                        + std::to_string(samples.size()) + "\n";
         return false;
     }
-    *camera_matrix.ptr<double>(0, 2) = (double) cx;
-    *camera_matrix.ptr<double>(1, 2) = (double) cy;
+
+    *calibration.camera_matrix.ptr<double>(0, 2) = (double) cx;
+    *calibration.camera_matrix.ptr<double>(1, 2) = (double) cy;
     return true;
 }

@@ -18,9 +18,9 @@ namespace mdl
     #define MIN_CALIBRATION_SAMPLES 5
 
     /**
-     * Struct for holding calibrated data from an image.
+     * Struct for holding a sample image to be used for calibartion.
      */
-    struct Calibration
+    struct Sample
     {
         // the image used to produce this calibration
         cv::Mat img;
@@ -33,19 +33,29 @@ namespace mdl
     };
 
     /**
+     * Holds the calibrated data.
+     */
+    struct Calibration
+    {
+        // the calibrated camera matrix
+        cv::Mat camera_matrix;
+
+    };
+
+    /**
      * Model for performing calibration operations.
      */
     class Calibrator
     {
         public:
-            // the calibrated camera matrix
-            cv::Mat camera_matrix;
+            // the calibrated camera data
+            mdl::Calibration calibration;
 
             // latest error to have occured
             std::string latest_error;
 
-            // the list of computed calibrations
-            std::vector<mdl::Calibration> calibrations;
+            // the list of samples for calibration
+            std::vector<mdl::Sample> samples;
 
             /**
              * Primary constructor for the Calibrator.
