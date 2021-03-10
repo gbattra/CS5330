@@ -76,7 +76,24 @@ bool utils::db::saveCalibration(std::string calibrator_name, mdl::Calibration ca
  */
 mdl::Calibration utils::db::loadCalibration(std::string calibrator_name)
 {
-    return mdl::Calibration();
+    mdl::Calibration calibration;
+    std::ifstream ifile("files/" + calibrator_name + ".calibration", std::ios::binary);
+    if (!ifile)
+    {
+        printf(
+            "Could not open file %s for reading",
+            ("files/" + calibrator_name + ".calibration").c_str());
+        return calibration;
+    }
+
+
+    char *pointer = reinterpret_cast<char*>(&calibration);
+    ifile.read(pointer, sizeof(mdl::Calibration));
+    ifile.close();
+    
+    if (ifile.good()) printf("Successfully read calibration from file\n");
+
+    return calibration;
 }
 
 /**
@@ -88,5 +105,26 @@ mdl::Calibration utils::db::loadCalibration(std::string calibrator_name)
  */
 std::vector<mdl::Sample> utils::db::loadSamples(std::string calibrator_name)
 {
-    return std::vector<mdl::Sample>(0);
+    mdl::Calibration calibration;
+    std::ifstream ifile("files/" + calibrator_name + ".samples", std::ios::binary);
+    if (!ifile)
+    {
+        printf(
+            "Could not open file %s for reading",
+            ("files/" + calibrator_name + ".samples").c_str());
+        return std::vector<mdl::Sample>(0);
+    }
+
+    ifile.seekg(0, ifile.end);
+    int size = ifile.tellg() / sizeof(mdl::Sample);
+    std::vector<mdl::Sample> samples(size);
+
+    ifile.seekg(0, ifile.beg);
+    char *pointer = reinterpret_cast<char*>(&samples[0]);
+    ifile.read(pointer, size * sizeof(mdl::Sample));
+    ifile.close();
+
+    if (ifile.good()) printf("Successfully read samples from file\n");
+
+    return samples;
 }
