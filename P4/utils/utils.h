@@ -18,7 +18,7 @@ namespace utils
          * 
          * @return true is save successful
          */
-        bool saveCalibration(mdl::Calibration calibration);
+        bool saveCalibration(mdl::Calibration *calibration);
 
         /**
          * Loads the calibration object from a specified file.
@@ -27,6 +27,6 @@ namespace utils
          * 
          * @return the loaded calibration struct
          */
-        bool loadCalibration(mdl::Calibration calibration);
+        bool loadCalibration(mdl::Calibration *calibration);
     }
 }

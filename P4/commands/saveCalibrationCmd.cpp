@@ -18,5 +18,5 @@
  */
 bool cmd::SaveCalibrationCmd::execute(mdl::Calibrator *receiver)
 {
-    return utils::db::saveCalibration(receiver->calibration);
+    return utils::db::saveCalibration(&receiver->calibration);
 }

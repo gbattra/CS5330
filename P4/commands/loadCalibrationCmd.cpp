@@ -8,8 +8,16 @@
 #include "commands/commands.h"
 #include "models/models.h"
 #include "utils/utils.h"
+#include "views/views.h"
 
 bool cmd::LoadCalibrationCmd::execute(mdl::Calibrator *receiver)
 {
-    return true;
+    bool success = utils::db::loadCalibration(&receiver->calibration);
+    if (success)
+    {
+        vw::CalibrationView view;
+        view.render(receiver->calibration);
+    }
+
+    return success;
 }
