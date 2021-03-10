@@ -16,11 +16,7 @@
  * 
  * @return true if execution was successful
  */
-bool cmd::SaveCalibratorCmd::execute(mdl::Calibrator *receiver)
+bool cmd::SaveCalibrationCmd::execute(mdl::Calibrator *receiver)
 {
-    std::string name = utils::input::getInput<std::string>("Calibrator name: ");
-    bool saved = utils::db::saveCalibration(name, receiver->calibration);
-    saved &= utils::db::saveSamples(name, receiver->samples);
-
-    return saved;
+    return true;
 }

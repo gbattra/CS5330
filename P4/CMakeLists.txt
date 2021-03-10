@@ -9,8 +9,8 @@ include_directories(
 add_executable(
     AR ar.cpp
     commands/commands.h commands/drawCornersCmd.cpp commands/registerFrameCmd.cpp
-    commands/calibrateCmd.cpp commands/saveCalibratorCmd.cpp
-    commands/loadCalibratorCmd.cpp
+    commands/calibrateCmd.cpp commands/saveCalibrationCmd.cpp
+    commands/loadCalibrationCmd.cpp
 
     controllers/controllers.h controllers/calibrationController.cpp
 

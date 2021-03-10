@@ -90,7 +90,7 @@ namespace cmd
      * Saves the calibration struct and list of samples saved on the Calibrator obj
      * to a file.
      */
-    class SaveCalibratorCmd: public Command<mdl::Calibrator>
+    class SaveCalibrationCmd: public Command<mdl::Calibrator>
     {
         public:
             /**
@@ -107,7 +107,7 @@ namespace cmd
      * Loads a list of sample images and their corners, and a calibration model
      * for a named calibrator.
      */
-    class LoadCalibratorCmd: public Command<mdl::Calibrator>
+    class LoadCalibrationCmd: public Command<mdl::Calibrator>
     {
         public:
             /**

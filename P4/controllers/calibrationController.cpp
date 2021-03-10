@@ -30,11 +30,11 @@ cmd::Command<mdl::Calibrator>* ctrl::CalibrationController::getCommand(
     }
     if (key == 'w')
     {
-        return new cmd::SaveCalibratorCmd();
+        return new cmd::SaveCalibrationCmd();
     }
     if (key == 'l')
     {
-        return new cmd::LoadCalibratorCmd();
+        return new cmd::LoadCalibrationCmd();
     }
 
     return new cmd::DrawCornersCmd(frame);
