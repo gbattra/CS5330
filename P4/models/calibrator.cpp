@@ -103,25 +103,6 @@ bool mdl::Calibrator::capture(cv::Mat *img)
 }
 
 /**
- * Maps the corners and points vectors from each sample into a vector of vectors.
- *
- * @param samples the samples list
- * @param corners_list the corners list to populate
- * @param points_list the points list to populate
- */
-void cornersAndPointsFromSamples(
-    std::vector<mdl::Sample> samples,
-    std::vector<std::vector<cv::Point2f>> corners_list,
-    std::vector<std::vector<cv::Vec3f>> points_list)
-{
-    for (int s = 0; s < samples.size(); s++)
-    {
-        corners_list.push_back(samples[s].corners);
-        points_list.push_back(samples[s].points);
-    }
-}
-
-/**
  * Calibrate the camera given the registered samples. Requires at least
  * 5 registered samples.
  * 
@@ -137,7 +118,7 @@ bool mdl::Calibrator::calibrate(cv::Size size)
                         + std::to_string(MIN_CALIBRATION_SAMPLES)
                         + " | Currrent: "
                         + std::to_string(samples.size()) + "\n";
-        return false;
+        // return false;
     }
 
     *calibration.camera_matrix.ptr<double>(0, 2) = (double) size.width / 2;
@@ -145,7 +126,11 @@ bool mdl::Calibrator::calibrate(cv::Size size)
 
     std::vector<std::vector<cv::Point2f>> corners_list;
     std::vector<std::vector<cv::Vec3f>> points_list;
-    cornersAndPointsFromSamples(samples, corners_list, points_list);
+    for (int s = 0; s < samples.size(); s++)
+    {
+        corners_list.push_back(samples[s].corners);
+        points_list.push_back(samples[s].points);
+    }
 
     calibration.final_proj_err = cv::calibrateCamera(
         points_list,
