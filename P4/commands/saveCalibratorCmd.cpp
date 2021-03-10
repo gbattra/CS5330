@@ -22,4 +22,10 @@ bool cmd::SaveCalibratorCmd::execute(mdl::Calibrator *receiver)
     {
         receiver->name = utils::input::getInput<std::string>("Calibrator name: ");
     }
+
+    bool saved = utils::db::saveCalibration(
+        receiver->name, receiver->calibration);
+    saved &= utils::db::saveSamples(receiver->name, receiver->samples);
+
+    return saved;
 }

@@ -28,6 +28,10 @@ cmd::Command<mdl::Calibrator>* ctrl::CalibrationController::getCommand(
     {
         return new cmd::CalibrateCmd(frame->size());
     }
+    if (key == 'w')
+    {
+        return new cmd::SaveCalibratorCmd();
+    }
 
     return new cmd::DrawCornersCmd(frame);
 }
