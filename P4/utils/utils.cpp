@@ -18,7 +18,7 @@
  */
 bool utils::db::saveCalibration(mdl::Calibration *calibration)
 {
-    std::vector<double> intrinsic_params(17);
+    std::vector<double> intrinsic_params(18);
     for (int r = 0; r < 3; r++)
     {
         for (int c = 0; c < 3; c++)
@@ -31,6 +31,8 @@ bool utils::db::saveCalibration(mdl::Calibration *calibration)
     {
         intrinsic_params[9 + d] = calibration->dist_coeffs.at<double>(d, 0);
     }
+
+    intrinsic_params[17] = calibration->final_proj_err;
 
     std::ofstream ofile("files/params", std::ios::binary);
     if (!ofile)
@@ -59,7 +61,7 @@ bool utils::db::saveCalibration(mdl::Calibration *calibration)
  */
 bool utils::db::loadCalibration(mdl::Calibration *calibration)
 {
-    std::vector<double> intrinsic_params(17);
+    std::vector<double> intrinsic_params(18);
     std::ifstream ifile("files/params", std::ios::binary);
     if (!ifile)
     {
@@ -78,13 +80,14 @@ bool utils::db::loadCalibration(mdl::Calibration *calibration)
     std::vector<double>::const_iterator cm_first = intrinsic_params.begin();
     std::vector<double>::const_iterator cm_last = intrinsic_params.begin() + 9;
     std::vector<double>::const_iterator dc_first = intrinsic_params.begin() + 9;
-    std::vector<double>::const_iterator dc_last = intrinsic_params.end();
+    std::vector<double>::const_iterator dc_last = intrinsic_params.end() - 1;
 
     std::vector<double> camera_matrix(cm_first, cm_last);
     std::vector<double> dist_coeffs(dc_first, dc_last);
 
     calibration->camera_matrix = cv::Mat(3, 3, CV_64FC1, camera_matrix.data());
     calibration->dist_coeffs = cv::Mat(8, 1, CV_64F, dist_coeffs.data());
+    calibration->final_proj_err = intrinsic_params[17];
 
     return good;
 }
