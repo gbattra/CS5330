@@ -9,6 +9,9 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
 
+/**
+ * Primary constructor for the Calibrator class.
+ */
 mdl::Calibrator::Calibrator()
 {
     samples = std::vector<mdl::Sample>(0);
@@ -151,7 +154,8 @@ bool mdl::Calibrator::calibrate(cv::Size size)
         calibration.camera_matrix,
         calibration.dist_coeffs,
         calibration.rotations,
-        calibration.transformations);
+        calibration.transformations,
+        cv::CALIB_FIX_ASPECT_RATIO);
 
     return true;
 }

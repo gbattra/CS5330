@@ -11,7 +11,7 @@
 #include "views/views.h"
 
 /**
- * Executes the command on the provided receiver.
+ * Draws the detected corners of the chessboard onto the img.
  * 
  * @param receiver the object via which to execute the command
  * 

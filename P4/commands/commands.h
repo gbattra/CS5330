@@ -87,9 +87,26 @@ namespace cmd
     };
 
     /**
+     * Saves the calibration struct and list of samples saved on the Calibrator obj
+     * to a file.
+     */
+    class SaveCalibratorCmd: public Command<mdl::Calibrator>
+    {
+        public:
+            /**
+             * Executes the command on the provided receiver.
+             * 
+             * @param receiver the object via which to execute the command
+             * 
+             * @return true if execution was successful
+             */
+            bool execute(mdl::Calibrator *receiver) override;
+    };
+
+    /**
      * Command for calibrating a camera once at least 5 samples have been registered.
      */
-    class Calibrate: public Command<mdl::Calibrator>
+    class CalibrateCmd: public Command<mdl::Calibrator>
     {
         private:
             // the size of the images used for calibration
@@ -101,7 +118,7 @@ namespace cmd
              * 
              * @param s the size of the images used for calibration
              */
-            Calibrate(cv::Size s): size(s) {}
+            CalibrateCmd(cv::Size s): size(s) {}
 
             /**
              * Executes the command on the provided receiver.

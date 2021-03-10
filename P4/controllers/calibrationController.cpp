@@ -26,7 +26,7 @@ cmd::Command<mdl::Calibrator>* ctrl::CalibrationController::getCommand(
     }
     if (key == 'c')
     {
-        return new cmd::Calibrate(frame->size());
+        return new cmd::CalibrateCmd(frame->size());
     }
 
     return new cmd::DrawCornersCmd(frame);

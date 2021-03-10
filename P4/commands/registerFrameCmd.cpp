@@ -9,7 +9,8 @@
 #include "models/models.h"
 
 /**
- * Executes the command on the provided receiver.
+ * Registers a frames detected corners and points to the samples list on the calibrator
+ * instance.
  * 
  * @param receiver the object via which to execute the command
  * 

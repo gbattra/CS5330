@@ -11,13 +11,13 @@
 
 
 /**
- * Executes the command on the provided receiver.
+ * Calibrates the camera using the samples computed.
  * 
  * @param receiver the object via which to execute the command
  * 
  * @return true if execution was successful
  */
-bool cmd::Calibrate::execute(mdl::Calibrator *receiver)
+bool cmd::CalibrateCmd::execute(mdl::Calibrator *receiver)
 {
     bool calibrated = receiver->calibrate(size);
     if (!calibrated)
