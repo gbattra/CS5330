@@ -118,7 +118,7 @@ bool mdl::Calibrator::calibrate(cv::Size size)
                         + std::to_string(MIN_CALIBRATION_SAMPLES)
                         + " | Currrent: "
                         + std::to_string(samples.size()) + "\n";
-        return false;
+        // return false;
     }
 
     *calibration.camera_matrix.ptr<double>(0, 2) = (double) size.width / 2;
