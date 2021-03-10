@@ -18,14 +18,9 @@
  */
 bool cmd::SaveCalibratorCmd::execute(mdl::Calibrator *receiver)
 {
-    if (receiver->name.empty())
-    {
-        receiver->name = utils::input::getInput<std::string>("Calibrator name: ");
-    }
-
-    bool saved = utils::db::saveCalibration(
-        receiver->name, receiver->calibration);
-    saved &= utils::db::saveSamples(receiver->name, receiver->samples);
+    std::string name = utils::input::getInput<std::string>("Calibrator name: ");
+    bool saved = utils::db::saveCalibration(name, receiver->calibration);
+    saved &= utils::db::saveSamples(name, receiver->samples);
 
     return saved;
 }

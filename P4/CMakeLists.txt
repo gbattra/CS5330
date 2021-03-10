@@ -10,6 +10,7 @@ add_executable(
     AR ar.cpp
     commands/commands.h commands/drawCornersCmd.cpp commands/registerFrameCmd.cpp
     commands/calibrateCmd.cpp commands/saveCalibratorCmd.cpp
+    commands/loadCalibratorCmd.cpp
 
     controllers/controllers.h controllers/calibrationController.cpp
 

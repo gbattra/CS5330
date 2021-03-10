@@ -62,9 +62,6 @@ namespace mdl
     class Calibrator
     {
         public:
-            // a name for the calibrator, will be used for the data filenames
-            std::string name;
-
             // the calibrated camera data
             mdl::Calibration calibration;
 

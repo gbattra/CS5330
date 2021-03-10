@@ -104,6 +104,23 @@ namespace cmd
     };
 
     /**
+     * Loads a list of sample images and their corners, and a calibration model
+     * for a named calibrator.
+     */
+    class LoadCalibratorCmd: public Command<mdl::Calibrator>
+    {
+        public:
+            /**
+             * Executes the command on the provided receiver.
+             * 
+             * @param receiver the object via which to execute the command
+             * 
+             * @return true if execution was successful
+             */
+            bool execute(mdl::Calibrator *receiver) override;
+    };
+
+    /**
      * Command for calibrating a camera once at least 5 samples have been registered.
      */
     class CalibrateCmd: public Command<mdl::Calibrator>

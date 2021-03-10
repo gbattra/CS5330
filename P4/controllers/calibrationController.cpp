@@ -32,6 +32,10 @@ cmd::Command<mdl::Calibrator>* ctrl::CalibrationController::getCommand(
     {
         return new cmd::SaveCalibratorCmd();
     }
+    if (key == 'l')
+    {
+        return new cmd::LoadCalibratorCmd();
+    }
 
     return new cmd::DrawCornersCmd(frame);
 }

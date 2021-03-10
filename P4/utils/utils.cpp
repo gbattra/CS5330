@@ -117,6 +117,7 @@ std::vector<mdl::Sample> utils::db::loadSamples(std::string calibrator_name)
 
     ifile.seekg(0, ifile.end);
     int size = ifile.tellg() / sizeof(mdl::Sample);
+    std::cout << size << std::endl;
     std::vector<mdl::Sample> samples(size);
 
     ifile.seekg(0, ifile.beg);
