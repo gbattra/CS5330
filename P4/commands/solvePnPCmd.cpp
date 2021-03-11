@@ -23,5 +23,5 @@ bool cmd::SolvePnPCmd::execute(mdl::Projector *receiver)
     if (!pose.found) printf("No checkboard found in image\n");
     vw::PoseView view = vw::PoseView();
     bool rendered = view.render(pose);
-    return pose.found && rendered;
+    return rendered;
 }

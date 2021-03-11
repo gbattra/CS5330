@@ -20,8 +20,12 @@ mdl::Pose mdl::Projector::computePose(cv::Mat *img)
     mdl::Pose pose = {
         false,
         img->clone(),
+        std::vector<cv::Vec3f>(0),
+        cv::Point2f(0, 0),
         cv::Mat(1, 3, CV_64FC1),
-        cv::Mat(1, 3, CV_64FC1)
+        cv::Mat(1, 3, CV_64FC1),
+        calibrator->calibration.camera_matrix,
+        calibrator->calibration.dist_coeffs
     };
 
     std::vector<cv::Point2f> corners = calibrator->locateCorners(img);
@@ -38,6 +42,8 @@ mdl::Pose mdl::Projector::computePose(cv::Mat *img)
         pose.translation);
     
     pose.found = solved;
+    pose.origin = corners[0];
+    pose.points = points;
 
     return pose;
 }

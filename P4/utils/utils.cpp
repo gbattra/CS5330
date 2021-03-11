@@ -23,6 +23,7 @@ bool utils::db::saveCalibration(mdl::Calibration *calibration)
     {
         for (int c = 0; c < 3; c++)
         {
+            std::cout << calibration->camera_matrix.at<double>(r, c) << std::endl;
             intrinsic_params[(r * 3) + c] = calibration->camera_matrix.at<double>(r, c);
         }
     }
@@ -74,8 +75,8 @@ bool utils::db::loadCalibration(mdl::Calibration *calibration)
     ifile.close();
 
     bool good = ifile.good();
-    if (!good) printf("Failed to read intrinsic params to file\n");
-    else printf("Successfully read intrinsic params to file\n");
+    if (!good) printf("Failed to read intrinsic params from file\n");
+    else printf("Successfully read intrinsic params from file\n");
 
     std::vector<double>::const_iterator cm_first = intrinsic_params.begin();
     std::vector<double>::const_iterator cm_last = intrinsic_params.begin() + 9;
@@ -85,8 +86,23 @@ bool utils::db::loadCalibration(mdl::Calibration *calibration)
     std::vector<double> camera_matrix(cm_first, cm_last);
     std::vector<double> dist_coeffs(dc_first, dc_last);
 
-    calibration->camera_matrix = cv::Mat(3, 3, CV_64FC1, camera_matrix.data());
-    calibration->dist_coeffs = cv::Mat(8, 1, CV_64F, dist_coeffs.data());
+    cv::Mat camera_matrix_mat(3, 3, CV_64FC1);
+    cv::Mat dist_coeffs_mat(8, 1, CV_64F);
+    for (int r = 0; r < 3; r++)
+    {
+        for (int c = 0; c < 3; c++)
+        {
+            camera_matrix_mat.at<double>(r, c) = camera_matrix[(r * 3) + c];
+        }
+    }
+
+    for (int d = 0; d < 8; d++)
+    {
+        dist_coeffs_mat.at<double>(d, 0) = dist_coeffs[d];
+    }
+
+    calibration->camera_matrix = camera_matrix_mat;
+    calibration->dist_coeffs = dist_coeffs_mat;
     calibration->final_proj_err = intrinsic_params[17];
 
     return good;

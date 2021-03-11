@@ -43,11 +43,23 @@ namespace mdl
         // the image used to produce this calibration
         cv::Mat img;
 
+        // the 3D points for each corner
+        std::vector<cv::Vec3f> points;
+
+        // the origin point for the pose
+        cv::Point2f origin;
+
         // the rotation matrix
         cv::Mat rotation;
 
         // the translation matrix
         cv::Mat translation;
+
+        // the calibrated camera matrix
+        cv::Mat camera_matrix;
+
+        // the distortion coefficients
+        cv::Mat dist_coeffs;
     };
 
     /**
