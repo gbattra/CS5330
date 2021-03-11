@@ -43,15 +43,6 @@ namespace mdl
         // the distortion coefficients
         cv::Mat dist_coeffs;
 
-        // rotations for calibration
-        std::vector<cv::Mat> rotations;
-
-        // transformations for calibration
-        std::vector<cv::Mat> transformations;
-
-        // the reprojection errors
-        std::vector<float> reproj_errors;
-
         // the final reproj error
         double final_proj_err;
     };
@@ -103,6 +94,24 @@ namespace mdl
              * @return true if calibration successful
              */
             bool calibrate(cv::Size size);
+    };
+
+    /**
+     * Class for performing projections on an image.
+     */
+    class Projector
+    {
+        private:
+            // the camera calibration model
+            mdl::Calibration calibration;
+
+        public:
+            /**
+             * Primary constructor for the projector.
+             * 
+             * @param c the camera calibration to use
+             */
+            Projector(mdl::Calibration c): calibration(c) {}
     };
 }
 

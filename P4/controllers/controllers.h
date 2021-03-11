@@ -82,6 +82,37 @@ namespace ctrl
              */
             cmd::Command<mdl::Calibrator>* getCommand(int key, cv::Mat *frame) override;
     };
+
+    /**
+     * Controller for performing projections given a calibration model.
+     */
+    class ProjectionController: public Controller<mdl::Projector>
+    {
+        public:
+            /**
+             * Primary constructor for the Projection Controller.
+             * 
+             * @param m the projector model
+             */
+            ProjectionController(mdl::Projector *m): Controller(m) {}
+
+            /**
+             * Runs the controller.
+             * 
+             * @return status code 0 -> success, -1 -> error
+             */
+            int spin() override;
+
+            /**
+             * Gets the command to execute given the user entered key.
+             * 
+             * @param key the user-entered key
+             * @param frame the frame to use when instantiating the command
+             * 
+             * @return the command to execute
+             */
+            cmd::Command<mdl::Projector>* getCommand(int key, cv::Mat *frame) override;
+    };
 }
 
 #endif

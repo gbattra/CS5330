@@ -146,6 +146,37 @@ namespace cmd
              */
             bool execute(mdl::Calibrator *receiver) override;
     };
+
+    /**
+     * Shows an image in a named window.
+     */
+    class ShowImgCmd: public Command<mdl::Projector>
+    {
+        private:
+            // the image to show
+            cv::Mat *img;
+            
+            // the named of the window
+            std::string name;
+
+        public:
+            /**
+             * Primary constructor for the ShowImgCmd.
+             * 
+             * @param i the image to show
+             * @param n the named window
+             */
+            ShowImgCmd(cv::Mat *i, std::string n): img(i), name(n) {}
+
+            /**
+             * Executes the command on the provided receiver.
+             * 
+             * @param receiver the object via which to execute the command
+             * 
+             * @return true if execution was successful
+             */
+            bool execute(mdl::Projector *receiver) override;
+    };
 }
 
 #endif

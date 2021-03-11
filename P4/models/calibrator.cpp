@@ -18,9 +18,7 @@ mdl::Calibrator::Calibrator()
     calibration = {
         cv::Mat::ones(3, 3, CV_64FC1),
         cv::Mat::zeros(8, 1, CV_64F),
-        std::vector<cv::Mat>(0),
-        std::vector<cv::Mat>(0),
-        std::vector<float>(0)
+        0
     };
 }
 
@@ -132,14 +130,17 @@ bool mdl::Calibrator::calibrate(cv::Size size)
         points_list.push_back(samples[s].points);
     }
 
+    std::vector<cv::Mat> rotations;
+    std::vector<cv::Mat> transformations;
+
     calibration.final_proj_err = cv::calibrateCamera(
         points_list,
         corners_list,
         size,
         calibration.camera_matrix,
         calibration.dist_coeffs,
-        calibration.rotations,
-        calibration.transformations,
+        rotations,
+        transformations,
         cv::CALIB_FIX_ASPECT_RATIO);
 
     return true;

@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include "controllers/controllers.h"
 #include "models/models.h"
+#include "utils/utils.h"
 
 std::string usage_string(
     "USAGE\n"
@@ -31,6 +32,20 @@ int main(int argc, char** argv)
         mdl::Calibrator *model = new mdl::Calibrator();
         ctrl::CalibrationController *ctrl = new ctrl::CalibrationController(model);
         ctrl->spin();
+
+        delete model;
+        delete ctrl;
+    }
+    else if (std::strcmp(argv[1], "-p") == 0)
+    {
+        mdl::Calibration calibration;
+        utils::db::loadCalibration(&calibration);
+        mdl::Projector *model = new mdl::Projector(calibration);
+        ctrl::ProjectionController *ctrl = new ctrl::ProjectionController(model);
+        ctrl->spin();
+
+        delete model;
+        delete ctrl;
     }
     else
     {
