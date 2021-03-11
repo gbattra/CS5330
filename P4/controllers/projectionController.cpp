@@ -20,7 +20,7 @@
 cmd::Command<mdl::Projector>* ctrl::ProjectionController::getCommand(
     int key, cv::Mat *frame)
 {
-    return new cmd::ShowImgCmd(frame, "Video");
+    return new cmd::SolvePnPCmd(frame);
 }
 
 /**

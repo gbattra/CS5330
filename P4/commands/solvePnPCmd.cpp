@@ -7,6 +7,7 @@
 
 #include "commands/commands.h"
 #include "models/models.h"
+#include "views/views.h"
 #include <opencv2/opencv.hpp>
 
 /**
@@ -16,10 +17,11 @@
  * 
  * @return true if command executes successfully
  */
-bool cmd::ShowImgCmd::execute(mdl::Projector *receiver)
+bool cmd::SolvePnPCmd::execute(mdl::Projector *receiver)
 {
-    cv::namedWindow(name);
-    cv::imshow(name, *img);
-
-    return true;
+    mdl::Pose pose = receiver->computePose(img);
+    if (!pose.found) printf("No checkboard found in image\n");
+    vw::PoseView view = vw::PoseView();
+    bool rendered = view.render(pose);
+    return pose.found && rendered;
 }

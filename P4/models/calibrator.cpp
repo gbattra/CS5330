@@ -59,7 +59,7 @@ std::vector<cv::Point2f> mdl::Calibrator::locateCorners(cv::Mat *img)
  * 
  * @return the vector of points corresponding to each corner
  */
-std::vector<cv::Vec3f> computePoints(std::vector<cv::Point2f> corners)
+std::vector<cv::Vec3f> mdl::Calibrator::computePoints(std::vector<cv::Point2f> corners)
 {
     std::vector<cv::Vec3f> points;
     if (corners.size() < CHESSBOARD_WIDTH * CHESSBOARD_HEIGHT)

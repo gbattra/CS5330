@@ -33,6 +33,24 @@ namespace mdl
     };
 
     /**
+     * Struct for holding an object pose.
+     */
+    struct Pose
+    {
+        // has the pose been found in the img
+        bool found;
+
+        // the image used to produce this calibration
+        cv::Mat img;
+
+        // the rotation matrix
+        cv::Mat rotation;
+
+        // the translation matrix
+        cv::Mat translation;
+    };
+
+    /**
      * Holds the calibrated data.
      */
     struct Calibration
@@ -77,6 +95,15 @@ namespace mdl
             std::vector<cv::Point2f> locateCorners(cv::Mat *img);
 
             /**
+             * Computes the point vector for each corner.
+             * 
+             * @param corners the list of corners found in locateCorners()
+             * 
+             * @return the vector of points corresponding to each corner
+             */
+            std::vector<cv::Vec3f> computePoints(std::vector<cv::Point2f> corners);
+
+            /**
              * Register an image's corners and points list in the calibrations property.
              * 
              * @param img the image to extract corners
@@ -102,16 +129,25 @@ namespace mdl
     class Projector
     {
         private:
-            // the camera calibration model
-            mdl::Calibration calibration;
+            // the camera calibrator model
+            mdl::Calibrator *calibrator;
 
         public:
             /**
              * Primary constructor for the projector.
              * 
-             * @param c the camera calibration to use
+             * @param c the camera calibrator to use
              */
-            Projector(mdl::Calibration c): calibration(c) {}
+            Projector(mdl::Calibrator *c): calibrator(c) {}
+
+            /**
+             * Computes the pose of the checkerboard if detected.
+             * 
+             * @param img the image to analyze
+             * 
+             * @return the populated pose object w/ translation and rotation vectors
+             */
+            mdl::Pose computePose(cv::Mat *img);
     };
 }
 

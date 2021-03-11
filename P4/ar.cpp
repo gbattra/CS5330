@@ -38,9 +38,9 @@ int main(int argc, char** argv)
     }
     else if (std::strcmp(argv[1], "-p") == 0)
     {
-        mdl::Calibration calibration;
-        utils::db::loadCalibration(&calibration);
-        mdl::Projector *model = new mdl::Projector(calibration);
+        mdl::Calibrator *calibrator = new mdl::Calibrator();
+        utils::db::loadCalibration(&calibrator->calibration);
+        mdl::Projector *model = new mdl::Projector(calibrator);
         ctrl::ProjectionController *ctrl = new ctrl::ProjectionController(model);
         ctrl->spin();
 

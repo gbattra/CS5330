@@ -47,6 +47,9 @@ namespace vw
             bool render(mdl::Sample model) override;
     };
 
+    /**
+     * Prints out the computed camera calibrations.
+     */
     class CalibrationView: public View<mdl::Calibration>
     {
         public:
@@ -58,6 +61,22 @@ namespace vw
              * @return true if render successful
              */
             bool render(mdl::Calibration model) override;
+    };
+
+    /**
+     * Projects the pose onto the checkerboard in the image.
+     */
+    class PoseView: public View<mdl::Pose>
+    {
+        public:
+            /**
+             * Render the view.
+             * 
+             * @param model the model to use to populate the view
+             *
+             * @return true if render successful
+             */
+            bool render(mdl::Pose model) override;
     };
 }
 

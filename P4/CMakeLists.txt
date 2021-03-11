@@ -10,14 +10,14 @@ add_executable(
     AR ar.cpp
     commands/commands.h commands/drawCornersCmd.cpp commands/registerFrameCmd.cpp
     commands/calibrateCmd.cpp commands/saveCalibrationCmd.cpp
-    commands/loadCalibrationCmd.cpp commands/showImgCmd.cpp
+    commands/loadCalibrationCmd.cpp commands/solvePnPCmd.cpp
 
     controllers/controllers.h controllers/calibrationController.cpp
     controllers/projectionController.cpp
 
     models/models.h models/calibrator.cpp models/projector.cpp
 
-    views/views.h views/cornersView.cpp views/calibrationView.cpp
+    views/views.h views/cornersView.cpp views/calibrationView.cpp views/poseView.cpp
 
     utils/utils.h utils/utils.cpp
 )

@@ -150,23 +150,19 @@ namespace cmd
     /**
      * Shows an image in a named window.
      */
-    class ShowImgCmd: public Command<mdl::Projector>
+    class SolvePnPCmd: public Command<mdl::Projector>
     {
         private:
             // the image to show
             cv::Mat *img;
-            
-            // the named of the window
-            std::string name;
 
         public:
             /**
              * Primary constructor for the ShowImgCmd.
              * 
              * @param i the image to show
-             * @param n the named window
              */
-            ShowImgCmd(cv::Mat *i, std::string n): img(i), name(n) {}
+            SolvePnPCmd(cv::Mat *i): img(i){}
 
             /**
              * Executes the command on the provided receiver.
