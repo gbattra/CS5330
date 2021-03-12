@@ -131,7 +131,7 @@ void obj3d::Truck::connectSides(
 void obj3d::Truck::projectWheel(cv::Vec3f wheel_origin, mdl::Pose pose)
 {
     std::vector<cv::Vec3f> wheel_points;
-    float radius = 1;
+    float radius = .85;
     for (float angle = 0; angle < (2*CV_PI); angle += (10 * (CV_PI / 180)))
     {
         float y = radius * sin(angle);
@@ -154,10 +154,10 @@ void obj3d::Truck::projectWheel(cv::Vec3f wheel_origin, mdl::Pose pose)
 
     for (int w = 1; w < img_points.size(); w++)
     {
-        cv::line(pose.img, img_points[w], img_points[w - 1], cv::Scalar(255, 0, 255), 2);
+        cv::line(pose.img, img_points[w], img_points[w - 1], cv::Scalar(255, 100, 100), 4);
     }
     
-    cv::line(pose.img, img_points[0], img_points.back(), cv::Scalar(255, 0, 255), 2);
+    cv::line(pose.img, img_points[0], img_points.back(), cv::Scalar(255, 100, 100), 4);
 }
 
 /**
