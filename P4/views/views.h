@@ -88,8 +88,7 @@ namespace vw
             // vectors holding the points of the object to project
             std::vector<cv::Vec3f> side_one;
             std::vector<cv::Vec3f> side_two;
-            std::vector<cv::Vec3f> wheels_one;
-            std::vector<cv::Vec3f> wheels_two;
+            std::vector<cv::Vec3f> wheels;
 
             /**
              * Projects a side of the object.

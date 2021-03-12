@@ -35,13 +35,11 @@ vw::CarView::CarView()
     side_two.push_back(cv::Vec3f(4, 8, 2));
     side_two.push_back(cv::Vec3f(4, 8, 1));
 
-    wheels_one = std::vector<cv::Vec3f>(0);
-    wheels_one.push_back(cv::Vec3f(2, 1, 1));
-    wheels_one.push_back(cv::Vec3f(7, 1, 1));
-
-    wheels_two = std::vector<cv::Vec3f>(0);
-    wheels_two.push_back(cv::Vec3f(2, 3, 1));
-    wheels_two.push_back(cv::Vec3f(7, 3, 1));
+    wheels = std::vector<cv::Vec3f>(0);
+    wheels.push_back(cv::Vec3f(1, 2, 1));
+    wheels.push_back(cv::Vec3f(1, 6, 1));
+    wheels.push_back(cv::Vec3f(4, 2, 1));
+    wheels.push_back(cv::Vec3f(4, 6, 1));
 }
 
 /**
@@ -68,7 +66,7 @@ std::vector<cv::Point2f> vw::CarView::projectSide(
         pose.dist_coeffs,
         img_points);
 
-    for (int s = 1; s < side_one.size(); s++)
+    for (int s = 1; s < img_points.size(); s++)
     {
         cv::line(pose.img, img_points[s], img_points[s - 1], cv::Scalar(255, 0, 255), 2);
     }
@@ -103,6 +101,58 @@ void vw::CarView::connectSides(
 }
 
 /**
+ * Projects a wheel given the origin and pose.
+ * 
+ * @param wheel_origin the origin of the wheel
+ * @param pose the pose of the checkerboard
+ */
+void projectWheel(cv::Vec3f wheel_origin, mdl::Pose pose)
+{
+    std::vector<cv::Vec3f> wheel_points;
+    float radius = 1;
+    for (float angle = 0; angle < (2*CV_PI); angle += (10 * (CV_PI / 180)))
+    {
+        float y = radius * sin(angle);
+        float x = radius * cos(angle);
+        cv::Vec3f point = cv::Vec3f(
+            wheel_origin[0],
+            wheel_origin[1] + x,
+            wheel_origin[2] + y);
+        wheel_points.push_back(point);
+    }
+
+    std::vector<cv::Point2f> img_points;
+    cv::projectPoints(
+        wheel_points,
+        pose.rotation,
+        pose.translation,
+        pose.camera_matrix,
+        pose.dist_coeffs,
+        img_points);
+
+    for (int w = 1; w < img_points.size(); w++)
+    {
+        cv::line(pose.img, img_points[w], img_points[w - 1], cv::Scalar(255, 0, 255), 2);
+    }
+    
+    cv::line(pose.img, img_points[0], img_points.back(), cv::Scalar(255, 0, 255), 2);
+}
+
+/**
+ * Projects the wheels onto the image.
+ * 
+ * @param wheels the points for the wheels
+ * @param pose the calculated pose of the checkerboard
+ */
+void vw::CarView::projectWheels(std::vector<cv::Vec3f> wheels, mdl::Pose pose)
+{
+    for (cv::Vec3f wheel : wheels)
+    {
+        projectWheel(wheel, pose);
+    }
+}
+
+/**
  * Render the view.
  * 
  * @param pose the model to use to populate the view
@@ -114,6 +164,7 @@ bool vw::CarView::render(mdl::Pose pose)
     std::vector<cv::Point2f> side_one_img_points = projectSide(side_one, pose);
     std::vector<cv::Point2f> side_two_img_points = projectSide(side_two, pose);
     connectSides(side_one_img_points, side_two_img_points, pose);
+    projectWheels(wheels, pose);
 
     cv::namedWindow("Truck");
     cv::imshow("Truck", pose.img);
