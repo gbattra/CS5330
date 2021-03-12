@@ -5,8 +5,8 @@
  * Header for defining the Calibration model.
  */
 
-#ifndef AR_CALIBRATION
-#define AR_CALIBRATION
+#ifndef AR_MODELS
+#define AR_MODELS
 
 #include <opencv2/opencv.hpp>
 

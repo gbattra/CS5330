@@ -8,6 +8,7 @@
 #include "commands/commands.h"
 #include "models/models.h"
 #include "views/views.h"
+#include "objects/objects3d.h"
 
 /**
  * Executes the command on the provided receiver.
@@ -20,7 +21,9 @@ bool cmd::ProjectObjectCmd::execute(mdl::Projector *receiver)
 {
     mdl::Pose pose = receiver->computePose(img);
     if (!pose.found) printf("No checkerboard found in image\n");
-    vw::CarView view = vw::CarView();
+
+    obj3d::Object3D *obj = new obj3d::Truck();
+    vw::ObjectView view = vw::ObjectView(obj);
     bool rendered = view.render(pose);
     return rendered;
 }

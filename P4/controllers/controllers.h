@@ -5,8 +5,8 @@
  * Header for defining controller methods.
  */
 
-#ifndef AR_CONTROLLER
-#define AR_CONTROLLER
+#ifndef AR_CONTROLLERS
+#define AR_CONTROLLERS
 
 #include "commands/commands.h"
 #include "models/models.h"

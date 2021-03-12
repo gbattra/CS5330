@@ -9,6 +9,7 @@
 #define AR_VIEWS
 
 #include "models/models.h"
+#include "objects/objects3d.h"
 
 namespace vw
 {
@@ -82,54 +83,20 @@ namespace vw
     /**
      * Projects a car onto the checkerboard in the image.
      */
-    class CarView: public View<mdl::Pose>
+    class ObjectView: public View<mdl::Pose>
     {
         private:
-            // vectors holding the points of the object to project
-            std::vector<cv::Vec3f> side_one;
-            std::vector<cv::Vec3f> side_two;
-            std::vector<cv::Vec3f> wheels;
-
-            /**
-             * Projects a side of the object.
-             * 
-             * @param side the list of points for that side
-             * @param pose the calculated pose of the checkerboard
-             * 
-             * @return the projected image points for the side
-             */
-            std::vector<cv::Point2f> projectSide(
-                std::vector<cv::Vec3f> side, mdl::Pose pose);
-
-            /**
-             * Projects the wheels onto the image.
-             * 
-             * @param wheels the points for the wheels
-             * @param pose the calculated pose of the checkerboard
-             */
-            void projectWheels(std::vector<cv::Vec3f> wheels, mdl::Pose pose);
-
-            /**
-             * Connects the points from one side with their corresponding points on
-             * the other side.
-             * 
-             * @param side_one_img_points one side of the object
-             * @param side_two_img_points the other side of the object
-             * @param pose the calculated pose of the checkerboard
-             */
-            void connectSides(
-                std::vector<cv::Point2f> side_one_img_points,
-                std::vector<cv::Point2f> side_two_img_points,
-                mdl::Pose pose);
+            // the object to render
+            obj3d::Object3D *object;
 
         public:
-
             /**
-             * Constructor for the car view. Populates the object
-             * points lists.
+             * Primary constructor for the object view.
+             * 
+             * @param o the object to project
              */
-            CarView();
-
+            ObjectView(obj3d::Object3D *o): object(o) {}
+            
             /**
              * Render the view.
              * 

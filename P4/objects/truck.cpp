@@ -1,11 +1,11 @@
 // Greg Attra
-// 03/12/2021
+// 03/21/2021
 
 /**
- * Implementation of the CarView class defined in views.h
+ * Implementation of the Truck class defined in objects3d.h
  */
 
-#include "views/views.h"
+#include "objects/objects3d.h"
 #include "models/models.h"
 #include <opencv2/opencv.hpp>
 
@@ -13,8 +13,10 @@
  * Constructor for the car view. Populates the object
  * points lists.
  */
-vw::CarView::CarView()
+obj3d::Truck::Truck()
 {
+    Object3D();
+
     side_one = std::vector<cv::Vec3f>(0);
     side_one.push_back(cv::Vec3f(1, 1, 1));
     side_one.push_back(cv::Vec3f(1, 1, 2));
@@ -43,6 +45,26 @@ vw::CarView::CarView()
 }
 
 /**
+ * Project the truck onto the img.
+ * 
+ * @param img the image to project onto
+ * @param pose the pose of the surface to project onto
+ * 
+ * @return true if projection successful
+ */
+bool obj3d::Truck::project(cv::Mat *img, mdl::Pose pose)
+{
+    if (!pose.found) return false;
+
+    std::vector<cv::Point2f> side_one_img_points = projectSide(side_one, pose);
+    std::vector<cv::Point2f> side_two_img_points = projectSide(side_two, pose);
+    connectSides(side_one_img_points, side_two_img_points, pose);
+    projectWheels(wheels, pose);
+
+    return true;
+}
+
+/**
  * Connects the points from one side with their corresponding points on
  * the other side.
  * 
@@ -52,7 +74,7 @@ vw::CarView::CarView()
  * 
  * @return the projected image points for the side
  */
-std::vector<cv::Point2f> vw::CarView::projectSide(
+std::vector<cv::Point2f> obj3d::Truck::projectSide(
     std::vector<cv::Vec3f> side,
     mdl::Pose pose)
 {
@@ -84,7 +106,7 @@ std::vector<cv::Point2f> vw::CarView::projectSide(
  * @param side_two_img_points the other side of the object
  * @param pose the calculated pose of the checkerboard
  */
-void vw::CarView::connectSides(
+void obj3d::Truck::connectSides(
     std::vector<cv::Point2f> side_one_img_points,
     std::vector<cv::Point2f> side_two_img_points,
     mdl::Pose pose)
@@ -106,7 +128,7 @@ void vw::CarView::connectSides(
  * @param wheel_origin the origin of the wheel
  * @param pose the pose of the checkerboard
  */
-void projectWheel(cv::Vec3f wheel_origin, mdl::Pose pose)
+void obj3d::Truck::projectWheel(cv::Vec3f wheel_origin, mdl::Pose pose)
 {
     std::vector<cv::Vec3f> wheel_points;
     float radius = 1;
@@ -144,29 +166,10 @@ void projectWheel(cv::Vec3f wheel_origin, mdl::Pose pose)
  * @param wheels the points for the wheels
  * @param pose the calculated pose of the checkerboard
  */
-void vw::CarView::projectWheels(std::vector<cv::Vec3f> wheels, mdl::Pose pose)
+void obj3d::Truck::projectWheels(std::vector<cv::Vec3f> wheels, mdl::Pose pose)
 {
     for (cv::Vec3f wheel : wheels)
     {
         projectWheel(wheel, pose);
     }
-}
-
-/**
- * Render the view.
- * 
- * @param pose the model to use to populate the view
- *
- * @return true if render successful
- */
-bool vw::CarView::render(mdl::Pose pose)
-{
-    std::vector<cv::Point2f> side_one_img_points = projectSide(side_one, pose);
-    std::vector<cv::Point2f> side_two_img_points = projectSide(side_two, pose);
-    connectSides(side_one_img_points, side_two_img_points, pose);
-    projectWheels(wheels, pose);
-
-    cv::namedWindow("Truck");
-    cv::imshow("Truck", pose.img);
-    return true;
 }

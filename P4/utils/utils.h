@@ -5,6 +5,9 @@
  * Header for defining utility functions such as reading from files.
  */
 
+#ifndef AR_UTILS
+#define AR_UTILS
+
 #include "models/models.h"
 
 namespace utils
@@ -30,3 +33,5 @@ namespace utils
         bool loadCalibration(mdl::Calibration *calibration);
     }
 }
+
+#endif

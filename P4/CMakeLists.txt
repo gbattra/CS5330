@@ -19,8 +19,10 @@ add_executable(
     models/models.h models/calibrator.cpp models/projector.cpp
 
     views/views.h views/cornersView.cpp views/calibrationView.cpp views/poseView.cpp
-    views/carView.cpp
+    views/objectView.cpp
 
     utils/utils.h utils/utils.cpp
+
+    objects/objects3d.h objects/truck.cpp
 )
 target_link_libraries( AR ${OpenCV_LIBS} )
