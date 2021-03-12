@@ -96,8 +96,11 @@ namespace vw
              * 
              * @param side the list of points for that side
              * @param pose the calculated pose of the checkerboard
+             * 
+             * @return the projected image points for the side
              */
-            void projectSide(std::vector<cv::Vec3f> side, mdl::Pose pose);
+            std::vector<cv::Point2f> projectSide(
+                std::vector<cv::Vec3f> side, mdl::Pose pose);
 
             /**
              * Projects the wheels onto the image.
@@ -111,13 +114,13 @@ namespace vw
              * Connects the points from one side with their corresponding points on
              * the other side.
              * 
-             * @param side_one one side of the object
-             * @param side_two the other side of the object
+             * @param side_one_img_points one side of the object
+             * @param side_two_img_points the other side of the object
              * @param pose the calculated pose of the checkerboard
              */
             void connectSides(
-                std::vector<cv::Vec3f> side_one,
-                std::vector<cv::Vec3f> side_two,
+                std::vector<cv::Point2f> side_one_img_points,
+                std::vector<cv::Point2f> side_two_img_points,
                 mdl::Pose pose);
 
         public:
