@@ -148,7 +148,7 @@ namespace cmd
     };
 
     /**
-     * Shows an image in a named window.
+     * Finds the pose of the checkerboard and projects the axis.
      */
     class SolvePnPCmd: public Command<mdl::Projector>
     {
@@ -163,6 +163,33 @@ namespace cmd
              * @param i the image to show
              */
             SolvePnPCmd(cv::Mat *i): img(i){}
+
+            /**
+             * Executes the command on the provided receiver.
+             * 
+             * @param receiver the object via which to execute the command
+             * 
+             * @return true if execution was successful
+             */
+            bool execute(mdl::Projector *receiver) override;
+    };
+
+    /**
+     * Projects an object onto the checkerboard.
+     */
+    class ProjectObjectCmd: public Command<mdl::Projector>
+    {
+        private:
+            // the image to show
+            cv::Mat *img;
+
+        public:
+            /**
+             * Primary constructor for the ShowImgCmd.
+             * 
+             * @param i the image to show
+             */
+            ProjectObjectCmd(cv::Mat *i): img(i){}
 
             /**
              * Executes the command on the provided receiver.

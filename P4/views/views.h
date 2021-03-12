@@ -78,6 +78,65 @@ namespace vw
              */
             bool render(mdl::Pose model) override;
     };
+
+    /**
+     * Projects a car onto the checkerboard in the image.
+     */
+    class CarView: public View<mdl::Pose>
+    {
+        private:
+            // vectors holding the points of the object to project
+            std::vector<cv::Vec3f> side_one;
+            std::vector<cv::Vec3f> side_two;
+            std::vector<cv::Vec3f> wheels_one;
+            std::vector<cv::Vec3f> wheels_two;
+
+            /**
+             * Projects a side of the object.
+             * 
+             * @param side the list of points for that side
+             * @param pose the calculated pose of the checkerboard
+             */
+            void projectSide(std::vector<cv::Vec3f> side, mdl::Pose pose);
+
+            /**
+             * Projects the wheels onto the image.
+             * 
+             * @param wheels the points for the wheels
+             * @param pose the calculated pose of the checkerboard
+             */
+            void projectWheels(std::vector<cv::Vec3f> wheels, mdl::Pose pose);
+
+            /**
+             * Connects the points from one side with their corresponding points on
+             * the other side.
+             * 
+             * @param side_one one side of the object
+             * @param side_two the other side of the object
+             * @param pose the calculated pose of the checkerboard
+             */
+            void connectSides(
+                std::vector<cv::Vec3f> side_one,
+                std::vector<cv::Vec3f> side_two,
+                mdl::Pose pose);
+
+        public:
+
+            /**
+             * Constructor for the car view. Populates the object
+             * points lists.
+             */
+            CarView();
+
+            /**
+             * Render the view.
+             * 
+             * @param model the model to use to populate the view
+             *
+             * @return true if render successful
+             */
+            bool render(mdl::Pose model) override;
+    };
 }
 
 #endif

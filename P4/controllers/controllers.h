@@ -16,6 +16,12 @@
 
 namespace ctrl
 {
+    enum MODE
+    {
+        POSE,
+        PROJECT
+    };
+
     /**
      * Base class for the controllers.
      */
@@ -88,13 +94,17 @@ namespace ctrl
      */
     class ProjectionController: public Controller<mdl::Projector>
     {
+        private:
+            // the controller mode
+            MODE mode;
+
         public:
             /**
              * Primary constructor for the Projection Controller.
              * 
              * @param m the projector model
              */
-            ProjectionController(mdl::Projector *m): Controller(m) {}
+            ProjectionController(mdl::Projector *m): Controller(m), mode(MODE::POSE) {}
 
             /**
              * Runs the controller.

@@ -34,8 +34,8 @@ bool vw::PoseView::render(mdl::Pose model)
             model.translation.at<double>(0, 2));
         
         std::vector<cv::Point2f> img_points;
-        model.points.push_back(cv::Vec3f(0, 0, 2));
 
+        model.points.push_back(cv::Vec3f(0, 0, 2));
         cv::projectPoints(
             model.points,
             model.rotation,

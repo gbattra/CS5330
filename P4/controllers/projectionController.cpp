@@ -20,6 +20,20 @@
 cmd::Command<mdl::Projector>* ctrl::ProjectionController::getCommand(
     int key, cv::Mat *frame)
 {
+    if (key == 'p')
+    {
+        mode = MODE::POSE;
+    }
+    if (key == 'o')
+    {
+        mode = MODE::PROJECT;
+    }
+    
+    if (mode == MODE::PROJECT)
+    {
+        return new cmd::ProjectObjectCmd(frame);
+    }
+
     return new cmd::SolvePnPCmd(frame);
 }
 

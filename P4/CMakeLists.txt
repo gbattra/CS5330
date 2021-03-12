@@ -11,6 +11,7 @@ add_executable(
     commands/commands.h commands/drawCornersCmd.cpp commands/registerFrameCmd.cpp
     commands/calibrateCmd.cpp commands/saveCalibrationCmd.cpp
     commands/loadCalibrationCmd.cpp commands/solvePnPCmd.cpp
+    commands/projectObjectCmd.cpp
 
     controllers/controllers.h controllers/calibrationController.cpp
     controllers/projectionController.cpp
@@ -18,6 +19,7 @@ add_executable(
     models/models.h models/calibrator.cpp models/projector.cpp
 
     views/views.h views/cornersView.cpp views/calibrationView.cpp views/poseView.cpp
+    views/carView.cpp
 
     utils/utils.h utils/utils.cpp
 )
