@@ -38,8 +38,10 @@ int main(int argc, char** argv)
 
         cv::Mat gray;
         cv::cvtColor(frame, gray, cv::COLOR_RGB2GRAY);
+        
         cv::Mat harris_corners;
         cv::cornerHarris(gray, harris_corners, 2, 3, ALPHA);
+
         double min_val;
         double max_val;
         cv::minMaxLoc(harris_corners, &min_val, &max_val, NULL, NULL);

@@ -23,7 +23,6 @@ bool utils::db::saveCalibration(mdl::Calibration *calibration)
     {
         for (int c = 0; c < 3; c++)
         {
-            std::cout << calibration->camera_matrix.at<double>(r, c) << std::endl;
             intrinsic_params[(r * 3) + c] = calibration->camera_matrix.at<double>(r, c);
         }
     }
