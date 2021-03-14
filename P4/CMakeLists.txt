@@ -26,3 +26,6 @@ add_executable(
     objects/objects3d.h objects/truck.cpp
 )
 target_link_libraries( AR ${OpenCV_LIBS} )
+
+add_executable( HarrisCorners harrisCorners.cpp views/views.h views/harrisCornersView.cpp )
+target_link_libraries( HarrisCorners ${OpenCV_LIBS} )

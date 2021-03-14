@@ -106,6 +106,30 @@ namespace vw
              */
             bool render(mdl::Pose model) override;
     };
+
+    class HarrisCornersView: View<std::vector<cv::Point2i>>
+    {
+        private:
+            // img to draw
+            cv::Mat *img;
+
+        public:
+            /**
+             * Primary constructor for the Harris Corners View.
+             * 
+             * @param i the image to draw the corners on
+             */
+            HarrisCornersView(cv::Mat *i): img(i) {}
+
+            /**
+             * Render the view.
+             * 
+             * @param model the model to use to populate the view
+             *
+             * @return true if render successful
+             */
+            bool render(std::vector<cv::Point2i> model) override;
+    };
 }
 
 #endif
