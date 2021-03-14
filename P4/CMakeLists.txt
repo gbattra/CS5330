@@ -27,5 +27,5 @@ add_executable(
 )
 target_link_libraries( AR ${OpenCV_LIBS} )
 
-add_executable( HarrisCorners harrisCorners.cpp views/views.h views/harrisCornersView.cpp )
+add_executable( HarrisCorners harrisCorners.cpp )
 target_link_libraries( HarrisCorners ${OpenCV_LIBS} )
