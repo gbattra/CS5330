@@ -1,0 +1,150 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional //EN">
+<html>
+<head>
+  <meta name="GENERATOR" content="mkd2html 2.2.6 GITHUB_CHECKBOX">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title></title>
+</head>
+<body>
+<h1>Project 4: Augmented Reality</h1>
+
+<p>Greg Attra | CS 5335 Prof. Maxwell</p>
+
+<h1>Overview</h1>
+
+<p>This project focused on the foundamentals of augmented reality using a checkerboard pattern to track and project onto. The first part focused on camera calibration, which consisted of finding the corners of the checkerboard and compiling a small dataset of images with the checkerboard at various translations and rotations with respect to the camera, and then using those samples to predict a camera calibration model. The second half consisted of using the predicted intrinsic parameters to track and project objects onto the checkerboard.</p>
+
+<p><a href="https://youtu.be/ZmhS2BurlAU">Here is a video</a> of the program in action: https://youtu.be/ZmhS2BurlAU</p>
+
+<h1>Implementation</h1>
+
+<h2>Calibration</h2>
+
+<p>The Calibration process can be broken into three parts:</p>
+
+<ol>
+<li>Detect the pixel locations of the checkboard corners at various translations and rotations</li>
+<li>Save N samples of these pixel locations and assign each a 3D coordinate</li>
+<li>Use the saved samples to predict the intrinsic parameters of the camera</li>
+</ol>
+
+
+<h3>Detecting the checkerboard</h3>
+
+<p>Using OpenCV&rsquo;s API we can find the corners of the checkerboard as follows:
+<code>
+cv::findChessboardCorners(*img, size, corners, flags);
+</code></p>
+
+<p>Where <code>img</code> is the target image, <code>size</code> is the size of the checkerboard in number of cells on each axis, and <code>corners</code> is a buffer to store the corner locations.</p>
+
+<p>Using OpenCV&rsquo;s <code>drawChessboardCorners()</code>, we can visualize the found corners:</p>
+
+<p><img src="images/corners.png" width="300px"/></p>
+
+<h3>Saving samples</h3>
+
+<p>We can press <code>s</code> to save the detected corner pixel locations and assign them 3D world points. In this case, the program measures the world in units of checkerborad squares (i.e. the top left square is at coordinate <code>(0, 0, 0)</code> in the checkerboard frame).</p>
+
+<h3>Calibrating the camera</h3>
+
+<p>Once we have at least 5 samples saved, we can calibrate the camera:</p>
+
+<p><code>
+calibration.final_proj_err = cv::calibrateCamera(
+        points_list,
+        corners_list,
+        size,
+        calibration.camera_matrix,
+        calibration.dist_coeffs,
+        rotations,
+        transformations,
+        cv::CALIB_FIX_ASPECT_RATIO);
+</code></p>
+
+<p>Where <code>points_list</code> is a vector of vectors each holding the 3D points for each corner set and <code>corners_list</code> is a vector of vectors each holding the detected corner locations.</p>
+
+<p>The program will output the predicted intrinsic parameters:</p>
+
+<p><img src="images/intrinsic.png" height="250px"/></p>
+
+<h3>Saving and loading the parameters</h3>
+
+<p>Pressing <code>w</code> will write the intrinsic parameters to a file in <code>files/params</code>. These params can be loaded from this file by pressing <code>l</code>.</p>
+
+<h2>Projection</h2>
+
+<p>Object projection consists of two parts:</p>
+
+<ol>
+<li>Detect the pose of the checkerboard</li>
+<li>Use the pose to project the object onto the checkerboard</li>
+</ol>
+
+
+<h3>Pose detection</h3>
+
+<p>Once intrinsic parameters of sufficient quality (with a reprojection error of &lt; <code>.5</code> pixels) we can move onto projection. To project an object onto an image, we first need to predict the checkerboard&rsquo;s translation and rotation. We can do this using OpenCV&rsquo;s <code>solvePnP()</code> method:</p>
+
+<p><code>
+cv::solvePnP(
+    points,
+    corners,
+    calibrator-&gt;calibration.camera_matrix,
+    calibrator-&gt;calibration.dist_coeffs,
+    pose.rotation,
+    pose.translation);
+</code></p>
+
+<p>Where <code>corners</code> are the pixel locations for the detected checkerboard corners and <code>points</code> are the 3D position for each corner. The <code>camera_matrix</code> and <code>dist_coeffs</code> are the loaded intrinsic params computed in the <code>Calibration</code> phase.</p>
+
+<p>We then draw the checkerboard 3D axis onto the checkerboard:</p>
+
+<p><img src="images/pose.png" width="300px"/></p>
+
+<h3>Objection projection</h3>
+
+<p>Once we have the pose, we can use OpenCV&rsquo;s <code>projectPoints()</code> function to project the points corresponding to the lines comprising the object we want to project.</p>
+
+<p>For example, to project the wheels of a truck onto the checkerboard, we pass in the 3D points comprising the wheel:</p>
+
+<p><code>
+cv::projectPoints(
+        wheel_points,
+        pose.rotation,
+        pose.translation,
+        pose.camera_matrix,
+        pose.dist_coeffs,
+        img_points);
+</code></p>
+
+<p>This will populate <code>img_points</code> with the pixel locations for each of the <code>wheel_points</code>.</p>
+
+<p>We can then draw lines to connect these pixel points to project the object on the checkboard:</p>
+
+<p><img src="images/object.png" width="300px"/></p>
+
+<h2>Harris Corners</h2>
+
+<p>Another way of tracking an object moving in an image is to use the Harris equation to detect strong corners. The <code>./HarrisCorners</code> program does this:</p>
+
+<p><img src="images/harris.png" width="300px"/></p>
+
+<p>Here the detected Harris Corners are marked in red (it may be difficult to see).</p>
+
+<h1>Reflection</h1>
+
+<p>This project came together relatively quickly for me, mostly due to OpenCV&rsquo;s API doing a lot of the heavy lifting. Where I struggled the most was in developing an intuitive sense of the projection from 3D to 2D. Once this clicked with me, I was able to create points for the truck object with relative ease.</p>
+
+<p>I am excited by the applications of AR. It was fun to explore the underlying mechanics of how it is accomplished and I plan to incorporate it into future projects. I like the idea of using AR to enable a human to instruct a robot to move to a target location.</p>
+
+<h1>Acknowledgements</h1>
+
+<ul>
+<li><a href="https://docs.opencv.org/master/d4/d94/tutorial_camera_calibration.html">OpenCV Calibration Tutorial</a></li>
+<li><a href="https://docs.opencv.org/master/d7/d53/tutorial_py_pose.html">OpenCV Pose Estimation Tutorial</a></li>
+<li><a href="https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_feature2d/py_features_harris/py_features_harris.html">OpenCV Harris Corners Tutorial</a></li>
+</ul>
+
+</body>
+</html>
