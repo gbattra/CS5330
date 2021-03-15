@@ -25,5 +25,6 @@ bool cmd::ProjectObjectCmd::execute(mdl::Projector *receiver)
     obj3d::Object3D *obj = new obj3d::Truck();
     vw::ObjectView view = vw::ObjectView(obj);
     bool rendered = view.render(pose);
+    delete obj;
     return rendered;
 }

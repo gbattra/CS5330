@@ -18,7 +18,7 @@ std::string usage_string(
     "$ ./AR -c\n"
     "\n"
     "Projection Mode:\n"
-    "$ ./AR -p <path-to-intrinsic-params-file>");
+    "$ ./AR -p");
     
 int main(int argc, char** argv)
 {
@@ -41,7 +41,6 @@ int main(int argc, char** argv)
     {
         mdl::Calibrator *calibrator = new mdl::Calibrator();
         utils::db::loadCalibration(&calibrator->calibration);
-        vw::CalibrationView calib_view = vw::CalibrationView();
         mdl::Projector *model = new mdl::Projector(calibrator);
         ctrl::ProjectionController *ctrl = new ctrl::ProjectionController(model);
         ctrl->spin();
