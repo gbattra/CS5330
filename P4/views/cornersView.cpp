@@ -22,7 +22,7 @@ bool vw::CornersView::render(mdl::Sample model)
         cv::Size(CHESSBOARD_WIDTH, CHESSBOARD_HEIGHT),
         cv::Mat(model.corners),
         model.corners.size() > 0);
-    cv::namedWindow("Circle Detection");
-    cv::imshow("Circle Detection", model.img);
+    cv::namedWindow("Corner Detection");
+    cv::imshow("Corner Detection", model.img);
     return true;
 }
