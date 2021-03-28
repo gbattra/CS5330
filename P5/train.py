@@ -8,6 +8,7 @@ This executable builds and trains a CNN to classify digits from the MNIST datase
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -39,22 +40,6 @@ def model(input_shape, n_classes):
     return m
 
 
-def build_and_train(x_train, y_train, batch_size, epochs):
-    """
-    Builds and fits the model to the training data.
-    :param x_train: the training input data
-    :param y_train: the training labels
-    :param batch_size: size of each batch
-    :param epochs: number of epochs
-    :return: the compiled and trained model
-    """
-    m = model((28, 28, 1), 10)
-    m.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
-    m.fit(x_train, y_train, batch_size=batch_size, epochs=epochs)
-
-    return m
-
-
 def load_data():
     """
     Loads the MNIST data and preps it for training
@@ -74,6 +59,23 @@ def load_data():
     return (x_train, y_train), (x_test, y_test)
 
 
+def plot_history(hist):
+    """
+    Plots the training history of the model.
+    :param hist: the history of the training
+    :return: None
+    """
+    print(hist.history.keys())
+    plt.plot(hist.history["accuracy"])
+    plt.plot(hist.history["val_accuracy"])
+    plt.title("Model Accuracy")
+    plt.ylabel("Accuracy")
+    plt.xlabel("Epochs")
+    plt.legend(["Train", "Test"], loc="upper left")
+    plt.show()
+
+
+
 def main():
     """
     Entrypoint to the program.
@@ -82,8 +84,11 @@ def main():
 
     # the MNIST dataset to train on
     (x_train, y_train), (x_test, y_test) = load_data()
-    m = build_and_train(x_train, y_train, batch_size=128, epochs=10)
+    m = model((28, 28, 1), 10)
+    m.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+    hist = m.fit(x_train, y_train, batch_size=128, epochs=10, validation_split=0.3)
     score = m.evaluate(x_test, y_test)
+    plot_history(hist)
 
     print("Test loss: ", score[0])
     print("Test acc: ", score[1])
