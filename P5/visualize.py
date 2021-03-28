@@ -48,6 +48,24 @@ def apply_weights(weights, img):
     plt.show()
 
 
+def apply_truncated(m, img):
+    """
+    Applies the first layer of the model to the img and visualizes the results.
+    :param m: the truncated model
+    :param img: the image to process
+    :return: None
+    """
+
+    p = m.predict(img)
+    fig, ax = plt.subplots(8, 4)
+    for i in range(p.shape[3]):
+        output = p[0, :, :, i]
+        ax[i // 4, i % 4].imshow(output)
+
+    fig.suptitle("Truncated Outputs")
+    plt.show()
+
+
 def main():
     """
     Visualizes the weights and how they process the data.
@@ -60,6 +78,9 @@ def main():
 
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data("mnist.npz")
     apply_weights(weights, x_train[0])
+
+    m_truncated = keras.Model(inputs=m.inputs, outputs=m.layers[0].output)
+    apply_truncated(m_truncated, x_train[:1])
 
 
 if __name__ == "__main__":
