@@ -44,7 +44,6 @@ def model(input_shape, n_classes):
 def load_data():
     """
     Loads the MNIST data and preps it for training
-    :param filepath the path to load the data into
     :return: the training and test datasets
     """
 
