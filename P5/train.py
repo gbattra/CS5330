@@ -24,6 +24,7 @@ def model(input_shape, n_classes):
     :param n_classes: the number of classes in the dataset (10)
     :return: a Keras sequential CNN for classifying the MNIST dataset
     """
+
     m = keras.Sequential([
         keras.Input(shape=input_shape),
         layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
@@ -46,6 +47,7 @@ def load_data():
     :param filepath the path to load the data into
     :return: the training and test datasets
     """
+
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data("mnist.npz")
 
     x_train = x_train.astype("float32") / 255
@@ -65,7 +67,7 @@ def plot_history(hist):
     :param hist: the history of the training
     :return: None
     """
-    print(hist.history.keys())
+
     plt.plot(hist.history["accuracy"])
     plt.plot(hist.history["val_accuracy"])
     plt.title("Model Accuracy")
@@ -75,14 +77,12 @@ def plot_history(hist):
     plt.show()
 
 
-
 def main():
     """
     Entrypoint to the program.
     :return: 0 if success, 1 if error
     """
 
-    # the MNIST dataset to train on
     (x_train, y_train), (x_test, y_test) = load_data()
     m = model((28, 28, 1), 10)
     m.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])

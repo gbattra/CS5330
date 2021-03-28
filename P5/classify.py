@@ -7,10 +7,6 @@
 This executable uses the pretrained model to classify new images from the /data dir.
 """
 
-import numpy as np
-import cv2
-import os
-
 from tensorflow import keras
 
 
