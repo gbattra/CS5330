@@ -31,8 +31,12 @@ def main():
     :return 0 if success, -1 otherwise
     """
     data = import_data()
+    i = iter(data)
+    x, y = next(i)
+    x /= 255
+
     m = keras.models.load_model("model")
-    score = m.evaluate(data)
+    score = m.evaluate(x, y)
 
     print("Test loss: ", score[0])
     print("Test acc: ", score[1])
