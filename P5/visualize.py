@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 import cv2
 
 from tensorflow import keras
-from matplotlib import colors
 
 
 def plot_weights(weights):
@@ -48,21 +47,23 @@ def apply_weights(weights, img):
     plt.show()
 
 
-def apply_truncated(m, img):
+def apply_truncated(m, img, i, title):
     """
     Applies the first layer of the model to the img and visualizes the results.
     :param m: the truncated model
     :param img: the image to process
+    :param i: the layer to truncate at
+    :param title: the title of the plot
     :return: None
     """
-
-    p = m.predict(img)
+    m_trunc = keras.Model(inputs=m.inputs, outputs=m.layers[i].output)
+    p = m_trunc.predict(img)
     fig, ax = plt.subplots(8, 4)
     for i in range(p.shape[3]):
         output = p[0, :, :, i]
         ax[i // 4, i % 4].imshow(output)
 
-    fig.suptitle("Truncated Outputs")
+    fig.suptitle(title)
     plt.show()
 
 
@@ -79,8 +80,11 @@ def main():
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data("mnist.npz")
     apply_weights(weights, x_train[0])
 
-    m_truncated = keras.Model(inputs=m.inputs, outputs=m.layers[0].output)
-    apply_truncated(m_truncated, x_train[:1])
+    apply_truncated(m, x_train[:1], 0, "Truncated First Layer")
+    apply_truncated(m, x_train[:1], 1, "Truncated Second Layer")
+    apply_truncated(m, x_train[:1], 2, "Truncated Max Pool - 1")
+    apply_truncated(m, x_train[199:200], 2, "Truncated Max Pool - 2")
+    apply_truncated(m, x_train[499:500], 2, "Truncated Max Pool - 3")
 
 
 if __name__ == "__main__":
