@@ -8,7 +8,6 @@ This executable builds and trains a CNN to classify digits from the MNIST datase
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -56,18 +55,6 @@ def build_and_train(x_train, y_train, batch_size, epochs):
     return m
 
 
-def evaluate(m, x_test, y_test):
-    """
-    Evaluates the model
-    :param m: the model to evaluate
-    :param x_test: the test data to evaluate with
-    :param y_test: the test labels to evaluate with
-    :return: the model score
-    """
-    score = m.evaluate(x_test, y_test)
-    return score
-
-
 def load_data():
     """
     Loads the MNIST data and preps it for training
@@ -96,7 +83,7 @@ def main():
     # the MNIST dataset to train on
     (x_train, y_train), (x_test, y_test) = load_data()
     m = build_and_train(x_train, y_train, batch_size=128, epochs=10)
-    score = evaluate(m, x_test, y_test)
+    score = m.evaluate(x_test, y_test)
 
     print("Test loss: ", score[0])
     print("Test acc: ", score[1])
