@@ -19,21 +19,21 @@ def import_images():
     :return: the images and their corresponding labels
     """
     folder = "data/greek"
-    images = []
+    imgs = []
     categories = []
-    labels = []
+    lbls = []
     for filename in os.listdir(folder):
         img = cv2.imread(os.path.join(folder, filename))
         if img is not None:
-            img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype("float32")
             img = cv2.resize(img, (28, 28))
-            img = np.float32(img)
-            img = cv2.invert(img)
+            img = np.abs(img - 255)
+            img = img.flatten()
             label, categories = get_label(filename, categories)
-            images.append(img)
-            labels.append(label)
+            imgs.append(img)
+            lbls.append([label])
 
-    return images, labels
+    return np.array(imgs), np.array(lbls)
 
 
 def get_label(filename, categories):
@@ -53,4 +53,6 @@ def get_label(filename, categories):
 
 
 if __name__ == '__main__':
-    import_images()
+    images, labels = import_images()
+    np.savetxt("data/greek/pixels.csv", images, header="Pixels")
+    np.savetxt("data/greek/labels.csv", labels, header="Labels")
