@@ -17,7 +17,7 @@ def import_data():
     """
 
     return keras.preprocessing.image_dataset_from_directory(
-        "data",
+        "data/mnist",
         labels="inferred",
         label_mode="categorical",
         color_mode="grayscale",
@@ -30,6 +30,7 @@ def main():
     Runs the images through the classifier and predicts the labels for each.
     :return 0 if success, -1 otherwise
     """
+
     data = import_data()
     i = iter(data)
     x, y = next(i)
