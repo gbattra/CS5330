@@ -8,6 +8,7 @@ This program reads the images from the /data/greek directory and saves their val
 in two CSV files to the same directory.
 """
 
+import numpy as np
 import cv2
 import os
 
@@ -25,6 +26,8 @@ def import_images():
         img = cv2.imread(os.path.join(folder, filename))
         if img is not None:
             img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+            img = cv2.resize(img, (28, 28))
+            img = np.float32(img)
             img = cv2.invert(img)
             label, categories = get_label(filename, categories)
             images.append(img)
@@ -47,3 +50,7 @@ def get_label(filename, categories):
     label = categories.index(category)
 
     return label, categories
+
+
+if __name__ == '__main__':
+    import_images()
