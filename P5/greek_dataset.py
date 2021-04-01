@@ -27,7 +27,7 @@ def import_images():
         if img is not None:
             img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
             img = cv2.resize(img, (28, 28))
-            img = 255 - img
+            img = (255 - img) / 255
             img = img.flatten()
             label, categories = get_label(filename, categories)
             imgs.append(img)

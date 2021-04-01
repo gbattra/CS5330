@@ -9,6 +9,7 @@ an embedding space for each Greek symbol. These embeddings are saved to a CSV fi
 """
 
 import numpy as np
+import cv2
 
 from tensorflow import keras
 
@@ -24,6 +25,7 @@ def read_data():
     p = np.genfromtxt("data/greek/pixels.csv")
     l = np.genfromtxt("data/greek/labels.csv")
     x = p.reshape((27, 28, 28))
+    print(x[0, :, :])
     return x, l
 
 

@@ -9,6 +9,7 @@ a sample from each category with all other samples.
 """
 
 import numpy as np
+import cv2
 
 from tensorflow import keras
 from greek_embeddings import truncated_model, read_data
@@ -24,6 +25,9 @@ def sum_squared_distance(img, imgs, labels, m):
     :param m: the model to compute the embedding
     :return: a list of the 27 SSD values for the target image
     """
+    print(img)
+    cv2.imshow("emb", (img[0, :, :] * 255).astype(np.uint8))
+    cv2.waitKey()
     e = m(img).numpy()
     p = m(imgs).numpy()
     ssd = np.sqrt(np.sum((p - e) ** 2, axis=1))
