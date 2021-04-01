@@ -52,4 +52,3 @@ if __name__ == '__main__':
     print(f'Alpha SSDs (sample {i_alpha}):\n{alpha_ssd}\n')
     print(f'Beta SSDs (sample {i_beta}):\n{beta_ssd}\n')
     print(f'Gamma SSDs (sample {i_gamma}):\n{gamma_ssd}\n')
-

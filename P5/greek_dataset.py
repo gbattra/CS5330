@@ -25,9 +25,9 @@ def import_images():
     for filename in os.listdir(folder):
         img = cv2.imread(os.path.join(folder, filename))
         if img is not None:
-            img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype("float32")
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
             img = cv2.resize(img, (28, 28))
-            img = np.abs(img - 255)
+            img = 255 - img
             img = img.flatten()
             label, categories = get_label(filename, categories)
             imgs.append(img)
@@ -56,3 +56,4 @@ if __name__ == '__main__':
     images, labels = import_images()
     np.savetxt("data/greek/pixels.csv", images, header="Pixels")
     np.savetxt("data/greek/labels.csv", labels, header="Labels")
+    cv2.waitKey()
