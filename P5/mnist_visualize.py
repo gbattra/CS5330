@@ -72,8 +72,9 @@ def main():
     Visualizes the weights and how they process the data.
     :return: 0 if success, -1 otherwise
     """
-
     m = keras.models.load_model("model")
+    m.summary()
+
     weights = np.array(m.layers[0].get_weights())
     plot_weights(weights)
 

@@ -18,7 +18,7 @@ def import_images():
     Reads the images into a labeled list.
     :return: the images and their corresponding labels
     """
-    folder = "data/greek"
+    folder = "data/greek/images"
     imgs = []
     categories = []
     lbls = []
