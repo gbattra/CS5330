@@ -24,17 +24,14 @@ def sum_squared_distance(img, imgs, labels, m):
     :param m: the model to compute the embedding
     :return: a list of the 27 SSD values for the target image
     """
-    ssds = []
     e = m(img).numpy()
     p = m(imgs).numpy()
-    print(img.shape)
     ssd = np.sqrt(np.sum((p - e) ** 2, axis=1))
     labeled_ssd = np.hstack((
         np.expand_dims(labels, axis=0).transpose(),
         np.expand_dims(ssd, axis=0).transpose()))
-    print(labeled_ssd)
 
-    return 0.0
+    return labeled_ssd
 
 
 if __name__ == '__main__':
@@ -51,4 +48,8 @@ if __name__ == '__main__':
     alpha_ssd = sum_squared_distance(imgs[i_alpha:i_alpha+1], imgs, labels, m)
     beta_ssd = sum_squared_distance(imgs[i_beta:i_beta+1], imgs, labels, m)
     gamma_ssd = sum_squared_distance(imgs[i_gamma:i_gamma+1], imgs, labels, m)
+
+    print(f'Alpha SSDs (sample {i_alpha}):\n{alpha_ssd}\n')
+    print(f'Beta SSDs (sample {i_beta}):\n{beta_ssd}\n')
+    print(f'Gamma SSDs (sample {i_gamma}):\n{gamma_ssd}\n')
 
