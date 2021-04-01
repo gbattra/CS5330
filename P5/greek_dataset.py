@@ -8,30 +8,33 @@ This program reads the images from the /data/greek directory and saves their val
 in two CSV files to the same directory.
 """
 
+import glob
 import numpy as np
 import cv2
 import os
 
 
-def import_images():
+def import_images(folder):
     """
     Reads the images into a labeled list.
     :return: the images and their corresponding labels
     """
-    folder = "data/greek/images"
     imgs = []
     categories = []
     lbls = []
-    for filename in os.listdir(folder):
-        img = cv2.imread(os.path.join(folder, filename))
-        if img is not None:
-            img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-            img = cv2.resize(img, (28, 28))
-            img = (255 - img) / 255
-            img = img.flatten()
-            label, categories = get_label(filename, categories)
-            imgs.append(img)
-            lbls.append([label])
+
+    filenames = glob.glob(folder.rstrip('/') + "/*.png")
+    filenames.sort()
+    data = [cv2.imread(img) for img in filenames]
+
+    for i, img in enumerate(data):
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        img = cv2.resize(img, (28, 28))
+        img = (255 - img) / 255
+        img = img.flatten()
+        label, categories = get_label(filenames[i], categories)
+        imgs.append(img)
+        lbls.append([label])
 
     return np.array(imgs), np.array(lbls)
 
@@ -52,8 +55,16 @@ def get_label(filename, categories):
     return label, categories
 
 
-if __name__ == '__main__':
-    images, labels = import_images()
+def main():
+    """
+    Imports the image data, generates labels, and saves the data to two CSV files.
+    :return: None
+    """
+    images, labels = import_images("data/greek/images")
     np.savetxt("data/greek/pixels.csv", images, header="Pixels")
     np.savetxt("data/greek/labels.csv", labels, header="Labels")
     cv2.waitKey()
+
+
+if __name__ == '__main__':
+    main()

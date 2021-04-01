@@ -25,9 +25,6 @@ def sum_squared_distance(img, imgs, labels, m):
     :param m: the model to compute the embedding
     :return: a list of the 27 SSD values for the target image
     """
-    print(img)
-    cv2.imshow("emb", (img[0, :, :] * 255).astype(np.uint8))
-    cv2.waitKey()
     e = m(img).numpy()
     p = m(imgs).numpy()
     ssd = np.sqrt(np.sum((p - e) ** 2, axis=1))
@@ -38,10 +35,12 @@ def sum_squared_distance(img, imgs, labels, m):
     return labeled_ssd
 
 
-if __name__ == '__main__':
+def main():
     """
-    Entrypoint to the program. Reads the labels and image data from CSVs and computes the SSD
-    for 1 sample from each category with all other samples.
+    Computes the SSD between a sample from each category and all other samples in the dataset, printing
+    the results to the console. The program then computes the SSDs for custom handwritten samples for each
+    symbol in the dataset and compares the results against those from the original dataset.
+    :return: None
     """
     imgs, labels = read_data()
     i_alpha = np.where(labels == 0)[0][0]
@@ -49,10 +48,14 @@ if __name__ == '__main__':
     i_gamma = np.where(labels == 2)[0][0]
 
     m = truncated_model()
-    alpha_ssd = sum_squared_distance(imgs[i_alpha:i_alpha+1], imgs, labels, m)
-    beta_ssd = sum_squared_distance(imgs[i_beta:i_beta+1], imgs, labels, m)
-    gamma_ssd = sum_squared_distance(imgs[i_gamma:i_gamma+1], imgs, labels, m)
+    alpha_ssd = sum_squared_distance(imgs[i_alpha:i_alpha + 1], imgs, labels, m)
+    beta_ssd = sum_squared_distance(imgs[i_beta:i_beta + 1], imgs, labels, m)
+    gamma_ssd = sum_squared_distance(imgs[i_gamma:i_gamma + 1], imgs, labels, m)
 
     print(f'Alpha SSDs (sample {i_alpha}):\n{alpha_ssd}\n')
     print(f'Beta SSDs (sample {i_beta}):\n{beta_ssd}\n')
     print(f'Gamma SSDs (sample {i_gamma}):\n{gamma_ssd}\n')
+
+
+if __name__ == '__main__':
+    main()

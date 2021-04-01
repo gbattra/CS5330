@@ -15,6 +15,10 @@ from tensorflow import keras
 
 
 def truncated_model():
+    """
+    Returns a truncated model for computing the Greek symbol embeddings.
+    :return: the truncated model
+    """
     m = keras.models.load_model("model")
     m_trunc = keras.Model(inputs=m.inputs, outputs=m.layers[5].output)
     m_trunc.summary()
@@ -22,15 +26,27 @@ def truncated_model():
 
 
 def read_data():
+    """
+    Reads in the Greek image data from the generated CSVs.
+    :return: the formatted data and labels
+    """
     p = np.genfromtxt("data/greek/pixels.csv")
     l = np.genfromtxt("data/greek/labels.csv")
     x = p.reshape((27, 28, 28))
-    print(x[0, :, :])
     return x, l
 
 
-if __name__ == '__main__':
+def main():
+    """
+    Computes the embeddings for each image in the Greek image dataset and saves them to
+    a CSV.
+    :return: None
+    """
     model = truncated_model()
     imgs, labels = read_data()
     p = model(imgs).numpy()
     np.savetxt("data/greek/embeddings.csv", p, header="Embeddings")
+
+
+if __name__ == '__main__':
+    main()
