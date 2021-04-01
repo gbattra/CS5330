@@ -13,6 +13,7 @@ import cv2
 
 from tensorflow import keras
 from greek_embeddings import truncated_model, read_data
+from greek_dataset import import_images
 
 
 def sum_squared_distance(img, imgs, labels, m):
@@ -28,11 +29,26 @@ def sum_squared_distance(img, imgs, labels, m):
     e = m(img).numpy()
     p = m(imgs).numpy()
     ssd = np.sqrt(np.sum((p - e) ** 2, axis=1))
+    print(labels.shape)
     labeled_ssd = np.hstack((
         np.expand_dims(labels, axis=0).transpose(),
         np.expand_dims(ssd, axis=0).transpose()))
 
     return labeled_ssd
+
+
+def evaluate_ssd(model, data, labels):
+    i_alpha = np.where(labels == 0)[0][0]
+    i_beta = np.where(labels == 1)[0][0]
+    i_gamma = np.where(labels == 2)[0][0]
+
+    alpha_ssd = sum_squared_distance(data[i_alpha:i_alpha + 1], data, labels, model)
+    beta_ssd = sum_squared_distance(data[i_beta:i_beta + 1], data, labels, model)
+    gamma_ssd = sum_squared_distance(data[i_gamma:i_gamma + 1], data, labels, model)
+
+    print(f'Alpha SSDs (sample {i_alpha}):\n{alpha_ssd}\n')
+    print(f'Beta SSDs (sample {i_beta}):\n{beta_ssd}\n')
+    print(f'Gamma SSDs (sample {i_gamma}):\n{gamma_ssd}\n')
 
 
 def main():
@@ -42,19 +58,13 @@ def main():
     symbol in the dataset and compares the results against those from the original dataset.
     :return: None
     """
-    imgs, labels = read_data()
-    i_alpha = np.where(labels == 0)[0][0]
-    i_beta = np.where(labels == 1)[0][0]
-    i_gamma = np.where(labels == 2)[0][0]
-
     m = truncated_model()
-    alpha_ssd = sum_squared_distance(imgs[i_alpha:i_alpha + 1], imgs, labels, m)
-    beta_ssd = sum_squared_distance(imgs[i_beta:i_beta + 1], imgs, labels, m)
-    gamma_ssd = sum_squared_distance(imgs[i_gamma:i_gamma + 1], imgs, labels, m)
+    x, y = read_data()
+    evaluate_ssd(m, x, y)
 
-    print(f'Alpha SSDs (sample {i_alpha}):\n{alpha_ssd}\n')
-    print(f'Beta SSDs (sample {i_beta}):\n{beta_ssd}\n')
-    print(f'Gamma SSDs (sample {i_gamma}):\n{gamma_ssd}\n')
+    custom_x, custom_y = import_images("data/greek/images/custom")
+    custom_x = custom_x.reshape((6, 28, 28))
+    evaluate_ssd(m, custom_x, np.squeeze(custom_y, axis=1))
 
 
 if __name__ == '__main__':
