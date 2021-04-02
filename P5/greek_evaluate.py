@@ -9,9 +9,7 @@ a sample from each category with all other samples.
 """
 
 import numpy as np
-import cv2
 
-from tensorflow import keras
 from greek_embeddings import truncated_model, read_data
 from greek_dataset import import_images
 
@@ -29,7 +27,6 @@ def sum_squared_distance(img, imgs, labels, m):
     e = m(img).numpy()
     p = m(imgs).numpy()
     ssd = np.sqrt(np.sum((p - e) ** 2, axis=1))
-    print(labels.shape)
     labeled_ssd = np.hstack((
         np.expand_dims(labels, axis=0).transpose(),
         np.expand_dims(ssd, axis=0).transpose()))
@@ -38,6 +35,14 @@ def sum_squared_distance(img, imgs, labels, m):
 
 
 def evaluate_ssd(model, data, labels):
+    """
+    Computes the SSD for a sample from each category against all samples in the data set and prints
+    the results.
+    :param model: the model to compute the embeddings
+    :param data: the dataset to run on
+    :param labels: the labels for the data
+    :return: None
+    """
     i_alpha = np.where(labels == 0)[0][0]
     i_beta = np.where(labels == 1)[0][0]
     i_gamma = np.where(labels == 2)[0][0]
@@ -62,6 +67,7 @@ def main():
     x, y = read_data()
     evaluate_ssd(m, x, y)
 
+    print("Custom Images:\n")
     custom_x, custom_y = import_images("data/greek/images/custom")
     custom_x = custom_x.reshape((6, 28, 28))
     evaluate_ssd(m, custom_x, np.squeeze(custom_y, axis=1))
