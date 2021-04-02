@@ -160,13 +160,14 @@ def evaluate_configurations(configurations, x_train, y_train, x_test, y_test):
 def plot_history(title, hist, config=None):
     """
     Plots the training history of the model.
+    :param title: the title for the plot
     :param hist: the history of the training
     :param config: the config used for the model
     :return: None
     """
     txt = f"No. Conv Layers: {config['N_conv_layers']}\n" \
           f"No. Conv Filters: {config['N_conv_filters']}\n" \
-          f"Conv Filter Size: {config['conv_filter_size']}" \
+          f"Conv Filter Size: {config['conv_filter_size']}\n" \
           f"No. Dense Layers: {config['N_dense_layers']}\n" \
           f"No. Dense Units: {config['N_dense_units']}\n" if config is not None else "Baseline History"
     plt.plot(hist.history["accuracy"])
@@ -175,7 +176,7 @@ def plot_history(title, hist, config=None):
     plt.ylabel("Accuracy")
     plt.xlabel("Epochs")
     plt.legend(["Train", "Test"], loc="upper left")
-    plt.text(0.5, 0.05, txt, ha='left')
+    plt.figtext(0.05, 0.05, txt, ha="left", fontsize=9, bbox={"facecolor": "orange", "alpha": 0.5, "pad": 5})
     plt.show()
 
 
@@ -272,7 +273,7 @@ def plot_histories(histories):
     baseline = histories[0]
 
     plot_history("Baseline", baseline['history'])
-    plot_history("Best Model", best_model['history'])
+    plot_history("Best Model", best_model['history'], best_model['config'])
     plot_param_metrics(histories)
 
 
