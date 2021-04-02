@@ -92,7 +92,7 @@ def main():
     print("Test loss: ", score[0])
     print("Test acc: ", score[1])
 
-    m.save("models")
+    m.save("models/mnist")
 
     return 0
 

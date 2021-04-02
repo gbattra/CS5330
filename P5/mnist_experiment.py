@@ -27,19 +27,19 @@ def generate_config(c, f, s, d, u):
     """
     Generates a configuration object given the indices for each config
     param.
-    :param c: index for number of conv layers
-    :param f: index for number of conv filters
-    :param s: index for conv filter size
-    :param d: index for number of dense layers
-    :param u: index for number of dense units
+    :param c: number of conv layers
+    :param f: number of conv filters
+    :param s: conv filter size
+    :param d: number of dense layers
+    :param u: number of dense units
     :return: a config dictionary
     """
     config = {
-        'N_conv_layers': N_conv_layers[c],
-        'N_conv_filters': N_conv_filters[f],
-        'N_dense_layers': N_dense_layers[d],
-        'N_dense_units': N_dense_units[u],
-        'conv_filter_size': conv_filter_size[s],
+        'N_conv_layers': c,
+        'N_conv_filters': f,
+        'N_dense_layers': d,
+        'N_dense_units': u,
+        'conv_filter_size': s
     }
     return config
 
@@ -67,7 +67,7 @@ def generate_dense_layers(d, u, l):
     :param l: the model layers
     :return: None
     """
-    for _ in d:
+    for _ in range(d):
         l.append(layers.Dense(u, activation="relu"))
         l.append(layers.Dropout(0.5))
 
@@ -81,9 +81,9 @@ def generate_conv_layers(c, f, s, l):
     :param l: the
     :return None
     """
-    for _ in c:
+    for _ in range(c):
         l.append(layers.Conv2D(f, kernel_size=(s, s), activation="relu"))
-        l.append(layers.MaxPooling2D(pool_size=0.5))
+        l.append(layers.MaxPooling2D(pool_size=(2, 2)))
         l.append(layers.Dropout(0.5))
 
 
@@ -117,7 +117,7 @@ def load_data():
     Loads and formats the MNIST Fashion dataset for training.
     :return: the formatted train and test datasets
     """
-    (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data("fashion_mnist.npz")
+    (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
 
     x_train = x_train.astype("float32") / 255
     x_test = x_test.astype("float32") / 255
@@ -142,13 +142,15 @@ def evaluate_configurations(configurations, x_train, y_train, x_test, y_test):
     :return: the histories list
     """
     histories = []
-    for config in configurations:
-        m = build_model((28, 28, 1), 10, config)
-        hist = m.fit(x_train, y_train, batch_size=128, epochs=10, validation_split=0.3)
-        histories.append({
-            'config': config,
-            'history': hist
-        })
+    # for config in configurations:
+    config = configurations[0]
+    m = build_model((28, 28, 1), 10, config)
+    m.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+    hist = m.fit(x_train, y_train, batch_size=128, epochs=10, validation_split=0.3)
+    histories.append({
+        'config': config,
+        'history': hist
+    })
     return histories
 
 
@@ -159,8 +161,9 @@ def main():
     """
     (x_train, y_train), (x_test, y_test) = load_data()
 
-    m_baseline = model((28, 28, 1), 10)
-    baseline_history = m_baseline.fit(x_train, y_train, batch_size=128, epochs=10, validation_split=0.3)
+    # m_baseline = model((28, 28, 1), 10)
+    # m_baseline.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+    # baseline_history = m_baseline.fit(x_train, y_train, batch_size=128, epochs=10, validation_split=0.3)
 
     configurations = build_configurations()
     histories = evaluate_configurations(configurations, x_train, y_train, x_test, y_test)

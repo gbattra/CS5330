@@ -36,7 +36,7 @@ def main():
     x, y = next(i)
     x /= 255
 
-    m = keras.models.load_model("model")
+    m = keras.models.load_model("models/mnist")
     score = m.evaluate(x, y)
 
     print("Test loss: ", score[0])
