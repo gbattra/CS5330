@@ -9,6 +9,8 @@ trained on the MNIST Fashion dataset. As a baseline, the original model used for
 dataset is used.
 """
 
+import numpy as np
+
 from tensorflow import keras
 from tensorflow.keras import layers
 from mnist_train import model
@@ -110,8 +112,58 @@ def build_model(input_shape, n_classes, config):
     return keras.Sequential(l)
 
 
+def load_data():
+    """
+    Loads and formats the MNIST Fashion dataset for training.
+    :return: the formatted train and test datasets
+    """
+    (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data("fashion_mnist.npz")
+
+    x_train = x_train.astype("float32") / 255
+    x_test = x_test.astype("float32") / 255
+    x_train = np.expand_dims(x_train, -1)
+    x_test = np.expand_dims(x_test, -1)
+
+    y_train = keras.utils.to_categorical(y_train, num_classes=10)
+    y_test = keras.utils.to_categorical(y_test, num_classes=10)
+
+    return (x_train, y_train), (x_test, y_test)
+
+
+def evaluate_configurations(configurations, x_train, y_train, x_test, y_test):
+    """
+    Fits the model for each config to the training data and returns a list of the history
+    for each.
+    :param configurations: the configs to use when building the model
+    :param x_train: training inputs
+    :param y_train: training labels
+    :param x_test: test inputs
+    :param y_test: test labels
+    :return: the histories list
+    """
+    histories = []
+    for config in configurations:
+        m = build_model((28, 28, 1), 10, config)
+        hist = m.fit(x_train, y_train, batch_size=128, epochs=10, validation_split=0.3)
+        histories.append({
+            'config': config,
+            'history': hist
+        })
+    return histories
+
+
 def main():
+    """
+    Evaluates each model configuration against the baseline model (used for MNIST numbers dataset).
+    :return: None
+    """
+    (x_train, y_train), (x_test, y_test) = load_data()
+
     m_baseline = model((28, 28, 1), 10)
+    baseline_history = m_baseline.fit(x_train, y_train, batch_size=128, epochs=10, validation_split=0.3)
+
+    configurations = build_configurations()
+    histories = evaluate_configurations(configurations, x_train, y_train, x_test, y_test)
 
 
 if __name__ == '__main__':
