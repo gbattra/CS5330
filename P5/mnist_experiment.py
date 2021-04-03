@@ -84,8 +84,8 @@ def generate_conv_layers(c, f, s, l):
     """
     for _ in range(c):
         l.append(layers.Conv2D(f, kernel_size=(s, s), activation="relu"))
-        l.append(layers.MaxPooling2D(pool_size=(2, 2)))
 
+    l.append(layers.MaxPooling2D(pool_size=(2, 2)))
     l.append(layers.Dropout(0.5))
 
 
@@ -111,7 +111,9 @@ def build_model(input_shape, n_classes, config):
     l.append(layers.Dropout(0.5)),
     l.append(layers.Dense(n_classes, activation="softmax"))
 
-    return keras.Sequential(l)
+    m = keras.Sequential(l)
+    m.summary()
+    return m
 
 
 def load_data():
