@@ -9,6 +9,7 @@ a sample from each category with all other samples.
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from greek_embeddings import truncated_model, read_data
 from greek_dataset import import_images
@@ -34,6 +35,20 @@ def sum_squared_distance(img, imgs, labels, m):
     return labeled_ssd
 
 
+def plot_embedding_ssd(ssd, title):
+    alpha = np.asarray([s for s in ssd if s[0] == 0])
+    beta = np.asarray([s for s in ssd if s[0] == 1])
+    gamma = np.asarray([s for s in ssd if s[0] == 2])
+
+    plt.scatter(alpha[:, 1], alpha[:, 0])
+    plt.scatter(beta[:, 1], beta[:, 0])
+    plt.scatter(gamma[:, 1], gamma[:, 0])
+    plt.legend(["Alpha", "Beta", "Gamma"], loc="upper left")
+    plt.title(title)
+
+    plt.show()
+
+
 def evaluate_ssd(model, data, labels):
     """
     Computes the SSD for a sample from each category against all samples in the data set and prints
@@ -50,6 +65,10 @@ def evaluate_ssd(model, data, labels):
     alpha_ssd = sum_squared_distance(data[i_alpha:i_alpha + 1], data, labels, model)
     beta_ssd = sum_squared_distance(data[i_beta:i_beta + 1], data, labels, model)
     gamma_ssd = sum_squared_distance(data[i_gamma:i_gamma + 1], data, labels, model)
+
+    plot_embedding_ssd(alpha_ssd, "Alpha SSDs")
+    plot_embedding_ssd(beta_ssd, "Beta SSDs")
+    plot_embedding_ssd(gamma_ssd, "Gamma SSDs")
 
     print(f'Alpha SSDs (sample {i_alpha}):\n{alpha_ssd}\n')
     print(f'Beta SSDs (sample {i_beta}):\n{beta_ssd}\n')

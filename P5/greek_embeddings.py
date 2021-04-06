@@ -19,7 +19,7 @@ def truncated_model():
     Returns a truncated model for computing the Greek symbol embeddings.
     :return: the truncated model
     """
-    m = keras.models.load_model("model")
+    m = keras.models.load_model("models/mnist")
     m_trunc = keras.Model(inputs=m.inputs, outputs=m.layers[5].output)
     m_trunc.summary()
     return m_trunc

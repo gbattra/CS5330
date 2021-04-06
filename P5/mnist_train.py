@@ -57,6 +57,12 @@ def load_data():
     y_train = keras.utils.to_categorical(y_train, num_classes=10)
     y_test = keras.utils.to_categorical(y_test, num_classes=10)
 
+    fig, ax = plt.subplots(2, 1)
+    fig.suptitle("First Two Samples")
+    ax[0].imshow(x_train[0, :, :, 0])
+    ax[1].imshow(x_train[1, :, :, 0])
+    plt.show()
+
     return (x_train, y_train), (x_test, y_test)
 
 
