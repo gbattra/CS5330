@@ -126,13 +126,18 @@ different letters, more so than when using the dataset provided.</p>
 
 <h3>Part 4: Experimenting</h3>
 
-<p>In this part, I selected five parameters along which I could modify the architecture of the
-neural network used to fit the MNIST number dataset. I chose the following:
-* Number of convolutional layers: <code>2, 3, 4</code>
-* Number of filters per convolutional layer: <code>34, 64, 128</code>
-* Size of filters per convolutional layer: <code>3, 5</code>
-* Number of dense layers: <code>2, 3, 4</code>
-* Number of units in each dense layer: <code>50, 100, 400</code></p>
+<p>In this part, I chose to experiment with variations on a model to fit the MNIST Fashion dataset.
+I selected five parameters along which I could modify the architecture of the
+neural network used to fit the MNIST number dataset. I chose the following:</p>
+
+<ul>
+<li><p>Number of convolutional layers: <code>2, 3, 4</code></p></li>
+<li><p>Number of filters per convolutional layer: <code>34, 64, 128</code></p></li>
+<li><p>Size of filters per convolutional layer: <code>3, 5</code></p></li>
+<li><p>Number of dense layers: <code>2, 3, 4</code></p></li>
+<li><p>Number of units in each dense layer: <code>50, 100, 400</code></p></li>
+</ul>
+
 
 <p>My hypothesis was that bigger filters would not have much of an impact on accuracy, but
 that an increased number of convolutional and dense layers, as well as a increase in teh number

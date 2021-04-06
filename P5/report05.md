@@ -118,12 +118,18 @@ different letters, more so than when using the dataset provided.
 
 ### Part 4: Experimenting
 
-In this part, I selected five parameters along which I could modify the architecture of the
+In this part, I chose to experiment with variations on a model to fit the MNIST Fashion dataset.
+I selected five parameters along which I could modify the architecture of the
 neural network used to fit the MNIST number dataset. I chose the following:
+
 * Number of convolutional layers: `2, 3, 4`
+  
 * Number of filters per convolutional layer: `34, 64, 128`
+  
 * Size of filters per convolutional layer: `3, 5`
+  
 * Number of dense layers: `2, 3, 4`
+  
 * Number of units in each dense layer: `50, 100, 400`
 
 My hypothesis was that bigger filters would not have much of an impact on accuracy, but
