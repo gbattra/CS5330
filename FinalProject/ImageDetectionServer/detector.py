@@ -24,6 +24,7 @@ def detect(content):
     for object_ in objects:
         print('\n{} (confidence: {})'.format(object_.name, object_.score))
         print('Normalized bounding polygon vertices: ')
+        print(object_)
         for vertex in object_.bounding_poly.normalized_vertices:
             print(' - ({}, {})'.format(vertex.x, vertex.y))
     return objects

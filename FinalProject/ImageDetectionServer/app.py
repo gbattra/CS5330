@@ -6,8 +6,6 @@ This app serves object localization requests from the Unity AR labeling app. It'
 encoded image and outputs a list of detected objects, their labels and bounding box dimensions.
 """
 
-import io
-import os
 import detector
 
 from flask import Flask
